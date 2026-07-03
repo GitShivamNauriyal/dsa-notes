@@ -74,6 +74,12 @@ Preferred platforms: LeetCode > GFG > Codeforces.
 - Index files link to all sub-files in the chapter
 - `00_Home.md` links to all chapter indexes
 
+### Backlinks & Prerequisites
+- For large/advanced topics (like Graphs, DP), include explicit backlinks to foundations or prerequisites (like Arrays, Trees, Heap, Backtracking, etc.) in the YAML `links` array and at the start of the notes as a "Prerequisites" section (e.g., `[[01_Arrays_and_Hashing_Index]]`).
+
+### Smart Optimization Links
+- For smart optimizations and high-impact algorithms that vastly reduce time/space complexity (e.g., Morris traversal, Segment Trees, Bitmask DP, Rolling Hash), always include an explicit link to [[00_Complexity_Cheatsheet]] and reference the specific complexity subtopic (e.g. Master Theorem, Amortized Complexity, etc.) to reinforce theoretical foundations.
+
 ---
 
 ## Completed Chapters (Do NOT redo these)
