@@ -19,27 +19,27 @@ links: ["[[08_Tries_Index]]", "[[08_Tries_Problems_and_Exercises]]", "[[../09_He
 3. `len(words[i]) < len(words[j])`: words[i] == reverse of a suffix of words[j], AND the prefix of words[j] is itself a palindrome
 
 ```cpp
-bool isPalin(const std::string& s, int lo, int hi) {
+bool isPalin(const string& s, int lo, int hi) {
     while (lo < hi) { if (s[lo++] != s[hi--]) return false; }
     return true;
 }
 
-std::vector<std::vector<int>> palindromePairs(std::vector<std::string>& words) {
-    std::unordered_map<std::string, int> wordMap;
+vector<vector<int>> palindromePairs(vector<string>& words) {
+    unordered_map<string, int> wordMap;
     for (int i = 0; i < (int)words.size(); i++) wordMap[words[i]] = i;
 
-    std::vector<std::vector<int>> result;
+    vector<vector<int>> result;
 
     for (int i = 0; i < (int)words.size(); i++) {
-        const std::string& w = words[i];
+        const string& w = words[i];
         int n = w.size();
 
         for (int cut = 0; cut <= n; cut++) {
             // Case 1 & 2: prefix = w[0..cut-1], suffix = w[cut..n-1]
             // If suffix is palindrome, look for reverse of prefix
             if (isPalin(w, cut, n - 1)) {
-                std::string revPrefix = std::string(w.begin(), w.begin() + cut);
-                std::reverse(revPrefix.begin(), revPrefix.end());
+                string revPrefix = string(w.begin(), w.begin() + cut);
+                reverse(revPrefix.begin(), revPrefix.end());
                 auto it = wordMap.find(revPrefix);
                 if (it != wordMap.end() && it->second != i) {
                     result.push_back({i, it->second});  // words[i] + revPrefix
@@ -48,8 +48,8 @@ std::vector<std::vector<int>> palindromePairs(std::vector<std::string>& words) {
             // Case 3: prefix = w[0..cut-1], if prefix is palindrome,
             // look for reverse of suffix
             if (cut > 0 && isPalin(w, 0, cut - 1)) {
-                std::string revSuffix = std::string(w.begin() + cut, w.end());
-                std::reverse(revSuffix.begin(), revSuffix.end());
+                string revSuffix = string(w.begin() + cut, w.end());
+                reverse(revSuffix.begin(), revSuffix.end());
                 auto it = wordMap.find(revSuffix);
                 if (it != wordMap.end() && it->second != i) {
                     result.push_back({it->second, i});  // revSuffix + words[i]
@@ -80,12 +80,12 @@ class MapSum {
         }
     };
     MSNode* root;
-    std::unordered_map<std::string, int> keyMap;  // track existing key values
+    unordered_map<string, int> keyMap;  // track existing key values
 
 public:
     MapSum() { root = new MSNode(); }
 
-    void insert(std::string key, int val) {
+    void insert(string key, int val) {
         int delta = val - keyMap[key];  // if key already exists, only add delta
         keyMap[key] = val;
         MSNode* cur = root;
@@ -98,7 +98,7 @@ public:
         cur->val = val;
     }
 
-    int sum(std::string prefix) {
+    int sum(string prefix) {
         MSNode* cur = root;
         for (char c : prefix) {
             int i = c - 'a';
@@ -118,18 +118,18 @@ public:
 **Why tricky**: Given nums[] and queries[xi, mi], for each query find max XOR of xi with any element in nums where element <= mi. Offline: sort queries and nums by mi, add elements to XOR trie incrementally.
 
 ```cpp
-int maximumXorWithQueries(std::vector<int>& nums, std::vector<std::vector<int>>& queries) {
+int maximumXorWithQueries(vector<int>& nums, vector<vector<int>>& queries) {
     // Sort queries offline by mi (threshold)
     int Q = queries.size();
-    std::vector<int> qIdx(Q);
-    std::iota(qIdx.begin(), qIdx.end(), 0);  // C++17: fill 0,1,2,...,Q-1
-    std::sort(qIdx.begin(), qIdx.end(), [&](int a, int b) {
+    vector<int> qIdx(Q);
+    iota(qIdx.begin(), qIdx.end(), 0);  // C++17: fill 0,1,2,...,Q-1
+    sort(qIdx.begin(), qIdx.end(), [&](int a, int b) {
         return queries[a][1] < queries[b][1];
     });
-    std::sort(nums.begin(), nums.end());
+    sort(nums.begin(), nums.end());
 
     XorTrie trie;  // from Pattern 5 in 01_Patterns.md
-    std::vector<int> answers(Q, -1);
+    vector<int> answers(Q, -1);
     int ni = 0;
 
     for (int qi : qIdx) {
@@ -140,10 +140,10 @@ int maximumXorWithQueries(std::vector<int>& nums, std::vector<std::vector<int>>&
         }
         if (ni > 0) answers[qi] = trie.maxXOR(x);
     }
-    return *std::max_element(answers.begin(), answers.end());
+    return *max_element(answers.begin(), answers.end());
 }
 // Time: O((n + Q) log(max_value)), Space: O(n * 32)
-// std::iota: fills range with sequentially increasing values -- C++11
+// iota: fills range with sequentially increasing values -- C++11
 ```
 
 ---
@@ -153,7 +153,7 @@ int maximumXorWithQueries(std::vector<int>& nums, std::vector<std::vector<int>>&
 **Why tricky**: Every substring is a prefix of some suffix. Insert all suffixes into a trie. Count of distinct substrings = total number of nodes in the trie (each node = one unique character extending a unique prefix).
 
 ```cpp
-int countDistinctSubstrings(const std::string& s) {
+int countDistinctSubstrings(const string& s) {
     // Insert all suffixes
     Trie trie;
     int distinctCount = 0;
@@ -164,7 +164,7 @@ int countDistinctSubstrings(const std::string& s) {
         TrieNode* root;
         CountingTrie() { root = new TrieNode(); }
 
-        int insertAndCount(const std::string& s, int start) {
+        int insertAndCount(const string& s, int start) {
             TrieNode* cur = root;
             int newNodes = 0;
             for (int i = start; i < (int)s.size(); i++) {

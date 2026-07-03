@@ -35,21 +35,21 @@ Answer: 6 (subarray [4,-1,2,1])
 #include <algorithm>
 
 // Version 1: Return just the max sum
-int maxSubArray(std::vector<int>& nums) {
+int maxSubArray(vector<int>& nums) {
     int currentSum = nums[0];
     int maxSum = nums[0];
 
     for (int i = 1; i < (int)nums.size(); i++) {
         // Either extend the existing subarray or start a new one from here
-        currentSum = std::max(nums[i], currentSum + nums[i]);
-        maxSum = std::max(maxSum, currentSum);
+        currentSum = max(nums[i], currentSum + nums[i]);
+        maxSum = max(maxSum, currentSum);
     }
     return maxSum;
 }
 // Time: O(n), Space: O(1)
 
 // Version 2: Return the actual subarray indices (interview follow-up)
-std::pair<int,int> maxSubArrayIndices(std::vector<int>& nums) {
+pair<int,int> maxSubArrayIndices(vector<int>& nums) {
     int currentSum = nums[0];
     int maxSum = nums[0];
     int start = 0, end = 0, tempStart = 0;
@@ -76,16 +76,16 @@ std::pair<int,int> maxSubArrayIndices(std::vector<int>& nums) {
 **Why it's different**: Negative × Negative = Positive. So we must track both max and min at every position.
 
 ```cpp
-int maxProduct(std::vector<int>& nums) {
+int maxProduct(vector<int>& nums) {
     int curMax = nums[0], curMin = nums[0], result = nums[0];
 
     for (int i = 1; i < (int)nums.size(); i++) {
         // When multiplied by a negative, max becomes min and vice versa
-        if (nums[i] < 0) std::swap(curMax, curMin);
+        if (nums[i] < 0) swap(curMax, curMin);
         
-        curMax = std::max(nums[i], curMax * nums[i]);
-        curMin = std::min(nums[i], curMin * nums[i]);
-        result = std::max(result, curMax);
+        curMax = max(nums[i], curMax * nums[i]);
+        curMin = min(nums[i], curMin * nums[i]);
+        result = max(result, curMax);
     }
     return result;
 }
@@ -134,18 +134,18 @@ Step 6: arr[mid]=1 → mid++
 ```
 
 ```cpp
-void sortColors(std::vector<int>& nums) {
+void sortColors(vector<int>& nums) {
     int low = 0, mid = 0, high = (int)nums.size() - 1;
 
     while (mid <= high) {
         if (nums[mid] == 0) {
-            std::swap(nums[low], nums[mid]);
+            swap(nums[low], nums[mid]);
             low++;
             mid++;  // element at low was already processed (it was a 1)
         } else if (nums[mid] == 1) {
             mid++;  // 1 is already in the right region
         } else {    // nums[mid] == 2
-            std::swap(nums[mid], nums[high]);
+            swap(nums[mid], nums[high]);
             high--;
             // DO NOT increment mid — the swapped-in element is unprocessed
         }
@@ -179,7 +179,7 @@ Final candidate = 2 ✓
 ```
 
 ```cpp
-int majorityElement(std::vector<int>& nums) {
+int majorityElement(vector<int>& nums) {
     int candidate = nums[0], votes = 1;
 
     for (int i = 1; i < (int)nums.size(); i++) {
@@ -203,7 +203,7 @@ int majorityElement(std::vector<int>& nums) {
 **Key insight**: At most 2 elements can appear more than n/3 times. Track 2 candidates.
 
 ```cpp
-std::vector<int> majorityElementII(std::vector<int>& nums) {
+vector<int> majorityElementII(vector<int>& nums) {
     int cand1 = INT_MIN, cand2 = INT_MIN, votes1 = 0, votes2 = 0;
 
     for (int x : nums) {
@@ -228,7 +228,7 @@ std::vector<int> majorityElementII(std::vector<int>& nums) {
         else if (x == cand2) votes2++;
     }
 
-    std::vector<int> result;
+    vector<int> result;
     int n = nums.size();
     if (votes1 > n / 3) result.push_back(cand1);
     if (votes2 > n / 3) result.push_back(cand2);
@@ -251,27 +251,27 @@ Water trapped:       1     1  2  1  1 = 6 units
 
 ```cpp
 // Approach 1: Prefix max arrays — O(n) time, O(n) space
-int trap(std::vector<int>& height) {
+int trap(vector<int>& height) {
     int n = height.size();
-    std::vector<int> maxLeft(n), maxRight(n);
+    vector<int> maxLeft(n), maxRight(n);
 
     maxLeft[0] = height[0];
     for (int i = 1; i < n; i++)
-        maxLeft[i] = std::max(maxLeft[i-1], height[i]);
+        maxLeft[i] = max(maxLeft[i-1], height[i]);
 
     maxRight[n-1] = height[n-1];
     for (int i = n-2; i >= 0; i--)
-        maxRight[i] = std::max(maxRight[i+1], height[i]);
+        maxRight[i] = max(maxRight[i+1], height[i]);
 
     int water = 0;
     for (int i = 0; i < n; i++)
-        water += std::min(maxLeft[i], maxRight[i]) - height[i];
+        water += min(maxLeft[i], maxRight[i]) - height[i];
 
     return water;
 }
 
 // Approach 2: Two pointers — O(n) time, O(1) space
-int trapOptimal(std::vector<int>& height) {
+int trapOptimal(vector<int>& height) {
     int left = 0, right = (int)height.size() - 1;
     int maxL = 0, maxR = 0, water = 0;
 

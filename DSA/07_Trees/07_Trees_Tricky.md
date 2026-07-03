@@ -43,8 +43,8 @@ Output: 4, 2, 5, 1, 3 ✓
 ```
 
 ```cpp
-std::vector<int> morrisInorder(TreeNode* root) {
-    std::vector<int> result;
+vector<int> morrisInorder(TreeNode* root) {
+    vector<int> result;
     TreeNode* cur = root;
 
     while (cur) {
@@ -99,7 +99,7 @@ void inorderRecover(TreeNode* root) {
 
 void recoverTree(TreeNode* root) {
     inorderRecover(root);
-    std::swap(first->val, second->val);
+    swap(first->val, second->val);
 }
 // Time: O(n), Space: O(h) -- use Morris traversal for true O(1)
 ```
@@ -168,8 +168,8 @@ TreeNode* treeToDoublyList(TreeNode* root) {
 ```cpp
 int distanceK(TreeNode* root, TreeNode* target, int k) {
     // Build parent map via BFS
-    std::unordered_map<TreeNode*, TreeNode*> parent;
-    std::queue<TreeNode*> q;
+    unordered_map<TreeNode*, TreeNode*> parent;
+    queue<TreeNode*> q;
     q.push(root);
     parent[root] = nullptr;
     while (!q.empty()) {
@@ -179,14 +179,14 @@ int distanceK(TreeNode* root, TreeNode* target, int k) {
     }
 
     // BFS from target, distance k
-    std::unordered_set<TreeNode*> visited;
+    unordered_set<TreeNode*> visited;
     q.push(target);
     visited.insert(target);
     int dist = 0;
 
     while (!q.empty()) {
         if (dist == k) {
-            std::vector<int> result;
+            vector<int> result;
             while (!q.empty()) { result.push_back(q.front()->val); q.pop(); }
             return result.size();  // return count
         }
@@ -217,9 +217,9 @@ int distanceK(TreeNode* root, TreeNode* target, int k) {
 // Segment tree for range sum queries with point updates
 class SegmentTree {
     int n;
-    std::vector<int> tree;
+    vector<int> tree;
 
-    void build(std::vector<int>& arr, int node, int lo, int hi) {
+    void build(vector<int>& arr, int node, int lo, int hi) {
         if (lo == hi) { tree[node] = arr[lo]; return; }
         int mid = lo + (hi - lo) / 2;
         build(arr, 2*node, lo, mid);
@@ -244,7 +244,7 @@ class SegmentTree {
     }
 
 public:
-    SegmentTree(std::vector<int>& arr) : n(arr.size()), tree(4 * arr.size(), 0) {
+    SegmentTree(vector<int>& arr) : n(arr.size()), tree(4 * arr.size(), 0) {
         build(arr, 1, 0, n-1);
     }
     void update(int idx, int val) { update(1, 0, n-1, idx, val); }
@@ -264,7 +264,7 @@ public:
 const int MAXN = 1e5 + 5, LOG = 17;
 int depth[MAXN], up[MAXN][LOG];  // up[v][j] = 2^j-th ancestor of v
 
-void dfs(int v, int par, int d, std::vector<std::vector<int>>& adj) {
+void dfs(int v, int par, int d, vector<vector<int>>& adj) {
     depth[v] = d;
     up[v][0] = par;
     for (int j = 1; j < LOG; j++)
@@ -273,7 +273,7 @@ void dfs(int v, int par, int d, std::vector<std::vector<int>>& adj) {
 }
 
 int lca(int u, int v) {
-    if (depth[u] < depth[v]) std::swap(u, v);
+    if (depth[u] < depth[v]) swap(u, v);
     int diff = depth[u] - depth[v];
     // Lift u to same depth as v
     for (int j = 0; j < LOG; j++) if ((diff >> j) & 1) u = up[u][j];

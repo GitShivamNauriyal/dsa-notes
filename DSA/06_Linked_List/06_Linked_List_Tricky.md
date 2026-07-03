@@ -38,14 +38,14 @@ int cycleLength(ListNode* head) {
 **Why tricky**: Distribute nodes as evenly as possible. First `n % k` parts get one extra node. Must handle k > n (some parts will be null).
 
 ```cpp
-std::vector<ListNode*> splitListToParts(ListNode* head, int k) {
+vector<ListNode*> splitListToParts(ListNode* head, int k) {
     int n = 0;
     for (ListNode* c = head; c; c = c->next) n++;
 
     int base = n / k;       // minimum size of each part
     int extra = n % k;      // first 'extra' parts get one more node
 
-    std::vector<ListNode*> result(k, nullptr);
+    vector<ListNode*> result(k, nullptr);
     ListNode* cur = head;
 
     for (int i = 0; i < k && cur; i++) {
@@ -187,7 +187,7 @@ Key ideas:
 // Simplified skip list node
 struct SkipNode {
     int val;
-    std::vector<SkipNode*> forward;  // forward[i] = next node at level i
+    vector<SkipNode*> forward;  // forward[i] = next node at level i
     SkipNode(int v, int levels) : val(v), forward(levels, nullptr) {}
 };
 // Full skip list implementation is a common system design interview question.
@@ -209,18 +209,18 @@ struct SkipNode {
 class Twitter {
     int time = 0;
     struct Tweet { int id, ts; };
-    std::unordered_map<int, std::vector<Tweet>> tweets;
-    std::unordered_map<int, std::unordered_set<int>> follows;
+    unordered_map<int, vector<Tweet>> tweets;
+    unordered_map<int, unordered_set<int>> follows;
 
 public:
     void postTweet(int userId, int tweetId) {
         tweets[userId].push_back({tweetId, time++});
     }
 
-    std::vector<int> getNewsFeed(int userId) {
+    vector<int> getNewsFeed(int userId) {
         // min-heap: {-timestamp, tweet_id, user_id, tweet_index}
-        using T = std::tuple<int,int,int,int>;
-        std::priority_queue<T, std::vector<T>, std::greater<T>> pq;
+        using T = tuple<int,int,int,int>;
+        priority_queue<T, vector<T>, greater<T>> pq;
 
         auto addLatest = [&](int uid) {
             auto& tw = tweets[uid];
@@ -232,7 +232,7 @@ public:
         addLatest(userId);
         for (int fid : follows[userId]) addLatest(fid);
 
-        std::vector<int> feed;
+        vector<int> feed;
         while (!pq.empty() && (int)feed.size() < 10) {
             auto [ts, tid, uid, idx] = pq.top(); pq.pop();
             feed.push_back(tid);

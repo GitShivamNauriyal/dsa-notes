@@ -223,10 +223,10 @@ ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
 #include <queue>
 
 // Use min-heap: always extract the globally minimum node
-ListNode* mergeKLists(std::vector<ListNode*>& lists) {
+ListNode* mergeKLists(vector<ListNode*>& lists) {
     // Min-heap comparator: compare node values
     auto cmp = [](ListNode* a, ListNode* b) { return a->val > b->val; };
-    std::priority_queue<ListNode*, std::vector<ListNode*>, decltype(cmp)> pq(cmp);
+    priority_queue<ListNode*, vector<ListNode*>, decltype(cmp)> pq(cmp);
 
     for (ListNode* l : lists) if (l) pq.push(l);
 

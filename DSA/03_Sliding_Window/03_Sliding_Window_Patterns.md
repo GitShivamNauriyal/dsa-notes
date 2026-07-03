@@ -32,7 +32,7 @@ Two types:
 //     update answer
 
 // Generic fixed window maximum sum
-int maxSumFixedWindow(std::vector<int>& nums, int k) {
+int maxSumFixedWindow(vector<int>& nums, int k) {
     int n = nums.size();
     if (n < k) return -1;
 
@@ -45,7 +45,7 @@ int maxSumFixedWindow(std::vector<int>& nums, int k) {
     for (int i = k; i < n; i++) {
         windowSum += nums[i];       // add incoming
         windowSum -= nums[i - k];   // remove outgoing
-        maxSum = std::max(maxSum, windowSum);
+        maxSum = max(maxSum, windowSum);
     }
     return maxSum;
 }
@@ -55,13 +55,13 @@ int maxSumFixedWindow(std::vector<int>& nums, int k) {
 ### Example: Maximum Average Subarray I (LC 643)
 
 ```cpp
-double findMaxAverage(std::vector<int>& nums, int k) {
+double findMaxAverage(vector<int>& nums, int k) {
     double windowSum = 0;
     for (int i = 0; i < k; i++) windowSum += nums[i];
     double maxSum = windowSum;
     for (int i = k; i < (int)nums.size(); i++) {
         windowSum += nums[i] - nums[i - k];
-        maxSum = std::max(maxSum, windowSum);
+        maxSum = max(maxSum, windowSum);
     }
     return maxSum / k;
 }
@@ -71,8 +71,8 @@ double findMaxAverage(std::vector<int>& nums, int k) {
 
 ```cpp
 // Sliding window of size k -- use a set to track elements in window
-bool containsNearbyDuplicate(std::vector<int>& nums, int k) {
-    std::unordered_set<int> window;
+bool containsNearbyDuplicate(vector<int>& nums, int k) {
+    unordered_set<int> window;
     for (int i = 0; i < (int)nums.size(); i++) {
         if (window.count(nums[i])) return true;
         window.insert(nums[i]);
@@ -117,14 +117,14 @@ for (int right = 0; right < n; right++) {
 ```cpp
 // LC 209 variant -- longest subarray with sum <= target (all positive)
 // Note: LC 209 asks for MINIMUM length with sum >= target
-int longestSubarraySum(std::vector<int>& nums, int target) {
+int longestSubarraySum(vector<int>& nums, int target) {
     int left = 0, sum = 0, ans = 0;
     for (int right = 0; right < (int)nums.size(); right++) {
         sum += nums[right];
         while (sum > target) {
             sum -= nums[left++];
         }
-        ans = std::max(ans, right - left + 1);
+        ans = max(ans, right - left + 1);
     }
     return ans;
 }
@@ -134,13 +134,13 @@ int longestSubarraySum(std::vector<int>& nums, int target) {
 
 ```cpp
 // LC 209 -- Minimum Size Subarray Sum
-int minSubArrayLen(int target, std::vector<int>& nums) {
+int minSubArrayLen(int target, vector<int>& nums) {
     int left = 0, sum = 0, ans = INT_MAX;
     for (int right = 0; right < (int)nums.size(); right++) {
         sum += nums[right];
         // Shrink as long as window is still valid (sum >= target)
         while (sum >= target) {
-            ans = std::min(ans, right - left + 1);
+            ans = min(ans, right - left + 1);
             sum -= nums[left++];
         }
     }
@@ -159,8 +159,8 @@ int minSubArrayLen(int target, std::vector<int>& nums) {
 
 ```cpp
 // LC 3
-int lengthOfLongestSubstring(std::string s) {
-    std::unordered_map<char, int> lastSeen;  // char -> last index seen
+int lengthOfLongestSubstring(string s) {
+    unordered_map<char, int> lastSeen;  // char -> last index seen
     int left = 0, ans = 0;
 
     for (int right = 0; right < (int)s.size(); right++) {
@@ -170,7 +170,7 @@ int lengthOfLongestSubstring(std::string s) {
             left = lastSeen[c] + 1;
         }
         lastSeen[c] = right;
-        ans = std::max(ans, right - left + 1);
+        ans = max(ans, right - left + 1);
     }
     return ans;
 }
@@ -181,8 +181,8 @@ int lengthOfLongestSubstring(std::string s) {
 
 ```cpp
 // LC 340
-int lengthOfLongestSubstringKDistinct(std::string s, int k) {
-    std::unordered_map<char, int> freq;
+int lengthOfLongestSubstringKDistinct(string s, int k) {
+    unordered_map<char, int> freq;
     int left = 0, ans = 0;
 
     for (int right = 0; right < (int)s.size(); right++) {
@@ -194,7 +194,7 @@ int lengthOfLongestSubstringKDistinct(std::string s, int k) {
             if (freq[s[left]] == 0) freq.erase(s[left]);
             left++;
         }
-        ans = std::max(ans, right - left + 1);
+        ans = max(ans, right - left + 1);
     }
     return ans;
 }
@@ -208,13 +208,13 @@ int lengthOfLongestSubstringKDistinct(std::string s, int k) {
 // maxFreq = count of most frequent character in window
 // Only characters OTHER than the most frequent need replacing
 
-int characterReplacement(std::string s, int k) {
-    std::vector<int> freq(26, 0);
+int characterReplacement(string s, int k) {
+    vector<int> freq(26, 0);
     int left = 0, maxFreq = 0, ans = 0;
 
     for (int right = 0; right < (int)s.size(); right++) {
         freq[s[right] - 'A']++;
-        maxFreq = std::max(maxFreq, freq[s[right] - 'A']);
+        maxFreq = max(maxFreq, freq[s[right] - 'A']);
 
         // Replacements needed = windowLen - maxFreq
         int windowLen = right - left + 1;
@@ -226,7 +226,7 @@ int characterReplacement(std::string s, int k) {
             // We only care about windows >= current best size.
             // maxFreq can only increase going forward (optimistic tracking).
         }
-        ans = std::max(ans, right - left + 1);
+        ans = max(ans, right - left + 1);
     }
     return ans;
 }
@@ -244,9 +244,9 @@ int characterReplacement(std::string s, int k) {
 
 ```cpp
 // Check if any permutation of pattern p exists as substring in s
-bool checkInclusion(std::string p, std::string s) {
+bool checkInclusion(string p, string s) {
     if (p.size() > s.size()) return false;
-    std::vector<int> pFreq(26, 0), wFreq(26, 0);
+    vector<int> pFreq(26, 0), wFreq(26, 0);
     for (char c : p) pFreq[c - 'a']++;
 
     int k = p.size();
@@ -265,9 +265,9 @@ bool checkInclusion(std::string p, std::string s) {
 // Time: O(26 * n) = O(n), Space: O(1)
 
 // More efficient: track how many characters are "matched"
-bool checkInclusionOptimal(std::string p, std::string s) {
+bool checkInclusionOptimal(string p, string s) {
     if (p.size() > s.size()) return false;
-    std::vector<int> count(26, 0);
+    vector<int> count(26, 0);
     for (char c : p) count[c - 'a']++;
     int k = p.size(), have = 0, need = 0;
     for (int x : count) if (x > 0) need++;  // distinct chars we need to satisfy
@@ -309,9 +309,9 @@ right=4: 5>-3,-1,3 -- pop all, push 4. deque=[4(val=5)]. Remove if out: 4>=2 OK.
 
 ```cpp
 // LC 239 -- Sliding Window Maximum
-std::vector<int> maxSlidingWindow(std::vector<int>& nums, int k) {
-    std::deque<int> dq;  // stores indices, front = index of current max
-    std::vector<int> result;
+vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+    deque<int> dq;  // stores indices, front = index of current max
+    vector<int> result;
 
     for (int right = 0; right < (int)nums.size(); right++) {
         // Remove elements from back that are smaller than current
@@ -354,8 +354,8 @@ Shown in Pattern 3a.
 // need map: char -> count needed
 // have count: how many distinct chars are fully satisfied
 // Expand right, shrink left when all satisfied
-std::string minWindow(std::string s, std::string t) {
-    std::unordered_map<char,int> need, have;
+string minWindow(string s, string t) {
+    unordered_map<char,int> need, have;
     for (char c : t) need[c]++;
     int formed = 0, required = need.size();
     int left = 0, minLen = INT_MAX, minStart = 0;

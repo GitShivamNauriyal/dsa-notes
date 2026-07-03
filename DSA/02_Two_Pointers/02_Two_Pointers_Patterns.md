@@ -34,7 +34,7 @@ left=0 (val=1), right=5 (val=9): sum=10 -> found!
 #include <vector>
 
 // LC 167 -- Two Sum II (sorted array, 1-indexed)
-std::vector<int> twoSum(std::vector<int>& nums, int target) {
+vector<int> twoSum(vector<int>& nums, int target) {
     int left = 0, right = (int)nums.size() - 1;
 
     while (left < right) {
@@ -78,9 +78,9 @@ Fix i=2 (-1): SKIP -- same as i=1 (duplicate)
 #include <vector>
 
 // LC 15 -- 3Sum
-std::vector<std::vector<int>> threeSum(std::vector<int>& nums) {
-    std::sort(nums.begin(), nums.end());
-    std::vector<std::vector<int>> result;
+vector<vector<int>> threeSum(vector<int>& nums) {
+    sort(nums.begin(), nums.end());
+    vector<vector<int>> result;
     int n = nums.size();
 
     for (int i = 0; i < n - 2; i++) {
@@ -117,9 +117,9 @@ std::vector<std::vector<int>> threeSum(std::vector<int>& nums) {
 **Why**: Fix two elements, reduce to Two Sum. O(n³) total.
 
 ```cpp
-std::vector<std::vector<int>> fourSum(std::vector<int>& nums, int target) {
-    std::sort(nums.begin(), nums.end());
-    std::vector<std::vector<int>> result;
+vector<vector<int>> fourSum(vector<int>& nums, int target) {
+    sort(nums.begin(), nums.end());
+    vector<vector<int>> result;
     int n = nums.size();
 
     for (int i = 0; i < n - 3; i++) {
@@ -166,7 +166,7 @@ Result: [2, 2, _, _], return write=2
 
 ```cpp
 // LC 27 -- Remove Element (in-place)
-int removeElement(std::vector<int>& nums, int val) {
+int removeElement(vector<int>& nums, int val) {
     int write = 0;
     for (int read = 0; read < (int)nums.size(); read++) {
         if (nums[read] != val) {
@@ -178,7 +178,7 @@ int removeElement(std::vector<int>& nums, int val) {
 // Time: O(n), Space: O(1)
 
 // LC 26 -- Remove Duplicates from Sorted Array
-int removeDuplicates(std::vector<int>& nums) {
+int removeDuplicates(vector<int>& nums) {
     if (nums.empty()) return 0;
     int write = 1;
     for (int read = 1; read < (int)nums.size(); read++) {
@@ -202,7 +202,7 @@ int removeDuplicates(std::vector<int>& nums) {
 // Slow reaches middle when fast reaches end
 
 // Find if array-as-linked-list has cycle (LC 287 -- find duplicate)
-int findDuplicate(std::vector<int>& nums) {
+int findDuplicate(vector<int>& nums) {
     int slow = nums[0], fast = nums[0];
     // Phase 1: detect cycle
     do {
@@ -227,29 +227,29 @@ int findDuplicate(std::vector<int>& nums) {
 
 ```cpp
 // Lomuto partition (simpler, used in QuickSort/QuickSelect)
-int partition(std::vector<int>& nums, int lo, int hi) {
+int partition(vector<int>& nums, int lo, int hi) {
     int pivot = nums[hi];   // choose last element as pivot
     int i = lo - 1;         // i = rightmost position of "less than pivot" region
 
     for (int j = lo; j < hi; j++) {
         if (nums[j] <= pivot) {
             i++;
-            std::swap(nums[i], nums[j]);
+            swap(nums[i], nums[j]);
         }
     }
-    std::swap(nums[i + 1], nums[hi]);  // place pivot in correct position
+    swap(nums[i + 1], nums[hi]);  // place pivot in correct position
     return i + 1;                       // pivot index
 }
 
 // Hoare partition (faster in practice -- fewer swaps)
-int partitionHoare(std::vector<int>& nums, int lo, int hi) {
+int partitionHoare(vector<int>& nums, int lo, int hi) {
     int pivot = nums[lo + (hi - lo) / 2];
     int i = lo - 1, j = hi + 1;
     while (true) {
         do { i++; } while (nums[i] < pivot);
         do { j--; } while (nums[j] > pivot);
         if (i >= j) return j;
-        std::swap(nums[i], nums[j]);
+        swap(nums[i], nums[j]);
     }
 }
 ```
@@ -260,7 +260,7 @@ int partitionHoare(std::vector<int>& nums, int lo, int hi) {
 // LC 215 -- Kth Largest Element in Array
 // Why: we don't need full sort. Partition to find pivot position.
 // If pivot is at index k, we found it. Otherwise recurse on one side.
-int quickSelect(std::vector<int>& nums, int lo, int hi, int k) {
+int quickSelect(vector<int>& nums, int lo, int hi, int k) {
     if (lo == hi) return nums[lo];
     int pivotIdx = partition(nums, lo, hi);
     if (pivotIdx == k) return nums[k];
@@ -268,7 +268,7 @@ int quickSelect(std::vector<int>& nums, int lo, int hi, int k) {
     else return quickSelect(nums, pivotIdx + 1, hi, k);
 }
 
-int findKthLargest(std::vector<int>& nums, int k) {
+int findKthLargest(vector<int>& nums, int k) {
     int n = nums.size();
     // k-th largest = index (n-k) when sorted ascending
     return quickSelect(nums, 0, n - 1, n - k);
@@ -283,12 +283,12 @@ int findKthLargest(std::vector<int>& nums, int k) {
 
 ```cpp
 // LC 125 -- Valid Palindrome (skip non-alphanumeric)
-bool isPalindrome(std::string s) {
+bool isPalindrome(string s) {
     int left = 0, right = (int)s.size() - 1;
     while (left < right) {
-        while (left < right && !std::isalnum(s[left]))  left++;
-        while (left < right && !std::isalnum(s[right])) right--;
-        if (std::tolower(s[left]) != std::tolower(s[right])) return false;
+        while (left < right && !isalnum(s[left]))  left++;
+        while (left < right && !isalnum(s[right])) right--;
+        if (tolower(s[left]) != tolower(s[right])) return false;
         left++; right--;
     }
     return true;
@@ -313,12 +313,12 @@ left=1(h=8), right=6(h=8): area=8*5=40, move either
 ```
 
 ```cpp
-int maxArea(std::vector<int>& height) {
+int maxArea(vector<int>& height) {
     int left = 0, right = (int)height.size() - 1;
     int maxWater = 0;
     while (left < right) {
-        int water = std::min(height[left], height[right]) * (right - left);
-        maxWater = std::max(maxWater, water);
+        int water = min(height[left], height[right]) * (right - left);
+        maxWater = max(maxWater, water);
         if (height[left] < height[right]) left++;
         else right--;
     }
@@ -332,9 +332,9 @@ int maxArea(std::vector<int>& height) {
 **Key insight**: Largest squares come from either end (most negative or most positive). Use two pointers filling result from back to front.
 
 ```cpp
-std::vector<int> sortedSquares(std::vector<int>& nums) {
+vector<int> sortedSquares(vector<int>& nums) {
     int n = nums.size();
-    std::vector<int> result(n);
+    vector<int> result(n);
     int left = 0, right = n - 1, pos = n - 1;
     while (left <= right) {
         int lsq = nums[left] * nums[left];
@@ -349,14 +349,14 @@ std::vector<int> sortedSquares(std::vector<int>& nums) {
 ### Example 3 -- LC 16: 3Sum Closest (Medium)
 
 ```cpp
-int threeSumClosest(std::vector<int>& nums, int target) {
-    std::sort(nums.begin(), nums.end());
+int threeSumClosest(vector<int>& nums, int target) {
+    sort(nums.begin(), nums.end());
     int closest = nums[0] + nums[1] + nums[2];
     for (int i = 0; i < (int)nums.size() - 2; i++) {
         int left = i + 1, right = (int)nums.size() - 1;
         while (left < right) {
             int sum = nums[i] + nums[left] + nums[right];
-            if (std::abs(sum - target) < std::abs(closest - target))
+            if (abs(sum - target) < abs(closest - target))
                 closest = sum;
             if (sum < target) left++;
             else if (sum > target) right--;

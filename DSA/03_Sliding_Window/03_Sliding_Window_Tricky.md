@@ -21,8 +21,8 @@ This converts any "exactly K" problem into two "at most K" problems.
 
 ```cpp
 // Template for "at most K" subarray count
-int atMost(std::vector<int>& nums, int k) {
-    std::unordered_map<int,int> freq;
+int atMost(vector<int>& nums, int k) {
+    unordered_map<int,int> freq;
     int left = 0, count = 0;
     for (int right = 0; right < (int)nums.size(); right++) {
         freq[nums[right]]++;
@@ -38,7 +38,7 @@ int atMost(std::vector<int>& nums, int k) {
 }
 
 // LC 992 -- Subarrays with K Different Integers
-int subarraysWithKDistinct(std::vector<int>& nums, int k) {
+int subarraysWithKDistinct(vector<int>& nums, int k) {
     return atMost(nums, k) - atMost(nums, k - 1);
 }
 ```
@@ -51,7 +51,7 @@ int subarraysWithKDistinct(std::vector<int>& nums, int k) {
 
 ```cpp
 // Max sum subarray of length k in a circular array
-int maxCircularSum(std::vector<int>& nums, int k) {
+int maxCircularSum(vector<int>& nums, int k) {
     int n = nums.size();
     // Duplicate conceptually: use modular index
     int windowSum = 0;
@@ -61,7 +61,7 @@ int maxCircularSum(std::vector<int>& nums, int k) {
     for (int i = k; i < n + k - 1; i++) {
         // i % n gives circular index; i - k gives element leaving window
         windowSum += nums[i % n] - nums[(i - k) % n];
-        maxSum = std::max(maxSum, windowSum);
+        maxSum = max(maxSum, windowSum);
     }
     return maxSum;
 }
@@ -76,8 +76,8 @@ int maxCircularSum(std::vector<int>& nums, int k) {
 
 ```cpp
 // Find minimum window containing all k distinct characters of s itself
-std::string minWindowAllDistinct(std::string s) {
-    std::unordered_set<char> allChars(s.begin(), s.end());
+string minWindowAllDistinct(string s) {
+    unordered_set<char> allChars(s.begin(), s.end());
     int k = allChars.size();
     return "";  // apply minimum window template with need = allChars
     // Exercise: implement using the standard minimum window template
@@ -93,7 +93,7 @@ std::string minWindowAllDistinct(std::string s) {
 ```cpp
 // LC 713 -- Number of Subarrays with Product Less Than K
 // Trick: don't divide when shrinking (use cumulative product and reset on shrink)
-int numSubarrayProductLessThanK(std::vector<int>& nums, int k) {
+int numSubarrayProductLessThanK(vector<int>& nums, int k) {
     if (k <= 1) return 0;
     int left = 0, product = 1, count = 0;
     for (int right = 0; right < (int)nums.size(); right++) {
@@ -115,7 +115,7 @@ int numSubarrayProductLessThanK(std::vector<int>& nums, int k) {
 **Why tricky**: Find a window of size (count of 1s) that contains the maximum number of 1s. Minimum swaps = window_size - max_ones_in_window.
 
 ```cpp
-int minSwaps(std::vector<int>& data) {
+int minSwaps(vector<int>& data) {
     int totalOnes = 0;
     for (int x : data) totalOnes += x;
     if (totalOnes == 0) return 0;
@@ -127,7 +127,7 @@ int minSwaps(std::vector<int>& data) {
 
     for (int i = totalOnes; i < (int)data.size(); i++) {
         onesInWindow += data[i] - data[i - totalOnes];
-        maxOnes = std::max(maxOnes, onesInWindow);
+        maxOnes = max(maxOnes, onesInWindow);
     }
     return totalOnes - maxOnes;
 }
@@ -147,7 +147,7 @@ int minSwaps(std::vector<int>& data) {
 
 #include <set>
 class SlidingWindowMedian {
-    std::multiset<int> lo, hi;  // lo = lower half, hi = upper half
+    multiset<int> lo, hi;  // lo = lower half, hi = upper half
 
     void balance() {
         // Maintain: lo.size() == hi.size() or lo.size() == hi.size() + 1
@@ -169,8 +169,8 @@ class SlidingWindowMedian {
     }
 
 public:
-    std::vector<double> medianSlidingWindow(std::vector<int>& nums, int k) {
-        std::vector<double> result;
+    vector<double> medianSlidingWindow(vector<int>& nums, int k) {
+        vector<double> result;
         for (int i = 0; i < (int)nums.size(); i++) {
             lo.insert(nums[i]);
             balance();
@@ -203,13 +203,13 @@ public:
 ```cpp
 // Generic template:
 // Check if any window of size 'len' satisfies the condition
-bool canAchieve(std::vector<int>& nums, int len, /* condition params */) {
+bool canAchieve(vector<int>& nums, int len, /* condition params */) {
     // Fixed window of size len -- check condition
     // ...
     return false;
 }
 
-int minWindowSize(std::vector<int>& nums /* condition params */) {
+int minWindowSize(vector<int>& nums /* condition params */) {
     int lo = 1, hi = nums.size(), ans = -1;
     while (lo <= hi) {
         int mid = lo + (hi - lo) / 2;

@@ -68,7 +68,7 @@ struct Node {
 // Approach 1: HashMap -- O(n) space
 Node* copyRandomList(Node* head) {
     if (!head) return nullptr;
-    std::unordered_map<Node*, Node*> map;  // old -> new
+    unordered_map<Node*, Node*> map;  // old -> new
 
     // Pass 1: create all new nodes
     Node* cur = head;
@@ -139,7 +139,7 @@ class LRUCache {
     };
 
     int capacity;
-    std::unordered_map<int, Node*> cache;  // key -> node
+    unordered_map<int, Node*> cache;  // key -> node
     Node* head;  // dummy head (most recent end)
     Node* tail;  // dummy tail (least recent end)
 

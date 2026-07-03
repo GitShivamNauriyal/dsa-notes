@@ -15,11 +15,11 @@ links: ["[[04_Stack_Index]]", "[[04_Stack_Problems_and_Exercises]]", "[[../05_Bi
 
 ```cpp
 // Sum of subarray maximums -- symmetric to minimums but flip comparisons
-long long sumSubarrayMaxs(std::vector<int>& arr) {
+long long sumSubarrayMaxs(vector<int>& arr) {
     const long long MOD = 1e9 + 7;
     int n = arr.size();
-    std::vector<long long> left(n), right(n);
-    std::stack<int> st;
+    vector<long long> left(n), right(n);
+    stack<int> st;
 
     // previous greater (strict) to left
     for (int i = 0; i < n; i++) {
@@ -50,12 +50,12 @@ long long sumSubarrayMaxs(std::vector<int>& arr) {
 **Why tricky**: Unlike Calculator II (only +, -, *, /), Calculator I has nested parentheses and no * or /. The trick is to push the current result and sign onto the stack when entering a parenthesis, then pop and restore when exiting.
 
 ```cpp
-int calculate(std::string s) {
-    std::stack<int> st;  // alternates: saved result, then sign
+int calculate(string s) {
+    stack<int> st;  // alternates: saved result, then sign
     int result = 0, num = 0, sign = 1;
 
     for (char c : s) {
-        if (std::isdigit(c)) {
+        if (isdigit(c)) {
             num = num * 10 + (c - '0');
         } else if (c == '+') {
             result += sign * num; num = 0; sign = 1;
@@ -84,13 +84,13 @@ int calculate(std::string s) {
 
 ```cpp
 // LC 316 / 1081 -- Remove Duplicate Letters
-std::string removeDuplicateLetters(std::string s) {
-    std::vector<int> lastIdx(26, -1);
-    std::vector<bool> inStack(26, false);
+string removeDuplicateLetters(string s) {
+    vector<int> lastIdx(26, -1);
+    vector<bool> inStack(26, false);
 
     for (int i = 0; i < (int)s.size(); i++) lastIdx[s[i] - 'a'] = i;
 
-    std::stack<char> st;
+    stack<char> st;
     for (int i = 0; i < (int)s.size(); i++) {
         char c = s[i];
         if (inStack[c - 'a']) continue;
@@ -104,9 +104,9 @@ std::string removeDuplicateLetters(std::string s) {
         inStack[c - 'a'] = true;
     }
 
-    std::string result = "";
+    string result = "";
     while (!st.empty()) { result += st.top(); st.pop(); }
-    std::reverse(result.begin(), result.end());
+    reverse(result.begin(), result.end());
     return result;
 }
 // Time: O(n), Space: O(26) = O(1)
@@ -119,10 +119,10 @@ std::string removeDuplicateLetters(std::string s) {
 **Why tricky**: Person i can see person j (j > i) if there's no person taller than both between them. Use a monotonic decreasing stack counting how many people each person can see using the stack's structure.
 
 ```cpp
-std::vector<int> canSeePersonsCount(std::vector<int>& heights) {
+vector<int> canSeePersonsCount(vector<int>& heights) {
     int n = heights.size();
-    std::vector<int> ans(n, 0);
-    std::stack<int> st;  // monotonically decreasing
+    vector<int> ans(n, 0);
+    stack<int> st;  // monotonically decreasing
 
     for (int i = n - 1; i >= 0; i--) {
         // Count how many shorter people to the right person i can see
@@ -145,7 +145,7 @@ std::vector<int> canSeePersonsCount(std::vector<int>& heights) {
 **Why tricky**: Find max `min(nums[i..j]) * (j - i + 1)` where `i <= k <= j`. This must include index k. Use monotonic stack to find left and right boundaries, then greedily expand from k outward choosing the larger neighbor.
 
 ```cpp
-int maximumScore(std::vector<int>& nums, int k) {
+int maximumScore(vector<int>& nums, int k) {
     int n = nums.size();
     int left = k, right = k;
     int minVal = nums[k], ans = nums[k];
@@ -157,12 +157,12 @@ int maximumScore(std::vector<int>& nums, int k) {
         else if (nums[left - 1] >= nums[right + 1]) left--;
         else right++;
 
-        minVal = std::min(minVal, std::min(
+        minVal = min(minVal, min(
             left > 0 ? INT_MAX : nums[left],  // simplified: just track
             nums[right]
         ));
-        minVal = std::min({minVal, nums[left], nums[right]});
-        ans = std::max(ans, minVal * (right - left + 1));
+        minVal = min({minVal, nums[left], nums[right]});
+        ans = max(ans, minVal * (right - left + 1));
     }
     return ans;
 }
@@ -194,7 +194,7 @@ int maximumScore(std::vector<int>& nums, int k) {
 
 ```cpp
 class MyQueue {
-    std::stack<int> inbox, outbox;
+    stack<int> inbox, outbox;
     // inbox: where new elements go
     // outbox: reversed inbox for FIFO order
     // Transfer only when outbox is empty (amortized O(1))

@@ -61,7 +61,7 @@ links: ["[[05_Binary_Search_Index]]", "[[05_Binary_Search_Patterns]]", "[[05_Bin
 **Why hard**: O(log(min(m,n))) required. Binary search on partition of smaller array to find where to cut both arrays such that left half elements <= right half elements.
 
 ```cpp
-double findMedianSortedArrays(std::vector<int>& nums1, std::vector<int>& nums2) {
+double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
     // Ensure nums1 is the smaller array (binary search on smaller for efficiency)
     if (nums1.size() > nums2.size()) return findMedianSortedArrays(nums2, nums1);
 
@@ -81,8 +81,8 @@ double findMedianSortedArrays(std::vector<int>& nums1, std::vector<int>& nums2) 
         if (l1 <= r2 && l2 <= r1) {
             // Correct partition found
             if ((m + n) % 2 == 1)
-                return std::max(l1, l2);  // odd total: median is max of left halves
-            return (std::max(l1, l2) + std::min(r1, r2)) / 2.0;
+                return max(l1, l2);  // odd total: median is max of left halves
+            return (max(l1, l2) + min(r1, r2)) / 2.0;
         } else if (l1 > r2) {
             hi = cut1 - 1;  // cut1 too far right, move left
         } else {
@@ -103,7 +103,7 @@ double findMedianSortedArrays(std::vector<int>& nums1, std::vector<int>& nums2) 
 ```cpp
 #include <algorithm>
 
-bool canPlace(std::vector<int>& stalls, int cows, int minDist) {
+bool canPlace(vector<int>& stalls, int cows, int minDist) {
     int placed = 1, last = stalls[0];
     for (int i = 1; i < (int)stalls.size(); i++) {
         if (stalls[i] - last >= minDist) {
@@ -115,8 +115,8 @@ bool canPlace(std::vector<int>& stalls, int cows, int minDist) {
     return placed >= cows;
 }
 
-int aggressiveCows(std::vector<int>& stalls, int cows) {
-    std::sort(stalls.begin(), stalls.end());
+int aggressiveCows(vector<int>& stalls, int cows) {
+    sort(stalls.begin(), stalls.end());
     int lo = 1, hi = stalls.back() - stalls.front(), ans = 0;
     while (lo <= hi) {
         int mid = lo + (hi - lo) / 2;

@@ -61,7 +61,7 @@ Postorder (L, R, Root): 4, 5, 2, 3, 1   <- useful for deletion, evaluating subtr
 
 ```cpp
 // Inorder: Left -> Root -> Right
-void inorder(TreeNode* root, std::vector<int>& result) {
+void inorder(TreeNode* root, vector<int>& result) {
     if (!root) return;
     inorder(root->left, result);
     result.push_back(root->val);   // process ROOT between children
@@ -69,7 +69,7 @@ void inorder(TreeNode* root, std::vector<int>& result) {
 }
 
 // Preorder: Root -> Left -> Right
-void preorder(TreeNode* root, std::vector<int>& result) {
+void preorder(TreeNode* root, vector<int>& result) {
     if (!root) return;
     result.push_back(root->val);   // process ROOT before children
     preorder(root->left, result);
@@ -77,7 +77,7 @@ void preorder(TreeNode* root, std::vector<int>& result) {
 }
 
 // Postorder: Left -> Right -> Root
-void postorder(TreeNode* root, std::vector<int>& result) {
+void postorder(TreeNode* root, vector<int>& result) {
     if (!root) return;
     postorder(root->left, result);
     postorder(root->right, result);
@@ -94,9 +94,9 @@ void postorder(TreeNode* root, std::vector<int>& result) {
 
 ```cpp
 // Iterative Inorder (most commonly asked)
-std::vector<int> inorderIterative(TreeNode* root) {
-    std::vector<int> result;
-    std::stack<TreeNode*> st;
+vector<int> inorderIterative(TreeNode* root) {
+    vector<int> result;
+    stack<TreeNode*> st;
     TreeNode* cur = root;
 
     while (cur || !st.empty()) {
@@ -114,10 +114,10 @@ std::vector<int> inorderIterative(TreeNode* root) {
 }
 
 // Iterative Preorder
-std::vector<int> preorderIterative(TreeNode* root) {
-    std::vector<int> result;
+vector<int> preorderIterative(TreeNode* root) {
+    vector<int> result;
     if (!root) return result;
-    std::stack<TreeNode*> st;
+    stack<TreeNode*> st;
     st.push(root);
 
     while (!st.empty()) {
@@ -131,10 +131,10 @@ std::vector<int> preorderIterative(TreeNode* root) {
 }
 
 // Iterative Postorder (tricky -- use reverse of modified preorder)
-std::vector<int> postorderIterative(TreeNode* root) {
-    std::vector<int> result;
+vector<int> postorderIterative(TreeNode* root) {
+    vector<int> result;
     if (!root) return result;
-    std::stack<TreeNode*> st;
+    stack<TreeNode*> st;
     st.push(root);
 
     while (!st.empty()) {
@@ -145,7 +145,7 @@ std::vector<int> postorderIterative(TreeNode* root) {
         if (node->right) st.push(node->right);
     }
     // Reverse: Root->Right->Left becomes Left->Right->Root = postorder
-    std::reverse(result.begin(), result.end());
+    reverse(result.begin(), result.end());
     return result;
 }
 ```
@@ -160,15 +160,15 @@ std::vector<int> postorderIterative(TreeNode* root) {
 #include <queue>
 
 // LC 102 -- Binary Tree Level Order Traversal
-std::vector<std::vector<int>> levelOrder(TreeNode* root) {
-    std::vector<std::vector<int>> result;
+vector<vector<int>> levelOrder(TreeNode* root) {
+    vector<vector<int>> result;
     if (!root) return result;
-    std::queue<TreeNode*> q;
+    queue<TreeNode*> q;
     q.push(root);
 
     while (!q.empty()) {
         int levelSize = q.size();  // number of nodes at this level
-        std::vector<int> level;
+        vector<int> level;
 
         for (int i = 0; i < levelSize; i++) {
             TreeNode* node = q.front(); q.pop();
@@ -192,16 +192,16 @@ std::vector<std::vector<int>> levelOrder(TreeNode* root) {
 ### Zigzag Level Order (LC 103)
 
 ```cpp
-std::vector<std::vector<int>> zigzagLevelOrder(TreeNode* root) {
-    std::vector<std::vector<int>> result;
+vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+    vector<vector<int>> result;
     if (!root) return result;
-    std::queue<TreeNode*> q;
+    queue<TreeNode*> q;
     q.push(root);
     bool leftToRight = true;
 
     while (!q.empty()) {
         int sz = q.size();
-        std::vector<int> level(sz);
+        vector<int> level(sz);
         for (int i = 0; i < sz; i++) {
             TreeNode* node = q.front(); q.pop();
             // Fill from left or right based on direction
@@ -225,7 +225,7 @@ std::vector<std::vector<int>> zigzagLevelOrder(TreeNode* root) {
 // Height of tree (longest path from root to any leaf)
 int height(TreeNode* root) {
     if (!root) return 0;
-    return 1 + std::max(height(root->left), height(root->right));
+    return 1 + max(height(root->left), height(root->right));
 }
 
 // Check if tree is balanced (height difference of subtrees <= 1 at every node)
@@ -237,8 +237,8 @@ int heightBalanced(TreeNode* root) {
     if (left == -1) return -1;
     int right = heightBalanced(root->right);
     if (right == -1) return -1;
-    if (std::abs(left - right) > 1) return -1;  // mark as unbalanced
-    return 1 + std::max(left, right);
+    if (abs(left - right) > 1) return -1;  // mark as unbalanced
+    return 1 + max(left, right);
 }
 bool isBalanced(TreeNode* root) { return heightBalanced(root) != -1; }
 
@@ -249,8 +249,8 @@ int diameterHelper(TreeNode* root, int& maxDiam) {
     if (!root) return 0;
     int left = diameterHelper(root->left, maxDiam);
     int right = diameterHelper(root->right, maxDiam);
-    maxDiam = std::max(maxDiam, left + right);  // path through this node
-    return 1 + std::max(left, right);           // height contributed upward
+    maxDiam = max(maxDiam, left + right);  // path through this node
+    return 1 + max(left, right);           // height contributed upward
 }
 int diameterOfBinaryTree(TreeNode* root) {
     int maxDiam = 0;

@@ -18,10 +18,10 @@ links: ["[[02_Two_Pointers_Index]]", "[[02_Two_Pointers_Problems_and_Exercises]]
 ```cpp
 // Find pair (a from A, b from B) minimizing |a - b|
 // Both arrays sorted. Two pointers, one per array.
-int minAbsDiff(std::vector<int>& A, std::vector<int>& B) {
+int minAbsDiff(vector<int>& A, vector<int>& B) {
     int i = 0, j = 0, minDiff = INT_MAX;
     while (i < (int)A.size() && j < (int)B.size()) {
-        minDiff = std::min(minDiff, std::abs(A[i] - B[j]));
+        minDiff = min(minDiff, abs(A[i] - B[j]));
         // Advance the pointer pointing to the smaller value
         // to try to close the gap
         if (A[i] < B[j]) i++;
@@ -39,7 +39,7 @@ int minAbsDiff(std::vector<int>& A, std::vector<int>& B) {
 **Why tricky**: Standard palindrome check is easy. When you hit a mismatch, you must try deleting either the left or right character and check if the rest is a palindrome. Two choices, but only one delete allowed total.
 
 ```cpp
-bool checkPalindrome(const std::string& s, int lo, int hi) {
+bool checkPalindrome(const string& s, int lo, int hi) {
     while (lo < hi) {
         if (s[lo] != s[hi]) return false;
         lo++; hi--;
@@ -47,7 +47,7 @@ bool checkPalindrome(const std::string& s, int lo, int hi) {
     return true;
 }
 
-bool validPalindrome(std::string s) {
+bool validPalindrome(string s) {
     int left = 0, right = (int)s.size() - 1;
     while (left < right) {
         if (s[left] != s[right]) {
@@ -70,8 +70,8 @@ bool validPalindrome(std::string s) {
 
 ```cpp
 // Sorted array. Count pairs (i,j) where i<j and nums[i]+nums[j] < target.
-int countPairs(std::vector<int>& nums, int target) {
-    std::sort(nums.begin(), nums.end());
+int countPairs(vector<int>& nums, int target) {
+    sort(nums.begin(), nums.end());
     int left = 0, right = (int)nums.size() - 1;
     int count = 0;
     while (left < right) {
@@ -98,8 +98,8 @@ int countPairs(std::vector<int>& nums, int target) {
 
 ```cpp
 #include <unordered_map>
-int minWindowArray(std::vector<int>& A, std::vector<int>& B) {
-    std::unordered_map<int,int> need, have;
+int minWindowArray(vector<int>& A, vector<int>& B) {
+    unordered_map<int,int> need, have;
     for (int x : B) need[x]++;
     int formed = 0, required = need.size();
     int left = 0, minLen = INT_MAX;
@@ -109,7 +109,7 @@ int minWindowArray(std::vector<int>& A, std::vector<int>& B) {
         if (need.count(A[right]) && have[A[right]] == need[A[right]])
             formed++;
         while (formed == required) {
-            minLen = std::min(minLen, right - left + 1);
+            minLen = min(minLen, right - left + 1);
             have[A[left]]--;
             if (need.count(A[left]) && have[A[left]] < need[A[left]])
                 formed--;
@@ -129,10 +129,10 @@ int minWindowArray(std::vector<int>& A, std::vector<int>& B) {
 ```cpp
 // Find all split indices where prefix[i] == totalSum - prefix[i]
 // i.e., prefix[i] = totalSum / 2
-std::vector<int> equalSumSplits(std::vector<int>& nums) {
+vector<int> equalSumSplits(vector<int>& nums) {
     long long total = 0;
     for (int x : nums) total += x;
-    std::vector<int> splits;
+    vector<int> splits;
     long long prefix = 0;
     for (int i = 0; i < (int)nums.size() - 1; i++) {
         prefix += nums[i];
@@ -150,13 +150,13 @@ std::vector<int> equalSumSplits(std::vector<int>& nums) {
 
 ```cpp
 #include <queue>
-int trapRainWater(std::vector<std::vector<int>>& heightMap) {
+int trapRainWater(vector<vector<int>>& heightMap) {
     if (heightMap.empty()) return 0;
     int rows = heightMap.size(), cols = heightMap[0].size();
     // min-heap: {height, row, col}
-    using T = std::tuple<int,int,int>;
-    std::priority_queue<T, std::vector<T>, std::greater<T>> pq;
-    std::vector<std::vector<bool>> visited(rows, std::vector<bool>(cols, false));
+    using T = tuple<int,int,int>;
+    priority_queue<T, vector<T>, greater<T>> pq;
+    vector<vector<bool>> visited(rows, vector<bool>(cols, false));
 
     // Push all boundary cells
     for (int r = 0; r < rows; r++) {
@@ -184,9 +184,9 @@ int trapRainWater(std::vector<std::vector<int>>& heightMap) {
                 continue;
             visited[nr][nc] = true;
             // Water trapped = how much current cell is below the boundary minimum
-            water += std::max(0, h - heightMap[nr][nc]);
+            water += max(0, h - heightMap[nr][nc]);
             // Push with max height (the "wall" height for neighbors)
-            pq.push({std::max(h, heightMap[nr][nc]), nr, nc});
+            pq.push({max(h, heightMap[nr][nc]), nr, nc});
         }
     }
     return water;
@@ -203,13 +203,13 @@ int trapRainWater(std::vector<std::vector<int>>& heightMap) {
 ```cpp
 // Partition into: < lo | lo..hi | > hi
 // Uses three pointers: left, mid, right
-void threeWayPartition(std::vector<int>& arr, int lo, int hi) {
+void threeWayPartition(vector<int>& arr, int lo, int hi) {
     int left = 0, mid = 0, right = (int)arr.size() - 1;
     while (mid <= right) {
         if (arr[mid] < lo) {
-            std::swap(arr[left++], arr[mid++]);
+            swap(arr[left++], arr[mid++]);
         } else if (arr[mid] > hi) {
-            std::swap(arr[mid], arr[right--]);
+            swap(arr[mid], arr[right--]);
             // do not increment mid -- newly swapped element unprocessed
         } else {
             mid++;

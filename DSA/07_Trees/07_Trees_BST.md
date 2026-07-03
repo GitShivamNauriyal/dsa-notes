@@ -208,7 +208,7 @@ TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
 
 ```cpp
 // Binary search style: always pick the middle as root for balance
-TreeNode* sortedArrayToBST(std::vector<int>& nums, int lo, int hi) {
+TreeNode* sortedArrayToBST(vector<int>& nums, int lo, int hi) {
     if (lo > hi) return nullptr;
     int mid = lo + (hi - lo) / 2;
     TreeNode* root = new TreeNode(nums[mid]);
@@ -216,7 +216,7 @@ TreeNode* sortedArrayToBST(std::vector<int>& nums, int lo, int hi) {
     root->right = sortedArrayToBST(nums, mid + 1, hi);
     return root;
 }
-TreeNode* sortedArrayToBST(std::vector<int>& nums) {
+TreeNode* sortedArrayToBST(vector<int>& nums) {
     return sortedArrayToBST(nums, 0, (int)nums.size() - 1);
 }
 ```

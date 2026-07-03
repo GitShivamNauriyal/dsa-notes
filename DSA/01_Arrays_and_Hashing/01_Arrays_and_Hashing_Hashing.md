@@ -29,8 +29,8 @@ A hash function converts a key (integer, string, etc.) into an array index. Good
 #include <vector>
 
 // Count frequency of each element
-std::unordered_map<int, int> freq;
-std::vector<int> nums = {1, 2, 2, 3, 3, 3};
+unordered_map<int, int> freq;
+vector<int> nums = {1, 2, 2, 3, 3, 3};
 
 for (int x : nums) {
     freq[x]++;       // if key not present, it's default-constructed to 0, then incremented
@@ -51,7 +51,7 @@ if (freq.contains(3)) {  // .contains() — cleaner, C++20
 
 // Iterate
 for (auto& [key, val] : freq) {  // C++17 structured binding
-    std::cout << key << " appears " << val << " times\n";
+    cout << key << " appears " << val << " times\n";
 }
 ```
 
@@ -65,16 +65,16 @@ for (auto& [key, val] : freq) {  // C++17 structured binding
 #include <unordered_set>
 #include <vector>
 
-std::vector<int> nums = {1, 2, 3, 4, 5};
-std::unordered_set<int> seen(nums.begin(), nums.end()); // O(n) build
+vector<int> nums = {1, 2, 3, 4, 5};
+unordered_set<int> seen(nums.begin(), nums.end()); // O(n) build
 
 bool hasFour = seen.count(4);        // O(1) average
 seen.insert(6);                       // O(1) average
 seen.erase(2);                        // O(1) average
 
 // Check two arrays for common elements: O(n + m) total
-std::vector<int> a = {1,2,3}, b = {3,4,5};
-std::unordered_set<int> setA(a.begin(), a.end());
+vector<int> a = {1,2,3}, b = {3,4,5};
+unordered_set<int> setA(a.begin(), a.end());
 for (int x : b) {
     if (setA.count(x)) {
         // x is in both arrays
@@ -93,8 +93,8 @@ for (int x : b) {
 #include <vector>
 
 // LeetCode 1 — Two Sum
-std::vector<int> twoSum(std::vector<int>& nums, int target) {
-    std::unordered_map<int, int> indexMap;  // value → index
+vector<int> twoSum(vector<int>& nums, int target) {
+    unordered_map<int, int> indexMap;  // value → index
     
     for (int i = 0; i < (int)nums.size(); i++) {
         int complement = target - nums[i];
@@ -123,18 +123,18 @@ std::vector<int> twoSum(std::vector<int>& nums, int target) {
 
 // LeetCode 49 — Group Anagrams
 // Key insight: anagrams, when sorted, are identical. Use sorted string as key.
-std::vector<std::vector<std::string>> groupAnagrams(
-    std::vector<std::string>& strs
+vector<vector<string>> groupAnagrams(
+    vector<string>& strs
 ) {
-    std::unordered_map<std::string, std::vector<std::string>> groups;
+    unordered_map<string, vector<string>> groups;
     
-    for (std::string& s : strs) {
-        std::string key = s;
-        std::sort(key.begin(), key.end());  // sort to get canonical form
+    for (string& s : strs) {
+        string key = s;
+        sort(key.begin(), key.end());  // sort to get canonical form
         groups[key].push_back(s);
     }
     
-    std::vector<std::vector<std::string>> result;
+    vector<vector<string>> result;
     for (auto& [key, group] : groups) {
         result.push_back(group);
     }
@@ -165,15 +165,15 @@ struct CustomHash {
     
     size_t operator()(uint64_t x) const {
         // Seed with random value to prevent hack reproducibility
-        static const uint64_t SEED = std::chrono::steady_clock::now()
+        static const uint64_t SEED = chrono::steady_clock::now()
                                        .time_since_epoch().count();
         return splitmix64(x + SEED);
     }
 };
 
 // Usage: drop-in replacement
-std::unordered_map<int, int, CustomHash> safe_map;
-std::unordered_set<int, CustomHash> safe_set;
+unordered_map<int, int, CustomHash> safe_map;
+unordered_set<int, CustomHash> safe_set;
 // Use this on Codeforces whenever you use unordered containers
 ```
 
@@ -202,12 +202,12 @@ new = "bcd" → hash = b*B² + c*B + d
 
 // Find all starting indices where pattern appears in text
 // Rabin-Karp Algorithm
-std::vector<int> rabinKarp(const std::string& text, const std::string& pattern) {
+vector<int> rabinKarp(const string& text, const string& pattern) {
     const long long MOD = 1e9 + 7;  // large prime
     const long long BASE = 31;       // prime larger than alphabet size
 
     int n = text.size(), m = pattern.size();
-    std::vector<int> result;
+    vector<int> result;
 
     if (m > n) return result;
 
@@ -253,7 +253,7 @@ std::vector<int> rabinKarp(const std::string& text, const std::string& pattern) 
 #include <string>
 #include <unordered_set>
 
-bool hasDuplicate(const std::string& s, int L) {
+bool hasDuplicate(const string& s, int L) {
     const long long MOD = (1LL << 61) - 1;  // Mersenne prime — fewer collisions
     const long long BASE = 131;
 
@@ -271,7 +271,7 @@ bool hasDuplicate(const std::string& s, int L) {
         if (i < L - 1) highPow = mul(highPow, BASE);
     }
 
-    std::unordered_set<long long> seen;
+    unordered_set<long long> seen;
     seen.insert(hashVal);
 
     for (int i = L; i < (int)s.size(); i++) {
@@ -293,14 +293,14 @@ bool hasDuplicate(const std::string& s, int L) {
 #include <vector>
 #include <algorithm>
 
-std::vector<int> compress(std::vector<int> arr) {
-    std::vector<int> sorted = arr;
-    std::sort(sorted.begin(), sorted.end());
-    sorted.erase(std::unique(sorted.begin(), sorted.end()), sorted.end()); // remove dups
+vector<int> compress(vector<int> arr) {
+    vector<int> sorted = arr;
+    sort(sorted.begin(), sorted.end());
+    sorted.erase(unique(sorted.begin(), sorted.end()), sorted.end()); // remove dups
 
     for (int& x : arr) {
         // Replace each value with its rank (0-indexed)
-        x = (int)(std::lower_bound(sorted.begin(), sorted.end(), x) - sorted.begin());
+        x = (int)(lower_bound(sorted.begin(), sorted.end(), x) - sorted.begin());
     }
     return arr;
 }
@@ -323,14 +323,14 @@ Already shown in Pattern 4.
 ```cpp
 // Key insight: only start counting from the beginning of a sequence
 // (i.e., when x-1 is NOT in the set)
-int longestConsecutive(std::vector<int>& nums) {
-    std::unordered_set<int> s(nums.begin(), nums.end());
+int longestConsecutive(vector<int>& nums) {
+    unordered_set<int> s(nums.begin(), nums.end());
     int best = 0;
     for (int x : s) {
         if (!s.count(x - 1)) {   // x is the start of a sequence
             int len = 1;
             while (s.count(x + len)) len++;
-            best = std::max(best, len);
+            best = max(best, len);
         }
     }
     return best;
@@ -341,8 +341,8 @@ int longestConsecutive(std::vector<int>& nums) {
 ### Example 4 — LC 217: Contains Duplicate (Easy)
 
 ```cpp
-bool containsDuplicate(std::vector<int>& nums) {
-    std::unordered_set<int> seen;
+bool containsDuplicate(vector<int>& nums) {
+    unordered_set<int> seen;
     for (int x : nums) {
         if (seen.count(x)) return true;
         seen.insert(x);

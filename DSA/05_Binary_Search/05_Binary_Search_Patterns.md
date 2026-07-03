@@ -37,7 +37,7 @@ left=2 > right=1: loop ends -> return -1
 ```cpp
 #include <vector>
 
-int binarySearch(const std::vector<int>& nums, int target) {
+int binarySearch(const vector<int>& nums, int target) {
     int left = 0, right = (int)nums.size() - 1;
 
     while (left <= right) {
@@ -76,7 +76,7 @@ left=1 == right=1 -> return 1    (first index where value >= 3)
 ```
 
 ```cpp
-int lowerBound(const std::vector<int>& nums, int target) {
+int lowerBound(const vector<int>& nums, int target) {
     int left = 0, right = (int)nums.size();  // right = n, NOT n-1
 
     while (left < right) {
@@ -90,7 +90,7 @@ int lowerBound(const std::vector<int>& nums, int target) {
     return left;
     // Verify: if left < n && nums[left] == target, then target exists
 }
-// STL: std::lower_bound(nums.begin(), nums.end(), target) - nums.begin()
+// STL: lower_bound(nums.begin(), nums.end(), target) - nums.begin()
 ```
 
 ---
@@ -101,7 +101,7 @@ int lowerBound(const std::vector<int>& nums, int target) {
 **Use case**: Count occurrences of target = upperBound(target) - lowerBound(target).
 
 ```cpp
-int upperBound(const std::vector<int>& nums, int target) {
+int upperBound(const vector<int>& nums, int target) {
     int left = 0, right = (int)nums.size();
 
     while (left < right) {
@@ -114,10 +114,10 @@ int upperBound(const std::vector<int>& nums, int target) {
     }
     return left;
 }
-// STL: std::upper_bound(nums.begin(), nums.end(), target) - nums.begin()
+// STL: upper_bound(nums.begin(), nums.end(), target) - nums.begin()
 
 // Count occurrences of target in sorted array
-int countOccurrences(const std::vector<int>& nums, int target) {
+int countOccurrences(const vector<int>& nums, int target) {
     return upperBound(nums, target) - lowerBound(nums, target);
 }
 ```
@@ -154,7 +154,7 @@ Find maximum answer:
 // LC 1011 -- Capacity to Ship Packages Within D Days
 // Binary search on answer = ship capacity
 
-bool canShip(const std::vector<int>& weights, int capacity, int days) {
+bool canShip(const vector<int>& weights, int capacity, int days) {
     int daysUsed = 1, load = 0;
     for (int w : weights) {
         if (load + w > capacity) { daysUsed++; load = 0; }
@@ -163,11 +163,11 @@ bool canShip(const std::vector<int>& weights, int capacity, int days) {
     return daysUsed <= days;
 }
 
-int shipWithinDays(const std::vector<int>& weights, int days) {
+int shipWithinDays(const vector<int>& weights, int days) {
     // Minimum capacity: must carry the heaviest single package
-    int low = *std::max_element(weights.begin(), weights.end());
+    int low = *max_element(weights.begin(), weights.end());
     // Maximum capacity: carry everything in one day
-    int high = std::accumulate(weights.begin(), weights.end(), 0);
+    int high = accumulate(weights.begin(), weights.end(), 0);
     int result = high;
 
     while (low <= high) {
@@ -188,13 +188,13 @@ int shipWithinDays(const std::vector<int>& weights, int days) {
 
 ```cpp
 // LC 875 -- Koko Eating Bananas
-bool canEat(std::vector<int>& piles, int k, int h) {
+bool canEat(vector<int>& piles, int k, int h) {
     long long hours = 0;
     for (int p : piles) hours += (p + k - 1) / k;  // ceil(p/k)
     return hours <= h;
 }
-int minEatingSpeed(std::vector<int>& piles, int h) {
-    int low = 1, high = *std::max_element(piles.begin(), piles.end()), ans = high;
+int minEatingSpeed(vector<int>& piles, int h) {
+    int low = 1, high = *max_element(piles.begin(), piles.end()), ans = high;
     while (low <= high) {
         int mid = low + (high - low) / 2;
         if (canEat(piles, mid, h)) { ans = mid; high = mid - 1; }
@@ -204,7 +204,7 @@ int minEatingSpeed(std::vector<int>& piles, int h) {
 }
 
 // LC 410 -- Split Array Largest Sum (minimize the maximum sum among k groups)
-bool canSplit(std::vector<int>& nums, int maxSum, int k) {
+bool canSplit(vector<int>& nums, int maxSum, int k) {
     int parts = 1, cur = 0;
     for (int x : nums) {
         if (cur + x > maxSum) { parts++; cur = 0; }
@@ -212,9 +212,9 @@ bool canSplit(std::vector<int>& nums, int maxSum, int k) {
     }
     return parts <= k;
 }
-int splitArray(std::vector<int>& nums, int k) {
-    int low = *std::max_element(nums.begin(), nums.end());
-    int high = std::accumulate(nums.begin(), nums.end(), 0), ans = high;
+int splitArray(vector<int>& nums, int k) {
+    int low = *max_element(nums.begin(), nums.end());
+    int high = accumulate(nums.begin(), nums.end(), 0), ans = high;
     while (low <= high) {
         int mid = low + (high - low) / 2;
         if (canSplit(nums, mid, k)) { ans = mid; high = mid - 1; }
@@ -243,7 +243,7 @@ target=0: not in [4,7] -> search right half
 
 ```cpp
 // LC 33 -- Search in Rotated Sorted Array
-int search(std::vector<int>& nums, int target) {
+int search(vector<int>& nums, int target) {
     int left = 0, right = (int)nums.size() - 1;
 
     while (left <= right) {
@@ -288,7 +288,7 @@ mid = nums[4]=0 -> left == right -> return nums[left]=0
 
 ```cpp
 // LC 153 -- Find Minimum in Rotated Sorted Array
-int findMin(std::vector<int>& nums) {
+int findMin(vector<int>& nums) {
     int left = 0, right = (int)nums.size() - 1;
     while (left < right) {
         int mid = left + (right - left) / 2;
@@ -311,7 +311,7 @@ int findMin(std::vector<int>& nums) {
 
 ```cpp
 // LC 162 -- Find Peak Element (any peak in array where neighbors are smaller)
-int findPeakElement(std::vector<int>& nums) {
+int findPeakElement(vector<int>& nums) {
     int left = 0, right = (int)nums.size() - 1;
     while (left < right) {
         int mid = left + (right - left) / 2;
@@ -325,7 +325,7 @@ int findPeakElement(std::vector<int>& nums) {
 }
 
 // LC 852 -- Peak Index in a Mountain Array
-int peakIndexInMountainArray(std::vector<int>& arr) {
+int peakIndexInMountainArray(vector<int>& arr) {
     int left = 0, right = (int)arr.size() - 1;
     while (left < right) {
         int mid = left + (right - left) / 2;
@@ -344,27 +344,27 @@ int peakIndexInMountainArray(std::vector<int>& arr) {
 #include <algorithm>
 #include <vector>
 
-std::vector<int> v = {1, 2, 2, 3, 4, 5};
+vector<int> v = {1, 2, 2, 3, 4, 5};
 
 // Check existence
-bool found = std::binary_search(v.begin(), v.end(), 3);  // true
+bool found = binary_search(v.begin(), v.end(), 3);  // true
 
 // First >= target
-auto it1 = std::lower_bound(v.begin(), v.end(), 2);
+auto it1 = lower_bound(v.begin(), v.end(), 2);
 int idx1 = it1 - v.begin();  // = 1 (first 2)
 
 // First > target
-auto it2 = std::upper_bound(v.begin(), v.end(), 2);
+auto it2 = upper_bound(v.begin(), v.end(), 2);
 int idx2 = it2 - v.begin();  // = 3 (first element > 2)
 
 // Count of target
 int cnt = (int)(it2 - it1);  // = 2 (two 2s)
 
 // On custom comparator (sorts by second element of pair, searches by second)
-std::vector<std::pair<int,int>> vp = {{1,3},{2,5},{3,7}};
-// std::lower_bound with comparator -- finds first pair where second >= 5
-auto it3 = std::lower_bound(vp.begin(), vp.end(), std::make_pair(0, 5),
-    [](const std::pair<int,int>& p, const std::pair<int,int>& val) {
+vector<pair<int,int>> vp = {{1,3},{2,5},{3,7}};
+// lower_bound with comparator -- finds first pair where second >= 5
+auto it3 = lower_bound(vp.begin(), vp.end(), make_pair(0, 5),
+    [](const pair<int,int>& p, const pair<int,int>& val) {
         return p.second < val.second;
     });
 ```

@@ -58,7 +58,7 @@ class Trie {
 public:
     Trie() { root = new TrieNode(); }
 
-    void insert(const std::string& word) {
+    void insert(const string& word) {
         TrieNode* cur = root;
         for (char c : word) {
             int idx = c - 'a';
@@ -70,7 +70,7 @@ public:
         cur->isEnd = true;
     }
 
-    bool search(const std::string& word) {
+    bool search(const string& word) {
         TrieNode* cur = root;
         for (char c : word) {
             int idx = c - 'a';
@@ -80,7 +80,7 @@ public:
         return cur->isEnd;  // must be end of word, not just a prefix
     }
 
-    bool startsWith(const std::string& prefix) {
+    bool startsWith(const string& prefix) {
         TrieNode* cur = root;
         for (char c : prefix) {
             int idx = c - 'a';
@@ -98,7 +98,7 @@ public:
 
 ```cpp
 struct TrieNodeMap {
-    std::unordered_map<char, TrieNodeMap*> children;
+    unordered_map<char, TrieNodeMap*> children;
     bool isEnd = false;
 };
 // Use when: Unicode characters, arbitrary symbols, or when words are sparse
@@ -126,7 +126,7 @@ class TrieWithCount {
 public:
     TrieWithCount() { root = new TrieNodeCount(); }
 
-    void insert(const std::string& word) {
+    void insert(const string& word) {
         TrieNodeCount* cur = root;
         for (char c : word) {
             int idx = c - 'a';
@@ -137,7 +137,7 @@ public:
         cur->wordCount++;
     }
 
-    int countWordsEqualTo(const std::string& word) {
+    int countWordsEqualTo(const string& word) {
         TrieNodeCount* cur = root;
         for (char c : word) {
             int idx = c - 'a';
@@ -147,7 +147,7 @@ public:
         return cur->wordCount;
     }
 
-    int countWordsStartingWith(const std::string& prefix) {
+    int countWordsStartingWith(const string& prefix) {
         TrieNodeCount* cur = root;
         for (char c : prefix) {
             int idx = c - 'a';
@@ -157,7 +157,7 @@ public:
         return cur->prefixCount;
     }
 
-    void erase(const std::string& word) {
+    void erase(const string& word) {
         if (countWordsEqualTo(word) == 0) return;  // word doesn't exist
         TrieNodeCount* cur = root;
         for (char c : word) {
@@ -179,12 +179,12 @@ public:
 // 1. Current node has exactly one child, AND
 // 2. Current node is not an end of word
 
-std::string longestCommonPrefix(std::vector<std::string>& strs) {
+string longestCommonPrefix(vector<string>& strs) {
     if (strs.empty()) return "";
     Trie trie;
-    for (const std::string& s : strs) trie.insert(s);
+    for (const string& s : strs) trie.insert(s);
 
-    std::string prefix = "";
+    string prefix = "";
     TrieNode* cur = trie.root;  // accessing root directly (make it public or add method)
 
     for (char c : strs[0]) {
@@ -215,15 +215,15 @@ std::string longestCommonPrefix(std::vector<std::string>& strs) {
 ```cpp
 struct WordTrieNode {
     WordTrieNode* children[26];
-    std::string word;  // store full word at terminal node instead of bool
+    string word;  // store full word at terminal node instead of bool
     WordTrieNode() : word("") {
         for (int i = 0; i < 26; i++) children[i] = nullptr;
     }
 };
 
 class Solution {
-    void dfs(std::vector<std::vector<char>>& board, int r, int c,
-             WordTrieNode* node, std::vector<std::string>& result) {
+    void dfs(vector<vector<char>>& board, int r, int c,
+             WordTrieNode* node, vector<string>& result) {
         char ch = board[r][c];
         if (ch == '#') return;  // already visited
         int idx = ch - 'a';
@@ -248,13 +248,13 @@ class Solution {
     }
 
 public:
-    std::vector<std::string> findWords(
-        std::vector<std::vector<char>>& board,
-        std::vector<std::string>& words
+    vector<string> findWords(
+        vector<vector<char>>& board,
+        vector<string>& words
     ) {
         WordTrieNode* root = new WordTrieNode();
         // Build trie
-        for (const std::string& w : words) {
+        for (const string& w : words) {
             WordTrieNode* cur = root;
             for (char c : w) {
                 int idx = c - 'a';
@@ -264,7 +264,7 @@ public:
             cur->word = w;
         }
 
-        std::vector<std::string> result;
+        vector<string> result;
         int rows = board.size(), cols = board[0].size();
         for (int r = 0; r < rows; r++)
             for (int c = 0; c < cols; c++)
@@ -336,11 +336,11 @@ public:
     }
 };
 
-int findMaximumXOR(std::vector<int>& nums) {
+int findMaximumXOR(vector<int>& nums) {
     XorTrie trie;
     for (int x : nums) trie.insert(x);
     int maxVal = 0;
-    for (int x : nums) maxVal = std::max(maxVal, trie.maxXOR(x));
+    for (int x : nums) maxVal = max(maxVal, trie.maxXOR(x));
     return maxVal;
 }
 // Time: O(n * 32) = O(n), Space: O(n * 32) = O(n)
@@ -352,17 +352,17 @@ int findMaximumXOR(std::vector<int>& nums) {
 
 ```cpp
 // Given dictionary of roots, replace each word in sentence with its shortest root
-std::string replaceWords(std::vector<std::string>& dictionary, std::string sentence) {
+string replaceWords(vector<string>& dictionary, string sentence) {
     Trie trie;
-    for (const std::string& root : dictionary) trie.insert(root);
+    for (const string& root : dictionary) trie.insert(root);
 
-    std::istringstream iss(sentence);
-    std::string word, result = "";
+    istringstream iss(sentence);
+    string word, result = "";
     while (iss >> word) {
         if (!result.empty()) result += " ";
         // Find shortest prefix in trie
         TrieNode* cur = trie.root;
-        std::string replacement = "";
+        string replacement = "";
         bool found = false;
         for (char c : word) {
             int idx = c - 'a';

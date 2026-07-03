@@ -19,7 +19,7 @@ links: ["[[05_Binary_Search_Index]]", "[[05_Binary_Search_Problems_and_Exercises
 // Search in an "infinite sorted array" (accessed via get(i) API)
 // Assume get(i) returns INT_MAX if out of bounds
 
-int searchInfinite(std::vector<int>& nums, int target) {
+int searchInfinite(vector<int>& nums, int target) {
     // Phase 1: find bounds by exponential expansion
     int left = 0, right = 1;
     // Double the right boundary until we find a range containing target
@@ -55,7 +55,7 @@ int searchInfinite(std::vector<int>& nums, int target) {
 // Example: find the nth root of m with precision 1e-7
 
 double nthRoot(int n, double m) {
-    double lo = 0, hi = std::max(1.0, m);  // for m<1, root > m, so hi = 1 is enough? No.
+    double lo = 0, hi = max(1.0, m);  // for m<1, root > m, so hi = 1 is enough? No.
     // Actually for m >= 1: root is in [1, m]. For m < 1: root is in [m, 1].
     if (m < 1) { lo = m; hi = 1.0; }
 
@@ -72,7 +72,7 @@ double nthRoot(int n, double m) {
 
 // LC 774 -- Minimize Max Distance to Gas Station
 // Answer is a real number: smallest max gap after adding k stations
-double minMaxGasDist(std::vector<int>& stations, int k) {
+double minMaxGasDist(vector<int>& stations, int k) {
     double lo = 0, hi = stations.back() - stations.front();
 
     auto countNeeded = [&](double d) -> int {
@@ -103,7 +103,7 @@ double minMaxGasDist(std::vector<int>& stations, int k) {
 
 ```cpp
 // LC 74 -- Search a 2D Matrix (Type 1: can flatten)
-bool searchMatrix(std::vector<std::vector<int>>& matrix, int target) {
+bool searchMatrix(vector<vector<int>>& matrix, int target) {
     int rows = matrix.size(), cols = matrix[0].size();
     int left = 0, right = rows * cols - 1;
 
@@ -121,7 +121,7 @@ bool searchMatrix(std::vector<std::vector<int>>& matrix, int target) {
 
 // LC 240 -- Search a 2D Matrix II (Type 2: staircase search)
 // Start from top-right corner. Go left if too big, go down if too small.
-bool searchMatrixII(std::vector<std::vector<int>>& matrix, int target) {
+bool searchMatrixII(vector<vector<int>>& matrix, int target) {
     int r = 0, c = (int)matrix[0].size() - 1;
     while (r < (int)matrix.size() && c >= 0) {
         if (matrix[r][c] == target) return true;
@@ -148,18 +148,18 @@ bool searchMatrixII(std::vector<std::vector<int>>& matrix, int target) {
 // Useful when the "check" function is expensive (e.g., involves segment tree query).
 
 void parallelBinarySearch(
-    std::vector<int>& nums,
-    std::vector<std::tuple<int,int,int>>& queries,  // {l, r, target}
-    std::vector<int>& answers
+    vector<int>& nums,
+    vector<tuple<int,int,int>>& queries,  // {l, r, target}
+    vector<int>& answers
 ) {
     int Q = queries.size(), n = nums.size();
     // Each query tracks its [lo, hi] binary search range
-    std::vector<int> lo(Q, 0), hi(Q, n), mid(Q);
+    vector<int> lo(Q, 0), hi(Q, n), mid(Q);
     answers.assign(Q, n);
 
     for (int iter = 0; iter < 20; iter++) {  // log2(n) rounds
         // Group queries by their current mid
-        std::vector<std::vector<int>> at(n + 1);
+        vector<vector<int>> at(n + 1);
         bool anyActive = false;
         for (int q = 0; q < Q; q++) {
             if (lo[q] < hi[q]) {
@@ -198,7 +198,7 @@ void parallelBinarySearch(
 // Find x in [lo, hi] where f(x) transitions from positive to negative
 // (e.g., profit = revenue - cost, find break-even point)
 
-int findBreakEven(std::function<int(int)> f, int lo, int hi) {
+int findBreakEven(function<int(int)> f, int lo, int hi) {
     while (lo < hi) {
         int mid = lo + (hi - lo) / 2;
         if (f(mid) > 0) lo = mid + 1;  // still positive, look right
@@ -216,7 +216,7 @@ int findBreakEven(std::function<int(int)> f, int lo, int hi) {
 
 ```cpp
 // LC 81 -- Search in Rotated Sorted Array II (with duplicates)
-bool searchWithDups(std::vector<int>& nums, int target) {
+bool searchWithDups(vector<int>& nums, int target) {
     int left = 0, right = (int)nums.size() - 1;
     while (left <= right) {
         int mid = left + (right - left) / 2;
@@ -249,7 +249,7 @@ bool searchWithDups(std::vector<int>& nums, int target) {
 
 ```cpp
 // Count elements <= val in a sorted matrix
-int countLE(std::vector<std::vector<int>>& matrix, int val) {
+int countLE(vector<vector<int>>& matrix, int val) {
     int n = matrix.size(), count = 0;
     int r = n - 1, c = 0;  // start from bottom-left
     while (r >= 0 && c < n) {
@@ -263,7 +263,7 @@ int countLE(std::vector<std::vector<int>>& matrix, int val) {
     return count;
 }
 
-int kthSmallest(std::vector<std::vector<int>>& matrix, int k) {
+int kthSmallest(vector<vector<int>>& matrix, int k) {
     int n = matrix.size();
     int lo = matrix[0][0], hi = matrix[n-1][n-1];
     while (lo < hi) {

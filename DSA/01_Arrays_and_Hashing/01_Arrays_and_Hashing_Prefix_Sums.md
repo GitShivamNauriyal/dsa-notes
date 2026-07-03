@@ -31,9 +31,9 @@ If we pre-store the cumulative sum at every index, subtraction gives us any rang
 // Build prefix sum array
 // prefix[i] = sum of elements from index 0 to i-1
 // (1-indexed prefix for cleaner code — prefix[0] = 0)
-std::vector<int> buildPrefix(const std::vector<int>& arr) {
+vector<int> buildPrefix(const vector<int>& arr) {
     int n = arr.size();
-    std::vector<int> prefix(n + 1, 0);
+    vector<int> prefix(n + 1, 0);
     for (int i = 0; i < n; i++) {
         prefix[i + 1] = prefix[i] + arr[i];
     }
@@ -41,7 +41,7 @@ std::vector<int> buildPrefix(const std::vector<int>& arr) {
 }
 
 // Query: sum from index l to r (0-indexed, inclusive)
-int rangeSum(const std::vector<int>& prefix, int l, int r) {
+int rangeSum(const vector<int>& prefix, int l, int r) {
     return prefix[r + 1] - prefix[l];
     // prefix[r+1] = sum(0..r), prefix[l] = sum(0..l-1)
     // difference = sum(l..r)
@@ -70,8 +70,8 @@ Rearranging: `prefix[i] = prefix[j] - k`.
 
 // Count subarrays with sum equal to k
 // LeetCode 560 — Subarray Sum Equals K
-int subarraySum(std::vector<int>& nums, int k) {
-    std::unordered_map<int, int> freq;  // freq[prefix_sum] = count
+int subarraySum(vector<int>& nums, int k) {
+    unordered_map<int, int> freq;  // freq[prefix_sum] = count
     freq[0] = 1;   // empty prefix (sum 0 seen once, before we start)
     
     int prefixSum = 0;
@@ -123,14 +123,14 @@ Answer = Big - Top - Left + Corner
 #include <vector>
 
 struct Matrix2DPrefix {
-    std::vector<std::vector<int>> prefix;
+    vector<vector<int>> prefix;
     int rows, cols;
 
     // Build: O(rows * cols)
-    Matrix2DPrefix(const std::vector<std::vector<int>>& grid) {
+    Matrix2DPrefix(const vector<vector<int>>& grid) {
         rows = grid.size();
         cols = grid[0].size();
-        prefix.assign(rows + 1, std::vector<int>(cols + 1, 0));
+        prefix.assign(rows + 1, vector<int>(cols + 1, 0));
         
         for (int i = 1; i <= rows; i++) {
             for (int j = 1; j <= cols; j++) {
@@ -175,11 +175,11 @@ Then reconstruct `arr` using prefix sum of `diff`.
 
 // Range update: add val to arr[l..r] for multiple queries
 // Then get final array
-std::vector<int> rangeUpdateAndQuery(
+vector<int> rangeUpdateAndQuery(
     int n,
-    std::vector<std::tuple<int,int,int>>& updates  // {l, r, val}
+    vector<tuple<int,int,int>>& updates  // {l, r, val}
 ) {
-    std::vector<int> diff(n + 1, 0);  // difference array, 1 extra for safety
+    vector<int> diff(n + 1, 0);  // difference array, 1 extra for safety
 
     for (auto& [l, r, val] : updates) {  // C++17 structured binding
         diff[l] += val;
@@ -187,7 +187,7 @@ std::vector<int> rangeUpdateAndQuery(
     }
 
     // Reconstruct by taking prefix sum of diff
-    std::vector<int> result(n, 0);
+    vector<int> result(n, 0);
     int running = 0;
     for (int i = 0; i < n; i++) {
         running += diff[i];
@@ -216,16 +216,16 @@ std::vector<int> rangeUpdateAndQuery(
 ```cpp
 #include <vector>
 
-std::vector<int> buildXorPrefix(const std::vector<int>& arr) {
+vector<int> buildXorPrefix(const vector<int>& arr) {
     int n = arr.size();
-    std::vector<int> prefix(n + 1, 0);
+    vector<int> prefix(n + 1, 0);
     for (int i = 0; i < n; i++) {
         prefix[i + 1] = prefix[i] ^ arr[i];
     }
     return prefix;
 }
 
-int xorQuery(const std::vector<int>& prefix, int l, int r) {
+int xorQuery(const vector<int>& prefix, int l, int r) {
     return prefix[r + 1] ^ prefix[l];
 }
 // If prefix[l] = XOR(0..l-1), prefix[r+1] = XOR(0..r),
@@ -242,9 +242,9 @@ int xorQuery(const std::vector<int>& prefix, int l, int r) {
 
 ```cpp
 class NumArray {
-    std::vector<int> prefix;
+    vector<int> prefix;
 public:
-    NumArray(std::vector<int>& nums) {
+    NumArray(vector<int>& nums) {
         int n = nums.size();
         prefix.resize(n + 1, 0);
         for (int i = 0; i < n; i++)
@@ -263,11 +263,11 @@ public:
 
 ```cpp
 class NumMatrix {
-    std::vector<std::vector<int>> prefix;
+    vector<vector<int>> prefix;
 public:
-    NumMatrix(std::vector<std::vector<int>>& matrix) {
+    NumMatrix(vector<vector<int>>& matrix) {
         int r = matrix.size(), c = matrix[0].size();
-        prefix.assign(r + 1, std::vector<int>(c + 1, 0));
+        prefix.assign(r + 1, vector<int>(c + 1, 0));
         for (int i = 1; i <= r; i++)
             for (int j = 1; j <= c; j++)
                 prefix[i][j] = matrix[i-1][j-1]
@@ -295,16 +295,16 @@ Already shown in Pattern 2. Key idea: `freq[prefixSum - k]` gives how many subar
 This is a direct application of **difference array**.
 
 ```cpp
-std::vector<int> corpFlightBookings(
-    std::vector<std::vector<int>>& bookings, int n
+vector<int> corpFlightBookings(
+    vector<vector<int>>& bookings, int n
 ) {
-    std::vector<int> diff(n + 2, 0);
+    vector<int> diff(n + 2, 0);
     for (auto& b : bookings) {
         int first = b[0], last = b[1], seats = b[2];
         diff[first] += seats;
         diff[last + 1] -= seats;
     }
-    std::vector<int> ans(n, 0);
+    vector<int> ans(n, 0);
     int running = 0;
     for (int i = 1; i <= n; i++) {
         running += diff[i];

@@ -60,7 +60,7 @@ class WordDictionary {
     };
     WTrieNode* root;
 
-    bool dfs(WTrieNode* node, const std::string& word, int idx) {
+    bool dfs(WTrieNode* node, const string& word, int idx) {
         if (idx == (int)word.size()) return node->isEnd;
         char c = word[idx];
         if (c == '.') {
@@ -77,7 +77,7 @@ class WordDictionary {
 public:
     WordDictionary() { root = new WTrieNode(); }
 
-    void addWord(std::string word) {
+    void addWord(string word) {
         WTrieNode* cur = root;
         for (char c : word) {
             int i = c - 'a';
@@ -87,7 +87,7 @@ public:
         cur->isEnd = true;
     }
 
-    bool search(std::string word) { return dfs(root, word, 0); }
+    bool search(string word) { return dfs(root, word, 0); }
 };
 ```
 
@@ -98,21 +98,21 @@ public:
 ```cpp
 // Insert all products, then for each prefix of searchWord,
 // collect up to 3 lexicographically smallest matches via DFS
-std::vector<std::vector<std::string>> suggestedProducts(
-    std::vector<std::string>& products, std::string searchWord
+vector<vector<string>> suggestedProducts(
+    vector<string>& products, string searchWord
 ) {
     Trie trie;  // extended with DFS collect method
-    for (const std::string& p : products) trie.insert(p);
+    for (const string& p : products) trie.insert(p);
 
     // Simpler approach: sort + binary search (O(n log n + L * log n))
-    std::sort(products.begin(), products.end());
-    std::vector<std::vector<std::string>> result;
-    std::string prefix = "";
+    sort(products.begin(), products.end());
+    vector<vector<string>> result;
+    string prefix = "";
 
     for (char c : searchWord) {
         prefix += c;
-        auto it = std::lower_bound(products.begin(), products.end(), prefix);
-        std::vector<std::string> suggestions;
+        auto it = lower_bound(products.begin(), products.end(), prefix);
+        vector<string> suggestions;
         for (int i = 0; i < 3 && it != products.end(); i++, ++it) {
             // Check if this product still starts with prefix
             if (it->substr(0, prefix.size()) == prefix)

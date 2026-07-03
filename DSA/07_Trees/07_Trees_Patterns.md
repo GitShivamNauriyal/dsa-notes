@@ -47,8 +47,8 @@ bool hasPathSum(TreeNode* root, int targetSum) {
 ### Path Sum II -- Find all root-to-leaf paths with given sum (LC 113)
 
 ```cpp
-void dfs(TreeNode* node, int remain, std::vector<int>& path,
-         std::vector<std::vector<int>>& result) {
+void dfs(TreeNode* node, int remain, vector<int>& path,
+         vector<vector<int>>& result) {
     if (!node) return;
     path.push_back(node->val);
     if (!node->left && !node->right && remain == node->val) {
@@ -59,9 +59,9 @@ void dfs(TreeNode* node, int remain, std::vector<int>& path,
     path.pop_back();  // backtrack
 }
 
-std::vector<std::vector<int>> pathSum(TreeNode* root, int targetSum) {
-    std::vector<std::vector<int>> result;
-    std::vector<int> path;
+vector<vector<int>> pathSum(TreeNode* root, int targetSum) {
+    vector<vector<int>> result;
+    vector<int> path;
     dfs(root, targetSum, path, result);
     return result;
 }
@@ -73,11 +73,11 @@ std::vector<std::vector<int>> pathSum(TreeNode* root, int targetSum) {
 
 ```cpp
 int pathSumIII(TreeNode* root, long long targetSum) {
-    std::unordered_map<long long, int> prefixCount;
+    unordered_map<long long, int> prefixCount;
     prefixCount[0] = 1;  // empty path has sum 0
     int result = 0;
 
-    std::function<void(TreeNode*, long long)> dfs = [&](TreeNode* node, long long cur) {
+    function<void(TreeNode*, long long)> dfs = [&](TreeNode* node, long long cur) {
         if (!node) return;
         cur += node->val;
         result += prefixCount[cur - targetSum];  // paths ending here with sum = target
@@ -91,7 +91,7 @@ int pathSumIII(TreeNode* root, long long targetSum) {
     return result;
 }
 // Time: O(n), Space: O(n)
-// std::function used here for concise lambda recursion -- slight overhead vs named function
+// function used here for concise lambda recursion -- slight overhead vs named function
 ```
 
 ### Maximum Path Sum (LC 124) -- Any Node to Any Node
@@ -100,14 +100,14 @@ int pathSumIII(TreeNode* root, long long targetSum) {
 int maxPathHelper(TreeNode* root, int& globalMax) {
     if (!root) return 0;
     // Only include a child's contribution if it's positive
-    int left  = std::max(0, maxPathHelper(root->left, globalMax));
-    int right = std::max(0, maxPathHelper(root->right, globalMax));
+    int left  = max(0, maxPathHelper(root->left, globalMax));
+    int right = max(0, maxPathHelper(root->right, globalMax));
 
     // Path through this node = left + root->val + right
-    globalMax = std::max(globalMax, left + root->val + right);
+    globalMax = max(globalMax, left + root->val + right);
 
     // Return max gain if we continue upward (can only pick one branch)
-    return root->val + std::max(left, right);
+    return root->val + max(left, right);
 }
 
 int maxPathSum(TreeNode* root) {
@@ -130,9 +130,9 @@ int maxPathSum(TreeNode* root) {
 - Use the sizes to split preorder accordingly.
 
 ```cpp
-TreeNode* build(std::vector<int>& pre, int preL, int preR,
-                std::vector<int>& in,  int inL,  int inR,
-                std::unordered_map<int,int>& inMap) {
+TreeNode* build(vector<int>& pre, int preL, int preR,
+                vector<int>& in,  int inL,  int inR,
+                unordered_map<int,int>& inMap) {
     if (preL > preR) return nullptr;
     TreeNode* root = new TreeNode(pre[preL]);
     int mid = inMap[pre[preL]];     // root's position in inorder
@@ -145,8 +145,8 @@ TreeNode* build(std::vector<int>& pre, int preL, int preR,
     return root;
 }
 
-TreeNode* buildTree(std::vector<int>& preorder, std::vector<int>& inorder) {
-    std::unordered_map<int,int> inMap;
+TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+    unordered_map<int,int> inMap;
     for (int i = 0; i < (int)inorder.size(); i++) inMap[inorder[i]] = i;
     return build(preorder, 0, preorder.size()-1, inorder, 0, inorder.size()-1, inMap);
 }
@@ -157,9 +157,9 @@ TreeNode* buildTree(std::vector<int>& preorder, std::vector<int>& inorder) {
 
 ```cpp
 // Postorder's last element is always the root -- mirror of above
-TreeNode* buildFromPost(std::vector<int>& in, int inL, int inR,
-                        std::vector<int>& post, int postL, int postR,
-                        std::unordered_map<int,int>& inMap) {
+TreeNode* buildFromPost(vector<int>& in, int inL, int inR,
+                        vector<int>& post, int postL, int postR,
+                        unordered_map<int,int>& inMap) {
     if (postL > postR) return nullptr;
     TreeNode* root = new TreeNode(post[postR]);  // last element = root
     int mid = inMap[post[postR]];
@@ -177,10 +177,10 @@ TreeNode* buildFromPost(std::vector<int>& in, int inL, int inR,
 
 ```cpp
 // Right Side View (LC 199): last node at each level in BFS
-std::vector<int> rightSideView(TreeNode* root) {
-    std::vector<int> result;
+vector<int> rightSideView(TreeNode* root) {
+    vector<int> result;
     if (!root) return result;
-    std::queue<TreeNode*> q;
+    queue<TreeNode*> q;
     q.push(root);
     while (!q.empty()) {
         int sz = q.size();
@@ -196,10 +196,10 @@ std::vector<int> rightSideView(TreeNode* root) {
 
 // Vertical Order Traversal (LC 987): BFS with column tracking
 // For each node, track (row, col). col: left child = col-1, right = col+1.
-std::vector<std::vector<int>> verticalTraversal(TreeNode* root) {
+vector<vector<int>> verticalTraversal(TreeNode* root) {
     // {col -> {row -> [vals]}}
-    std::map<int, std::map<int, std::multiset<int>>> data;
-    std::queue<std::tuple<TreeNode*,int,int>> q;  // {node, row, col}
+    map<int, map<int, multiset<int>>> data;
+    queue<tuple<TreeNode*,int,int>> q;  // {node, row, col}
     q.push({root, 0, 0});
     while (!q.empty()) {
         auto [node, row, col] = q.front(); q.pop();
@@ -207,9 +207,9 @@ std::vector<std::vector<int>> verticalTraversal(TreeNode* root) {
         if (node->left)  q.push({node->left,  row+1, col-1});
         if (node->right) q.push({node->right, row+1, col+1});
     }
-    std::vector<std::vector<int>> result;
+    vector<vector<int>> result;
     for (auto& [col, rows] : data) {
-        std::vector<int> colVals;
+        vector<int> colVals;
         for (auto& [row, vals] : rows)
             for (int v : vals) colVals.push_back(v);
         result.push_back(colVals);
@@ -224,26 +224,26 @@ std::vector<std::vector<int>> verticalTraversal(TreeNode* root) {
 
 ```cpp
 // Encode tree to string, decode back. Use preorder with null markers.
-std::string serialize(TreeNode* root) {
+string serialize(TreeNode* root) {
     if (!root) return "null,";
-    return std::to_string(root->val) + "," +
+    return to_string(root->val) + "," +
            serialize(root->left) + serialize(root->right);
 }
 
-TreeNode* deserializeHelper(std::queue<std::string>& tokens) {
-    std::string token = tokens.front(); tokens.pop();
+TreeNode* deserializeHelper(queue<string>& tokens) {
+    string token = tokens.front(); tokens.pop();
     if (token == "null") return nullptr;
-    TreeNode* node = new TreeNode(std::stoi(token));
+    TreeNode* node = new TreeNode(stoi(token));
     node->left  = deserializeHelper(tokens);
     node->right = deserializeHelper(tokens);
     return node;
 }
 
-TreeNode* deserialize(std::string data) {
-    std::queue<std::string> tokens;
-    std::stringstream ss(data);
-    std::string token;
-    while (std::getline(ss, token, ',')) tokens.push(token);
+TreeNode* deserialize(string data) {
+    queue<string> tokens;
+    stringstream ss(data);
+    string token;
+    while (getline(ss, token, ',')) tokens.push(token);
     return deserializeHelper(tokens);
 }
 ```
@@ -268,7 +268,7 @@ bool isSymmetric(TreeNode* root) {
 // Invert Binary Tree (LC 226)
 TreeNode* invertTree(TreeNode* root) {
     if (!root) return nullptr;
-    std::swap(root->left, root->right);
+    swap(root->left, root->right);
     invertTree(root->left);
     invertTree(root->right);
     return root;

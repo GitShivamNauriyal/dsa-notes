@@ -18,7 +18,7 @@ The key insight for interview problems: **a stack lets you remember the "most re
 ```cpp
 #include <stack>
 
-std::stack<int> st;
+stack<int> st;
 st.push(5);            // push
 int top = st.top();    // peek at top without removing
 st.pop();              // remove top
@@ -27,7 +27,7 @@ int size = st.size();
 
 // In competitive programming, vector-as-stack is often faster
 // (better cache behavior, direct index access)
-std::vector<int> st2;
+vector<int> st2;
 st2.push_back(5);      // push
 int t = st2.back();    // top
 st2.pop_back();        // pop
@@ -41,8 +41,8 @@ st2.pop_back();        // pop
 
 ```cpp
 // LC 20 -- Valid Parentheses
-bool isValid(std::string s) {
-    std::stack<char> st;
+bool isValid(string s) {
+    stack<char> st;
     for (char c : s) {
         if (c == '(' || c == '[' || c == '{') {
             st.push(c);
@@ -89,10 +89,10 @@ Result: [5, 5, 6, -1, 3, -1]
 
 // LC 496 -- Next Greater Element I
 // For each element, find next greater element to its RIGHT
-std::vector<int> nextGreaterElement(std::vector<int>& nums) {
+vector<int> nextGreaterElement(vector<int>& nums) {
     int n = nums.size();
-    std::vector<int> nge(n, -1);
-    std::stack<int> st;  // stores indices
+    vector<int> nge(n, -1);
+    stack<int> st;  // stores indices
 
     for (int i = 0; i < n; i++) {
         // Current element resolves all smaller elements waiting in stack
@@ -112,10 +112,10 @@ std::vector<int> nextGreaterElement(std::vector<int>& nums) {
 
 ```cpp
 // Process array twice (2*n iterations) using modular index
-std::vector<int> nextGreaterElements(std::vector<int>& nums) {
+vector<int> nextGreaterElements(vector<int>& nums) {
     int n = nums.size();
-    std::vector<int> result(n, -1);
-    std::stack<int> st;
+    vector<int> result(n, -1);
+    stack<int> st;
 
     for (int i = 0; i < 2 * n; i++) {
         while (!st.empty() && nums[st.top()] < nums[i % n]) {
@@ -136,10 +136,10 @@ std::vector<int> nextGreaterElements(std::vector<int>& nums) {
 
 ```cpp
 // Previous Greater Element (PGE) -- nearest greater to the LEFT
-std::vector<int> previousGreater(std::vector<int>& nums) {
+vector<int> previousGreater(vector<int>& nums) {
     int n = nums.size();
-    std::vector<int> pge(n, -1);
-    std::stack<int> st;  // monotonically decreasing from bottom to top
+    vector<int> pge(n, -1);
+    stack<int> st;  // monotonically decreasing from bottom to top
 
     for (int i = 0; i < n; i++) {
         // Pop elements <= current (they can't be PGE for future elements either
@@ -172,9 +172,9 @@ When we pop index i (because current height is smaller):
 
 ```cpp
 // LC 84 -- Largest Rectangle in Histogram
-int largestRectangleArea(std::vector<int>& heights) {
+int largestRectangleArea(vector<int>& heights) {
     int n = heights.size();
-    std::stack<int> st;  // monotonically increasing stack of indices
+    stack<int> st;  // monotonically increasing stack of indices
     int maxArea = 0;
 
     for (int i = 0; i <= n; i++) {
@@ -185,7 +185,7 @@ int largestRectangleArea(std::vector<int>& heights) {
             int h = heights[st.top()]; st.pop();
             // Width: from (new top + 1) to (i - 1)
             int width = st.empty() ? i : i - st.top() - 1;
-            maxArea = std::max(maxArea, h * width);
+            maxArea = max(maxArea, h * width);
         }
         st.push(i);
     }
@@ -200,10 +200,10 @@ int largestRectangleArea(std::vector<int>& heights) {
 // Reduce each row to a histogram problem.
 // For each row, compute the height of consecutive 1s above (including current row).
 // Then apply largestRectangleArea on that histogram.
-int maximalRectangle(std::vector<std::vector<char>>& matrix) {
+int maximalRectangle(vector<vector<char>>& matrix) {
     if (matrix.empty()) return 0;
     int rows = matrix.size(), cols = matrix[0].size();
-    std::vector<int> heights(cols, 0);
+    vector<int> heights(cols, 0);
     int maxArea = 0;
 
     for (int r = 0; r < rows; r++) {
@@ -211,7 +211,7 @@ int maximalRectangle(std::vector<std::vector<char>>& matrix) {
         for (int c = 0; c < cols; c++) {
             heights[c] = (matrix[r][c] == '1') ? heights[c] + 1 : 0;
         }
-        maxArea = std::max(maxArea, largestRectangleArea(heights));
+        maxArea = max(maxArea, largestRectangleArea(heights));
     }
     return maxArea;
 }
@@ -228,18 +228,18 @@ int maximalRectangle(std::vector<std::vector<char>>& matrix) {
 // Evaluate: "3 + 2 * 2" = 7,  " 3/2 " = 1,  " 3+5 / 2 " = 5
 // Rule: handle * and / immediately. Defer + and - (push with sign).
 // At the end, sum everything in the stack.
-int calculate(std::string s) {
-    std::stack<int> st;
+int calculate(string s) {
+    stack<int> st;
     int num = 0;
     char op = '+';  // last operator seen (start as + so first num gets pushed)
 
     for (int i = 0; i < (int)s.size(); i++) {
         char c = s[i];
-        if (std::isdigit(c)) {
+        if (isdigit(c)) {
             num = num * 10 + (c - '0');
         }
         // Process when we see an operator or reach end of string
-        if ((!std::isdigit(c) && c != ' ') || i == (int)s.size() - 1) {
+        if ((!isdigit(c) && c != ' ') || i == (int)s.size() - 1) {
             if (op == '+') st.push(num);
             else if (op == '-') st.push(-num);
             else if (op == '*') { int top = st.top(); st.pop(); st.push(top * num); }
@@ -264,7 +264,7 @@ int calculate(std::string s) {
 // LC 155 -- Min Stack
 // Maintain two stacks: main stack and auxiliary min stack
 class MinStack {
-    std::stack<int> st, minSt;
+    stack<int> st, minSt;
 public:
     void push(int val) {
         st.push(val);
@@ -290,7 +290,7 @@ public:
 // For each day's price, find how many consecutive days before it had price <= today
 // Monotonic decreasing stack stores {price, span}
 class StockSpanner {
-    std::stack<std::pair<int,int>> st;  // {price, span}
+    stack<pair<int,int>> st;  // {price, span}
 public:
     int next(int price) {
         int span = 1;
@@ -314,10 +314,10 @@ public:
 > For each day, how many days until a warmer day? Return -1 if none.
 
 ```cpp
-std::vector<int> dailyTemperatures(std::vector<int>& temps) {
+vector<int> dailyTemperatures(vector<int>& temps) {
     int n = temps.size();
-    std::vector<int> result(n, 0);
-    std::stack<int> st;  // indices of days waiting for warmer day
+    vector<int> result(n, 0);
+    stack<int> st;  // indices of days waiting for warmer day
 
     for (int i = 0; i < n; i++) {
         while (!st.empty() && temps[st.top()] < temps[i]) {
@@ -334,15 +334,15 @@ std::vector<int> dailyTemperatures(std::vector<int>& temps) {
 
 ```cpp
 // Alternative to two-pointer: use stack to track walls
-int trap(std::vector<int>& height) {
-    std::stack<int> st;
+int trap(vector<int>& height) {
+    stack<int> st;
     int water = 0;
     for (int i = 0; i < (int)height.size(); i++) {
         while (!st.empty() && height[st.top()] < height[i]) {
             int bottom = height[st.top()]; st.pop();
             if (st.empty()) break;
             int width = i - st.top() - 1;
-            int bounded = std::min(height[st.top()], height[i]) - bottom;
+            int bounded = min(height[st.top()], height[i]) - bottom;
             water += bounded * width;
         }
         st.push(i);
@@ -355,8 +355,8 @@ int trap(std::vector<int>& height) {
 
 ```cpp
 // Use stack storing indices. Push -1 as base.
-int longestValidParentheses(std::string s) {
-    std::stack<int> st;
+int longestValidParentheses(string s) {
+    stack<int> st;
     st.push(-1);  // base sentinel
     int maxLen = 0;
 
@@ -368,7 +368,7 @@ int longestValidParentheses(std::string s) {
             if (st.empty()) {
                 st.push(i);  // no match -- this ) becomes new base
             } else {
-                maxLen = std::max(maxLen, i - st.top());
+                maxLen = max(maxLen, i - st.top());
             }
         }
     }

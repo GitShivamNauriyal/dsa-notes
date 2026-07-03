@@ -54,14 +54,14 @@ links: ["[[03_Sliding_Window_Index]]", "[[03_Sliding_Window_Patterns]]", "[[03_S
 > Flip at most `k` zeros. Find longest subarray of ones.
 
 ```cpp
-int longestOnes(std::vector<int>& nums, int k) {
+int longestOnes(vector<int>& nums, int k) {
     int left = 0, zeros = 0, ans = 0;
     for (int right = 0; right < (int)nums.size(); right++) {
         if (nums[right] == 0) zeros++;
         while (zeros > k) {
             if (nums[left++] == 0) zeros--;
         }
-        ans = std::max(ans, right - left + 1);
+        ans = max(ans, right - left + 1);
     }
     return ans;
 }
@@ -73,9 +73,9 @@ int longestOnes(std::vector<int>& nums, int k) {
 ## Worked Solution: LC 438 -- Find All Anagrams in String
 
 ```cpp
-std::vector<int> findAnagrams(std::string s, std::string p) {
+vector<int> findAnagrams(string s, string p) {
     if (p.size() > s.size()) return {};
-    std::vector<int> pFreq(26, 0), wFreq(26, 0), result;
+    vector<int> pFreq(26, 0), wFreq(26, 0), result;
     for (char c : p) pFreq[c - 'a']++;
     int k = p.size();
 

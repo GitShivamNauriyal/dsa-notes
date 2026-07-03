@@ -80,9 +80,9 @@ links: ["[[01_Arrays_and_Hashing_Index]]", "[[01_Arrays_and_Hashing_Key_Algorith
 ```cpp
 #include <vector>
 
-std::vector<int> productExceptSelf(std::vector<int>& nums) {
+vector<int> productExceptSelf(vector<int>& nums) {
     int n = nums.size();
-    std::vector<int> output(n, 1);
+    vector<int> output(n, 1);
 
     // Step 1: output[i] = product of all elements to the LEFT of i
     int left = 1;
@@ -114,14 +114,14 @@ std::vector<int> productExceptSelf(std::vector<int>& nums) {
 ```cpp
 #include <vector>
 
-int firstMissingPositive(std::vector<int>& nums) {
+int firstMissingPositive(vector<int>& nums) {
     int n = nums.size();
 
     // Step 1: Place each number at its "correct" index
     // nums[i] should be at index nums[i]-1
     for (int i = 0; i < n; i++) {
         while (nums[i] >= 1 && nums[i] <= n && nums[nums[i] - 1] != nums[i]) {
-            std::swap(nums[i], nums[nums[i] - 1]);
+            swap(nums[i], nums[nums[i] - 1]);
         }
     }
 

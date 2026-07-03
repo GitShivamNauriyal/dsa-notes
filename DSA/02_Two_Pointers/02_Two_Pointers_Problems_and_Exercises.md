@@ -62,8 +62,8 @@ links: ["[[02_Two_Pointers_Index]]", "[[02_Two_Pointers_Patterns]]", "[[02_Two_P
 
 ```cpp
 #include <algorithm>
-int numRescueBoats(std::vector<int>& people, int limit) {
-    std::sort(people.begin(), people.end());
+int numRescueBoats(vector<int>& people, int limit) {
+    sort(people.begin(), people.end());
     int left = 0, right = (int)people.size() - 1;
     int boats = 0;
     while (left <= right) {
@@ -83,7 +83,7 @@ int numRescueBoats(std::vector<int>& people, int limit) {
 > Check if `s` is a subsequence of `t`.
 
 ```cpp
-bool isSubsequence(std::string s, std::string t) {
+bool isSubsequence(string s, string t) {
     int i = 0, j = 0;
     while (i < (int)s.size() && j < (int)t.size()) {
         if (s[i] == t[j]) i++;  // matched one character of s
@@ -102,10 +102,10 @@ bool isSubsequence(std::string s, std::string t) {
 #include <vector>
 #include <string>
 
-std::vector<std::vector<int>> preprocess(const std::string& t) {
+vector<vector<int>> preprocess(const string& t) {
     int n = t.size();
     // next[j][c] = smallest index >= j where character c appears, or n if none
-    std::vector<std::vector<int>> nxt(n + 1, std::vector<int>(26, n));
+    vector<vector<int>> nxt(n + 1, vector<int>(26, n));
     for (int j = n - 1; j >= 0; j--) {
         for (int c = 0; c < 26; c++) nxt[j][c] = nxt[j+1][c];
         nxt[j][t[j] - 'a'] = j;
@@ -113,7 +113,7 @@ std::vector<std::vector<int>> preprocess(const std::string& t) {
     return nxt;
 }
 
-bool isSubsequenceFast(const std::string& s, const std::vector<std::vector<int>>& nxt, int tLen) {
+bool isSubsequenceFast(const string& s, const vector<vector<int>>& nxt, int tLen) {
     int pos = 0;
     for (char c : s) {
         if (nxt[pos][c - 'a'] == tLen) return false;

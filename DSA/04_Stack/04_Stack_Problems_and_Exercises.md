@@ -57,14 +57,14 @@ links: ["[[04_Stack_Index]]", "[[04_Stack_Patterns]]", "[[04_Stack_Tricky]]"]
 **Key technique -- Contribution**: Instead of iterating over all subarrays, ask: "for how many subarrays is element `A[i]` the minimum?" Multiply `A[i]` by that count. The count depends on how far left and right `A[i]` extends before hitting a smaller element -- exactly what a monotonic stack gives you.
 
 ```cpp
-int sumSubarrayMins(std::vector<int>& arr) {
+int sumSubarrayMins(vector<int>& arr) {
     const int MOD = 1e9 + 7;
     int n = arr.size();
     // left[i]  = distance to previous smaller element (or start)
     // right[i] = distance to next smaller or equal element (or end)
     // Why "or equal" on right: avoid double counting equal elements
-    std::vector<int> left(n), right(n);
-    std::stack<int> st;
+    vector<int> left(n), right(n);
+    stack<int> st;
 
     // Compute left distances (previous smaller)
     for (int i = 0; i < n; i++) {
@@ -99,14 +99,14 @@ int sumSubarrayMins(std::vector<int>& arr) {
 > "3[a2[c]]" -> "accaccacc"
 
 ```cpp
-std::string decodeString(std::string s) {
-    std::stack<int> counts;
-    std::stack<std::string> strs;
-    std::string cur = "";
+string decodeString(string s) {
+    stack<int> counts;
+    stack<string> strs;
+    string cur = "";
     int num = 0;
 
     for (char c : s) {
-        if (std::isdigit(c)) {
+        if (isdigit(c)) {
             num = num * 10 + (c - '0');
         } else if (c == '[') {
             counts.push(num);   // save repeat count
@@ -115,8 +115,8 @@ std::string decodeString(std::string s) {
             cur = "";           // start fresh inside brackets
         } else if (c == ']') {
             int k = counts.top(); counts.pop();
-            std::string prev = strs.top(); strs.pop();
-            std::string repeated = "";
+            string prev = strs.top(); strs.pop();
+            string repeated = "";
             for (int i = 0; i < k; i++) repeated += cur;
             cur = prev + repeated;
         } else {

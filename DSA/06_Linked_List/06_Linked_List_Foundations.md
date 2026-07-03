@@ -53,7 +53,7 @@ struct DListNode {
 
 ```cpp
 // Build list from vector: 1 -> 2 -> 3 -> 4 -> 5
-ListNode* buildList(std::vector<int>& vals) {
+ListNode* buildList(vector<int>& vals) {
     if (vals.empty()) return nullptr;
     ListNode* dummy = new ListNode(0);  // dummy head simplifies edge cases
     ListNode* cur = dummy;
@@ -79,11 +79,11 @@ ListNode* buildList(std::vector<int>& vals) {
 // Basic traversal
 void printList(ListNode* head) {
     while (head != nullptr) {
-        std::cout << head->val;
-        if (head->next) std::cout << " -> ";
+        cout << head->val;
+        if (head->next) cout << " -> ";
         head = head->next;
     }
-    std::cout << "\n";
+    cout << "\n";
 }
 
 // Count nodes
