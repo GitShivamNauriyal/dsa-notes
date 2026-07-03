@@ -40,12 +40,12 @@ links: ["[[03_Sliding_Window_Index]]", "[[03_Sliding_Window_Patterns]]", "[[03_S
 
 ## Tier 4 -- Placement-Hard
 
-| # | Problem | Difficulty | Key Concept | Link |
-|---|---------|------------|-------------|------|
-| 15 | Subarrays with K Different Integers | Hard | atMost(k) - atMost(k-1) | [LC 992](https://leetcode.com/problems/subarrays-with-k-different-integers/) |
-| 16 | Longest Substring with At Most K Distinct | Medium | Variable window, freq map | [LC 340](https://leetcode.com/problems/longest-substring-with-at-most-k-distinct-characters/) |
-| 17 | Minimum Window Containing Substring with All K Distinct | Hard | Variable + distinct tracking | Custom OA variant |
-| 18 | Count Number of Nice Subarrays | Medium | Prefix (odd count) / sliding | [LC 1248](https://leetcode.com/problems/count-number-of-nice-subarrays/) |
+| #   | Problem                                                 | Difficulty | Key Concept                  | Link                                                                                          |
+| --- | ------------------------------------------------------- | ---------- | ---------------------------- | --------------------------------------------------------------------------------------------- |
+| 15  | Subarrays with K Different Integers                     | Hard       | atMost(k) - atMost(k-1)      | [LC 992](https://leetcode.com/problems/subarrays-with-k-different-integers/)                  |
+| 16  | Longest Substring with At Most K Distinct               | Medium     | Variable window, freq map    | [LC 340](https://leetcode.com/problems/longest-substring-with-at-most-k-distinct-characters/) |
+| 17  | Minimum Window Containing Substring with All K Distinct | Hard       | Variable + distinct tracking | Custom OA variant                                                                             |
+| 18  | Count Number of Nice Subarrays                          | Medium     | Prefix (odd count) / sliding | [LC 1248](https://leetcode.com/problems/count-number-of-nice-subarrays/)                      |
 
 ---
 
