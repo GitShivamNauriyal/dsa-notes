@@ -186,6 +186,12 @@
   },
   "active": "120c376d9b9fb681",
   "lastOpenFiles": [
+    "DSA/07_Trees/05_Tricky.md",
+    "DSA/07_Trees/04_Problems_and_Exercises.md",
+    "DSA/07_Trees/03_Patterns.md",
+    "DSA/07_Trees/02_BST.md",
+    "DSA/07_Trees/01_Foundations.md",
+    "DSA/07_Trees/00_Index.md",
     "DSA/06_Linked_List/04_Tricky.md",
     "DSA/06_Linked_List/03_Problems_and_Exercises.md",
     "DSA/06_Linked_List/02_Patterns.md",
@@ -205,12 +211,6 @@
     "DSA/03_Sliding_Window/00_Index.md",
     "DSA/02_Two_Pointers/03_Tricky.md",
     "DSA/02_Two_Pointers/02_Problems_and_Exercises.md",
-    "DSA/02_Two_Pointers/01_Patterns.md",
-    "DSA/02_Two_Pointers/00_Index.md",
-    "DSA/01_Arrays_and_Hashing/06_Tricky.md",
-    "DSA/01_Arrays_and_Hashing/05_Problems_and_Exercises.md",
-    "DSA/01_Arrays_and_Hashing/04_Key_Algorithms.md",
-    "DSA/00_Home.md",
-    "DSA/01_Arrays_and_Hashing/03_Hashing.md"
+    "DSA/02_Two_Pointers/01_Patterns.md"
   ]
 }
