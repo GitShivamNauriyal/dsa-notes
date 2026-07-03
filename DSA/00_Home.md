@@ -56,13 +56,11 @@ Arrays & Hashing ──► Two Pointers ──► Sliding Window ──► Stack
 
 ### Extras (TakeUForward Beyond NeetCode)
 
-| Topic | Status |
-|-------|--------|
-| [[EXTRAS/Recursion/00_Index\|Recursion]] | ⬜ |
-| [[EXTRAS/Sorting_Algorithms/00_Index\|Sorting Algorithms]] | ⬜ |
-| [[EXTRAS/Matrix/00_Index\|Matrix]] | ⬜ |
-| [[EXTRAS/String_Algorithms/00_Index\|String Algorithms]] | ⬜ |
-| [[EXTRAS/Number_Theory/00_Index\|Number Theory]] | ⬜ |
+| [[EXTRAS/Recursion/00_Index\|Recursion]] | ✅ |
+| [[EXTRAS/Sorting_Algorithms/00_Index\|Sorting Algorithms]] | ✅ |
+| [[EXTRAS/Matrix/00_Index\|Matrix]] | ✅ |
+| [[EXTRAS/String_Algorithms/00_Index\|String Algorithms]] | ✅ |
+| [[EXTRAS/Number_Theory/00_Index\|Number Theory]] | ✅ |
 
 ---
 
