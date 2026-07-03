@@ -186,6 +186,11 @@
   },
   "active": "120c376d9b9fb681",
   "lastOpenFiles": [
+    "DSA/06_Linked_List/04_Tricky.md",
+    "DSA/06_Linked_List/03_Problems_and_Exercises.md",
+    "DSA/06_Linked_List/02_Patterns.md",
+    "DSA/06_Linked_List/01_Foundations.md",
+    "DSA/06_Linked_List/00_Index.md",
     "DSA/05_Binary_Search/03_Tricky.md",
     "DSA/05_Binary_Search/02_Problems_and_Exercises.md",
     "DSA/05_Binary_Search/01_Patterns.md",
@@ -206,9 +211,6 @@
     "DSA/01_Arrays_and_Hashing/05_Problems_and_Exercises.md",
     "DSA/01_Arrays_and_Hashing/04_Key_Algorithms.md",
     "DSA/00_Home.md",
-    "DSA/01_Arrays_and_Hashing/03_Hashing.md",
-    "DSA/00_Complexity_Cheatsheet.md",
-    "create a link.md",
-    "Welcome.md"
+    "DSA/01_Arrays_and_Hashing/03_Hashing.md"
   ]
 }
