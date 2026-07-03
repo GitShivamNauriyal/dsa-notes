@@ -16,6 +16,7 @@ links: ["[[../00_Home]]"]
 | [[03_Hashing\|03 · Hashing, Maps & Sets]] | unordered_map, unordered_set, custom hash, rolling hash |
 | [[04_Key_Algorithms\|04 · Key Array Algorithms]] | Kadane's, Dutch National Flag, Boyer-Moore Voting |
 | [[05_Problems_and_Exercises\|05 · Problems & Exercises]] | LeetCode / GFG / Codeforces problems |
+| [[06_Tricky\|06 · Tricky & Higher-Order]] | Floyd cycle trick, monotonic deque, exactly-K, XOR tricks |
 
 ---
 
