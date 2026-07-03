@@ -53,11 +53,16 @@ struct TrieNode {
 };
 
 class Trie {
+public:
     TrieNode* root;
 
-public:
     Trie() { root = new TrieNode(); }
 
+    // Insertion Dry Run for "cat":
+    // 1. Start at root. c - 'a' = 2. children[2] is null -> create new TrieNode. Move to it.
+    // 2. c - 'a' = 0. children[0] is null -> create new TrieNode. Move to it.
+    // 3. t - 'a' = 19. children[19] is null -> create new TrieNode. Move to it.
+    // 4. Word ends: set cur->isEnd = true.
     void insert(const string& word) {
         TrieNode* cur = root;
         for (char c : word) {
@@ -89,9 +94,58 @@ public:
         }
         return true;  // just need to reach end of prefix -- don't check isEnd
     }
+
+    // MEMORY DELETION / GARBAGE COLLECTION (Classic Interview Addition)
+    // Why tricky: We must delete unused nodes bottom-up (post-order DFS).
+    // A node can only be deleted if:
+    // 1. It has no children (all children are nullptr).
+    // 2. It is not marked as the end of another word (isEnd == false).
+    bool deleteWord(TrieNode* curr, const string& word, int depth) {
+        if (!curr) return false;
+
+        // Base case: Reached the end of the word
+        if (depth == (int)word.size()) {
+            if (!curr->isEnd) return false; // word doesn't exist
+            curr->isEnd = false;            // unmark end of word
+            return isEmpty(curr);           // if node has no children, it can be deleted
+        }
+
+        int idx = word[depth] - 'a';
+        bool shouldDeleteChild = deleteWord(curr->children[idx], word, depth + 1);
+
+        if (shouldDeleteChild) {
+            delete curr->children[idx];
+            curr->children[idx] = nullptr;
+
+            // Recurse upward: curr can be deleted if it has no other children
+            // AND it is not the end of another word
+            return !curr->isEnd && isEmpty(curr);
+        }
+        return false;
+    }
+
+private:
+    bool isEmpty(TrieNode* node) {
+        for (int i = 0; i < 26; i++) {
+            if (node->children[i]) return false;
+        }
+        return true;
+    }
 };
-// Insert/Search/StartsWith: O(L) time, O(L) space per insertion
+// Insert/Search/StartsWith/Delete: O(L) time, O(L) space per insertion
 // Total space: O(ALPHABET * total_characters) in worst case
+```
+
+### Pointer Dry Run Diagram: Inserting "car" after "cat"
+```
+               root
+                |
+              children[2] ('c')
+                |
+              children[0] ('a')
+             /          \
+  children[19] ('t')   children[17] ('r')  <-- newly created node
+     [isEnd=true]         [isEnd=true]
 ```
 
 ### Approach B: HashMap for children (better when alphabet is large or sparse)

@@ -11,12 +11,37 @@ links: ["[[08_Tries_Index]]", "[[08_Tries_Problems_and_Exercises]]", "[[../09_He
 
 ## 1. Palindrome Pairs (LC 336)
 
-**Why tricky**: Given a list of unique words, find all pairs `(i, j)` where `words[i] + words[j]` is a palindrome. O(n²L) naive is too slow. Trie approach: for each word, search for its reverse in the trie while checking palindrome conditions on remaining suffixes.
+**Why tricky**: Given a list of unique words, find all pairs `(i, j)` where `words[i] + words[j]` is a palindrome. O(n²L) naive is too slow. 
+By utilizing a hash map or Trie to store the words and their reversed forms, we can search for valid matching prefixes/suffixes in $O(n \cdot L^2)$ time.
 
-**Three cases for `words[i] + words[j]` to be a palindrome**:
-1. `len(words[i]) == len(words[j])` and `words[j] == reverse(words[i])`
-2. `len(words[i]) > len(words[j])`: prefix of words[i] == reverse(words[j]), AND the remaining suffix of words[i] is itself a palindrome
-3. `len(words[i]) < len(words[j])`: words[i] == reverse of a suffix of words[j], AND the prefix of words[j] is itself a palindrome
+### Three cases for `words[i] + words[j]` to be a palindrome:
+
+#### Case 1: `len(words[i]) == len(words[j])`
+`words[i] = "abcd"` and `words[j] = "dcba"`. 
+- `words[i] + words[j] = "abcddcba"` (Palindrome).
+- **Condition**: `words[j]` is the exact reverse of `words[i]`.
+
+#### Case 2: `len(words[i]) > len(words[j])`
+`words[i] = "lls"` and `words[j] = "sss"` is not a valid match, but if `words[i] = "sssll"` and `words[j] = "sss"`, we split `words[i]` into a prefix and a suffix.
+Let `words[i]` be split into `prefix = "sss"` and `suffix = "ll"`.
+- If `suffix = "ll"` is a palindrome, we look for the reverse of `prefix = "sss"`, which is `"sss"`.
+- Since `"sss"` exists in the dictionary, `words[i] + words[j] = "sssll" + "sss" = "sssllsss"` (not a palindrome). 
+- Wait, the correct order is: `words[i] + reverse(prefix)` where `suffix` is a palindrome.
+- If `words[i] = "llsss"` and we split into `prefix = "ll"` (palindrome) and `suffix = "sss"`. Then `words[j] = "sss"`.
+- `words[j] + words[i] = "sss" + "llsss" = "sssllsss"` (Palindrome).
+- **Condition**: Split `words[i]` into `[prefix, suffix]`. If `suffix` is a palindrome, we search for `reverse(prefix)` to append to the right: `words[i] + reverse(prefix)`.
+
+#### Case 3: `len(words[i]) < len(words[j])`
+This is symmetric to Case 2. If we process `words[j]` by splitting it, it resolves to Case 2 from the other word's perspective. Thus, by splitting every word at every possible index `cut` from `0` to `L`, we cover all combinations.
+
+### Step-by-Step Split Tracing table for `w = "abcd"`
+| Cut | Prefix | Suffix | Prefix Palindrome? | Suffix Palindrome? | Action if Yes |
+|---|---|---|---|---|---|
+| 0 | `""` | `"abcd"` | Yes (empty) | No | If prefix is palindrome, look for `reverse(suffix) = "dcba"` to prepend. |
+| 1 | `"a"` | `"bcd"` | Yes (`"a"`) | No | Look for `reverse(suffix) = "dcb"` to prepend. |
+| 2 | `"ab"` | `"cd"` | No | No | - |
+| 3 | `"abc"` | `"d"` | No | Yes (`"d"`) | If suffix is palindrome, look for `reverse(prefix) = "cba"` to append. |
+| 4 | `"abcd"` | `""` | No | Yes (empty) | If suffix is palindrome, look for `reverse(prefix) = "dcba"` to append. |
 
 ```cpp
 bool isPalin(const string& s, int lo, int hi) {
@@ -35,65 +60,83 @@ vector<vector<int>> palindromePairs(vector<string>& words) {
         int n = w.size();
 
         for (int cut = 0; cut <= n; cut++) {
-            // Case 1 & 2: prefix = w[0..cut-1], suffix = w[cut..n-1]
-            // If suffix is palindrome, look for reverse of prefix
+            // Case 1 & 2: Split into prefix w[0..cut-1] and suffix w[cut..n-1]
+            // If suffix is a palindrome, we search for reverse(prefix) to append on the right
             if (isPalin(w, cut, n - 1)) {
                 string revPrefix = string(w.begin(), w.begin() + cut);
                 reverse(revPrefix.begin(), revPrefix.end());
                 auto it = wordMap.find(revPrefix);
                 if (it != wordMap.end() && it->second != i) {
-                    result.push_back({i, it->second});  // words[i] + revPrefix
+                    result.push_back({i, it->second}); // words[i] + words[it->second]
                 }
             }
-            // Case 3: prefix = w[0..cut-1], if prefix is palindrome,
-            // look for reverse of suffix
+            
+            // Case 3: If prefix is a palindrome, we search for reverse(suffix) to prepend on the left
+            // cut > 0 avoids duplicate checks for empty prefix/suffix at boundaries
             if (cut > 0 && isPalin(w, 0, cut - 1)) {
                 string revSuffix = string(w.begin() + cut, w.end());
                 reverse(revSuffix.begin(), revSuffix.end());
                 auto it = wordMap.find(revSuffix);
                 if (it != wordMap.end() && it->second != i) {
-                    result.push_back({it->second, i});  // revSuffix + words[i]
+                    result.push_back({it->second, i}); // words[it->second] + words[i]
                 }
             }
         }
     }
     return result;
 }
-// Time: O(n * L²) -- n words, L cuts per word, L for isPalin check
-// Better than O(n²L) naive when L << n
+// Time Complexity: O(n * L²) — where n is the number of words, L is max word length.
+//                  For each word, we check L cuts. For each cut, we run isPalin of length L.
+// Space Complexity: O(n * L) to store the word map.
 ```
 
 ---
 
 ## 2. Map Sum Pairs (LC 677)
 
-**Why tricky**: Insert `(key, val)`. Query sum of all values whose keys start with prefix. A trie with cumulative sum at each node requires careful update on re-insert (if key already exists, delta = new_val - old_val).
+**Why tricky**: Query sum of all values whose keys start with a given prefix. 
+- If we do this naively on query, it takes $O(n \cdot L)$ time where we scan all $n$ keys.
+- By utilizing a Trie where each node stores a cumulative `sum` of all values in its subtree, we query the sum in optimal $O(L)$ time.
+- **Tricky Edge Case**: Re-inserting an existing key with a new value. We must calculate the difference (`delta = new_val - old_val`) and propagate this delta down the tree during insertion.
+
+### Delta Propagation Trace Table:
+1. `insert("apple", 3)`:
+   - key `"apple"` doesn't exist (old_val = 0). `delta = 3 - 0 = 3`.
+   - Nodes `a -> p -> p -> l -> e` all have their `sum` incremented by `3`.
+2. `insert("app", 2)`:
+   - key `"app"` doesn't exist (old_val = 0). `delta = 2 - 0 = 2`.
+   - Nodes `a -> p -> p` have their `sum` incremented by `2`.
+   - Subtree sums now: `a.sum = 5`, `p.sum = 5`, `p.sum = 5`, `l.sum = 3`, `e.sum = 3`.
+3. `insert("apple", 5)` (re-insert):
+   - key `"apple"` exists with val `3`. `delta = 5 - 3 = 2`.
+   - Nodes `a -> p -> p -> l -> e` have their `sum` incremented by `2`.
+   - Subtree sums now: `a.sum = 7`, `p.sum = 7`, `p.sum = 7`, `l.sum = 5`, `e.sum = 5`.
 
 ```cpp
 class MapSum {
     struct MSNode {
         MSNode* children[26];
-        int val;       // stored value at this word (0 if not end of word)
-        int sum;       // sum of all values in subtree rooted here
+        int val;       // stored value at this word node (0 if not end of word)
+        int sum;       // sum of all values in the subtree rooted here
         MSNode() : val(0), sum(0) {
             for (int i = 0; i < 26; i++) children[i] = nullptr;
         }
     };
     MSNode* root;
-    unordered_map<string, int> keyMap;  // track existing key values
+    unordered_map<string, int> keyMap; // track existing key-value pairs
 
 public:
     MapSum() { root = new MSNode(); }
 
     void insert(string key, int val) {
-        int delta = val - keyMap[key];  // if key already exists, only add delta
+        int delta = val - keyMap[key]; // calculate change delta (handles overwriting)
         keyMap[key] = val;
         MSNode* cur = root;
         for (char c : key) {
             int i = c - 'a';
             if (!cur->children[i]) cur->children[i] = new MSNode();
             cur = cur->children[i];
-            cur->sum += delta;  // propagate delta through path
+            cur->sum += delta; // propagate delta through the insertion path
         }
         cur->val = val;
     }
@@ -105,10 +148,9 @@ public:
             if (!cur->children[i]) return 0;
             cur = cur->children[i];
         }
-        return cur->sum;  // sum of all words with this prefix
+        return cur->sum; // O(L) retrieval of the precalculated subtree sum
     }
 };
-// Insert: O(L), Sum: O(L) -- both optimal
 ```
 
 ---

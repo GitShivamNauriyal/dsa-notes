@@ -17,14 +17,53 @@ links: ["[[11_Graphs_Index]]", "[[11_Graphs_BFS_DFS]]", "[[11_Graphs_Union_Find]
 - **Constraint**: Cannot handle negative weight edges (can cause infinite loops or incorrect greedy choices).
 
 ```
-    Graph:                       Dijkstra Min-Heap Step:
-       (4)                       Pop node 0 (dist=0). Relaxation:
-      0 ──► 1                    dist[1] = min(inf, 0 + 4) = 4
-      │    ▲ │                   dist[2] = min(inf, 0 + 1) = 1
-  (1) │ (2)│ │ (3)               Min-Heap = [{1, 2}, {4, 1}]
-      ▼   /  ▼
-      2 ──   3
+    Graph Structure:
+       (4)
+      0 ──► 1 ──► 3
+      │    ▲     (3)
+  (1) │ (2)│
+      ▼   /
+      2 ──
 ```
+
+### Dijkstra Step-by-Step Execution Trace
+
+#### Initialization:
+- `dist` array: `[0, inf, inf, inf]`
+- `pq` (Min-Heap): `[{0, 0}]` (stores `{distance, node}`)
+
+#### Step 1: Pop `{0, 0}` (u = 0, dist = 0)
+- Neighbor `1`: `dist[0] + weight(0->1) = 0 + 4 = 4`. Since $4 < \infty$, update `dist[1] = 4`, push `{4, 1}`.
+- Neighbor `2`: `dist[0] + weight(0->2) = 0 + 1 = 1`. Since $1 < \infty$, update `dist[2] = 1`, push `{1, 2}`.
+- **State**:
+  - `dist` = `[0, 4, 1, inf]`
+  - `pq` = `[{1, 2}, {4, 1}]`
+
+#### Step 2: Pop `{1, 2}` (u = 2, dist = 1)
+- Neighbor `1`: `dist[2] + weight(2->1) = 1 + 2 = 3`. Since $3 < 4$ (previous distance to node 1), update `dist[1] = 3`, push `{3, 1}`.
+- **State**:
+  - `dist` = `[0, 3, 1, inf]`
+  - `pq` = `[{3, 1}, {4, 1}]` (node 1 now has two entries in heap; the stale `{4, 1}` will be ignored later)
+
+#### Step 3: Pop `{3, 1}` (u = 1, dist = 3)
+- Neighbor `3`: `dist[1] + weight(1->3) = 3 + 3 = 6`. Since $6 < \infty$, update `dist[3] = 6`, push `{6, 3}`.
+- **State**:
+  - `dist` = `[0, 3, 1, 6]`
+  - `pq` = `[{4, 1}, {6, 3}]`
+
+#### Step 4: Pop `{4, 1}` (u = 1, dist = 4)
+- **Stale check**: `d = 4` is greater than `dist[1] = 3`. This is a stale entry! Skip processing.
+- **State**:
+  - `dist` = `[0, 3, 1, 6]`
+  - `pq` = `[{6, 3}]`
+
+#### Step 5: Pop `{6, 3}` (u = 3, dist = 6)
+- Node 3 has no outgoing edges.
+- **State**:
+  - `dist` = `[0, 3, 1, 6]`
+  - `pq` = `[]` (Termination)
+
+---
 
 ```cpp
 #include <vector>

@@ -138,19 +138,56 @@ int findMaximizedCapital(int k, int w, vector<int>& profits, vector<int>& capita
 
 **Why Tricky**: We need the median of every sliding window of size $k$. Doing it with two heaps requires removing the element that "leaves" the window. Since we can't delete directly from C++ heaps, we must combine **Two Heaps** with **Lazy Deletion** and track the balances.
 
-```
-Window = 3. Elements: [1, 3, -1, -3, 5], k=3
-Lower (Max-Heap) | Upper (Min-Heap) | Lazy Deletes
+### Step-by-Step Transition Trace: `nums = [1, 3, -1, -3, 5]`, `k = 3`
 
-Initial state (k=3): [1, 3, -1]
-Lower = [-1], Upper = [1, 3], Median = 1.0
+#### Step 1: Initialize first window (i = 0, 1, 2) -> `[1, 3, -1]`
+- **Insert 1**: maxHeap (lower) = `[1]`, minHeap (upper) = `[]`
+- **Insert 3**: 3 > maxHeap.top() (1) -> push to minHeap. maxHeap = `[1]`, minHeap = `[3]`. Balance is correct (size difference $\le 1$).
+- **Insert -1**: -1 < maxHeap.top() (1) -> push to maxHeap. maxHeap = `[1, -1]`, minHeap = `[3]`.
+- **Median**: maxHeap has size 2, minHeap has size 1. $k$ is odd, so median is maxHeap.top() = `1`.
+- **Heaps State**:
+  - `maxHeap` (Max-Heap): `[1, -1]` (top: 1)
+  - `minHeap` (Min-Heap): `[3]` (top: 3)
+  - `lazyDeletes`: `{}`
+  - **Output Median**: `1.0`
 
-Next step (insert -3, remove 1):
-1 is in Upper. We mark 1 for lazy deletion: lazyDeletes[1] = 1.
-Insert -3 into Lower.
-Rebalance Lower and Upper sizes.
-Discard lazy deleted elements from tops of heaps.
-```
+#### Step 2: Slide window (i = 3) -> Insert `-3`, Remove outgoing `1`
+- **Remove outgoing `1`**: 
+  - `1` is $\le$ maxHeap.top() (`1`), so we decrement `maxHeapSize` from 2 to 1.
+  - Increment lazy deletion tracker: `lazyDeletes[1] = 1`.
+- **Insert `-3`**: 
+  - `-3` is $\le$ maxHeap.top() (`1`), so push to maxHeap. `maxHeapSize` becomes 2.
+  - `maxHeap` elements: `[1, -1, -3]`, `minHeap` elements: `[3]`.
+- **Clean Tops**:
+  - `maxHeap.top()` is `1`. Since `lazyDeletes[1] == 1`, we decrement tracker to 0 and `pop()` it.
+  - Now `maxHeap.top()` is `-1`, which is not in `lazyDeletes`. Stop cleaning.
+- **Balance Heaps**:
+  - `maxHeapSize` = 2, `minHeapSize` = 1. Already balanced!
+- **Heaps State**:
+  - `maxHeap` (Max-Heap): `[-1, -3]` (top: -1)
+  - `minHeap` (Min-Heap): `[3]` (top: 3)
+  - `lazyDeletes`: `{1: 0}`
+  - **Output Median**: `-1.0`
+
+#### Step 3: Slide window (i = 4) -> Insert `5`, Remove outgoing `3`
+- **Remove outgoing `3`**:
+  - `3` is > maxHeap.top() (`-1`), so decrement `minHeapSize` from 1 to 0.
+  - Increment lazy deletion tracker: `lazyDeletes[3] = 1`.
+- **Insert `5`**:
+  - `5` is > maxHeap.top() (`-1`), so push to minHeap. `minHeapSize` becomes 1.
+  - `minHeap` elements: `[5, 3]`.
+- **Clean Tops**:
+  - `minHeap.top()` is `3` (since `3 < 5` in minHeap). Since `lazyDeletes[3] == 1`, decrement tracker to 0 and `pop()` it.
+  - Now `minHeap.top()` is `5`. Stop cleaning.
+- **Balance Heaps**:
+  - `maxHeapSize` = 2, `minHeapSize` = 1. Balanced!
+- **Heaps State**:
+  - `maxHeap` (Max-Heap): `[-1, -3]` (top: -1)
+  - `minHeap` (Min-Heap): `[5]` (top: 5)
+  - `lazyDeletes`: `{1: 0, 3: 0}`
+  - **Output Median**: `-1.0`
+
+---
 
 ```cpp
 #include <vector>

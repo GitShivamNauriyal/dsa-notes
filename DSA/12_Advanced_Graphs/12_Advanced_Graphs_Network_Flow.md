@@ -28,11 +28,47 @@ A **Flow Network** is a directed graph where each edge has a **capacity** (maxim
 When we route flow along a path, we reduce the capacity in the forward direction. Simultaneously, we add **residual capacity in the reverse direction**.
 - **Why reverse edges?** They act as "undo buttons". They allow subsequent path explorations to redirect (push back) previously routed flow to find a globally optimal configuration.
 
-```
-Routing 5 units of flow along 0 -> 1:
-Forward capacity (0 -> 1) goes from 10 to 5.
-Reverse capacity (1 -> 0) goes from 0 to 5.
-```
+### Step-by-Step Edmonds-Karp Execution Trace
+
+Consider a 4-node flow network: `Source (0)`, `Node 1`, `Node 2`, `Sink (3)`.
+
+#### Original Capacities Matrix:
+- `C[0][1] = 10`, `C[0][2] = 5`
+- `C[1][2] = 2`,  `C[1][3] = 10`
+- `C[2][3] = 10`
+- All other capacities = 0.
+
+#### Step 1: BFS Augmenting Path Search
+- BFS finds shortest path: `0 -> 1 -> 3` (2 edges).
+- **Bottleneck Capacity**: `min(C[0][1], C[1][3]) = min(10, 10) = 10`.
+- **Flow Update**:
+  - Subtract bottleneck from forward edges:
+    - `C[0][1]` goes from 10 to 0 (fully saturated).
+    - `C[1][3]` goes from 10 to 0 (fully saturated).
+  - Add bottleneck to reverse edges:
+    - `C[1][0]` goes from 0 to 10.
+    - `C[3][1]` goes from 0 to 10.
+- **Current Max Flow**: `10`
+
+#### Step 2: BFS Augmenting Path Search
+- BFS finds next shortest path: `0 -> 2 -> 3` (2 edges).
+- **Bottleneck Capacity**: `min(C[0][2], C[2][3]) = min(5, 10) = 5`.
+- **Flow Update**:
+  - Subtract bottleneck from forward edges:
+    - `C[0][2]` goes from 5 to 0 (fully saturated).
+    - `C[2][3]` goes from 10 to 5.
+  - Add bottleneck to reverse edges:
+    - `C[2][0]` goes from 0 to 5.
+    - `C[3][2]` goes from 0 to 5.
+- **Current Max Flow**: `10 + 5 = 15`
+
+#### Step 3: BFS Augmenting Path Search
+- BFS attempts to find a path from `0` to `3`.
+  - From `0`, the residual capacities to `1` and `2` are both `0`.
+  - No path can leave `0`. BFS returns false.
+- **Final Max Flow**: `15`
+
+---
 
 ---
 

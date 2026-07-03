@@ -15,21 +15,60 @@ A heap is a complete binary tree that satisfies the **heap property**:
 - **Max-Heap**: Parent value $\ge$ children values. Root is the global maximum.
 - **Min-Heap**: Parent value $\le$ children values. Root is the global minimum.
 
+Being a **complete binary tree** means every level is fully filled, except possibly the last level, which is filled from left to right. This structural property allows representing the tree in a simple contiguous **array** without pointers, avoiding memory overhead.
+
 ```
-       Min-Heap Representation                    Array Layout
+        Min-Heap Tree Representation              Array Layout
                  2                             Index:  0  1  2  3  4  5
                 / \                                    [2, 3, 5, 8, 4, 7]
                3   5
-              / \  /                           Parent of i: (i-1)/2
-             8   4 7                           Left child:  2*i + 1
-                                               Right child: 2*i + 2
+              / \  /                           
+             8   4 7                           
 ```
+
+### Complete Binary Tree Array Index Math
+For a node at 0-based index $i$:
+- **Parent**: `(i - 1) / 2` (integer division, e.g. parent of 5 is `(5-1)/2 = 2`)
+- **Left Child**: `2 * i + 1`
+- **Right Child**: `2 * i + 2`
+
+---
+
+## Under the Hood: Sift-Up & Sift-Down Operations
+
+All heap operations are built on two fundamental restructuring utilities:
+
+### 1. Sift-Up (Bubble-Up)
+Used during **insertion** to restore the heap property when a value violates it by being smaller (in Min-Heap) than its parent.
+- Place new element at the end of the array.
+- Compare it with its parent. If parent is larger, swap them.
+- Repeat until the element is at the root or its parent is smaller.
+- **Time Complexity**: $O(\log n)$ (maximum swaps is tree height).
+
+### 2. Sift-Down (Sink-Down / Heapify)
+Used during **extraction (pop)** to restore the heap property when the root is replaced by the last element of the array.
+- Replace root with the last element of the array. Shrink array size by 1.
+- Compare the new root with its children. Swap with the **smaller** child.
+- Repeat down the tree until children are larger or a leaf is reached.
+- **Time Complexity**: $O(\log n)$.
+
+---
+
+## Mathematical Proof: O(n) Build-Heap (Heapify)
+Creating a heap from an unsorted array of size $n$ can be done in $O(n)$ time using **Floyd's Heapify method**, rather than $O(n \log n)$ insertions.
+- **Method**: Start from the first non-leaf node, which is at index `(n/2) - 1`, and run `siftDown` on each node going backwards to index 0.
+- **Proof**: 
+  A complete tree of height $h$ has at most $\lceil n/2^{h+1} \rceil$ nodes at height $h$. The time cost of `siftDown` at height $h$ is $O(h)$.
+  $$\text{Total Time} \le \sum_{h=0}^{\log n} \frac{n}{2^{h+1}} O(h) = O\left(n \sum_{h=0}^{\infty} \frac{h}{2^h}\right)$$
+  The summation $\sum_{h=0}^{\infty} \frac{h}{2^h}$ is a converging arithmetic-geometric series that equals $2$.
+  $$\text{Total Time} \le O(n \times 2) = O(n)$$
 
 ### Why use a Heap?
 When you need to **frequently query the minimum/maximum element while insertions are happening**. 
 - Query Min/Max: $O(1)$
 - Insert: $O(\log n)$
 - Remove Min/Max: $O(\log n)$
+- Build Heap: $O(n)$ (ideal for bulk initialization)
 
 ---
 
