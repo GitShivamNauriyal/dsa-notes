@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "e451d9cda57b2fbb",
+        "id": "70a2a1e244976540",
         "type": "tabs",
         "children": [
           {
-            "id": "120c376d9b9fb681",
+            "id": "ed6379784f56048b",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "DSA/00_Complexity_Cheatsheet.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "00_Complexity_Cheatsheet"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
             }
           }
         ]
@@ -78,8 +74,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "e2f8bbc1dcbcd1c9",
@@ -163,8 +158,19 @@
               "icon": "lucide-list",
               "title": "Outline of create a link"
             }
+          },
+          {
+            "id": "226ad180293d813c",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
           }
-        ]
+        ],
+        "currentTab": 5
       }
     ],
     "direction": "horizontal",
@@ -184,33 +190,35 @@
       "bases:Create new base": false
     }
   },
-  "active": "120c376d9b9fb681",
+  "active": "ed6379784f56048b",
   "lastOpenFiles": [
-    "DSA/08_Tries/03_Tricky.md",
-    "DSA/08_Tries/02_Problems_and_Exercises.md",
-    "DSA/08_Tries/01_Patterns.md",
-    "DSA/08_Tries/00_Index.md",
-    "doc.md",
-    "DSA/07_Trees/05_Tricky.md",
-    "DSA/07_Trees/04_Problems_and_Exercises.md",
-    "DSA/07_Trees/03_Patterns.md",
-    "DSA/07_Trees/02_BST.md",
-    "DSA/07_Trees/01_Foundations.md",
-    "DSA/07_Trees/00_Index.md",
-    "DSA/06_Linked_List/04_Tricky.md",
-    "DSA/06_Linked_List/03_Problems_and_Exercises.md",
-    "DSA/06_Linked_List/02_Patterns.md",
-    "DSA/06_Linked_List/01_Foundations.md",
-    "DSA/06_Linked_List/00_Index.md",
-    "DSA/05_Binary_Search/03_Tricky.md",
-    "DSA/05_Binary_Search/02_Problems_and_Exercises.md",
-    "DSA/05_Binary_Search/01_Patterns.md",
-    "DSA/05_Binary_Search/00_Index.md",
-    "DSA/04_Stack/03_Tricky.md",
-    "DSA/04_Stack/02_Problems_and_Exercises.md",
-    "DSA/04_Stack/01_Patterns.md",
-    "DSA/04_Stack/00_Index.md",
-    "DSA/03_Sliding_Window/03_Tricky.md",
-    "DSA/03_Sliding_Window/02_Problems_and_Exercises.md"
+    "DSA/08_Tries/08_Tries_Tricky.md",
+    "DSA/08_Tries/08_Tries_Problems_and_Exercises.md",
+    "DSA/08_Tries/08_Tries_Patterns.md",
+    "DSA/08_Tries/08_Tries_Index.md",
+    "DSA/07_Trees/07_Trees_Tricky.md",
+    "DSA/07_Trees/07_Trees_Problems_and_Exercises.md",
+    "DSA/07_Trees/07_Trees_Patterns.md",
+    "DSA/07_Trees/07_Trees_BST.md",
+    "DSA/07_Trees/07_Trees_Foundations.md",
+    "DSA/07_Trees/07_Trees_Index.md",
+    "DSA/06_Linked_List/06_Linked_List_Tricky.md",
+    "DSA/06_Linked_List/06_Linked_List_Problems_and_Exercises.md",
+    "DSA/06_Linked_List/06_Linked_List_Patterns.md",
+    "DSA/06_Linked_List/06_Linked_List_Foundations.md",
+    "DSA/06_Linked_List/06_Linked_List_Index.md",
+    "DSA/05_Binary_Search/05_Binary_Search_Tricky.md",
+    "DSA/05_Binary_Search/05_Binary_Search_Problems_and_Exercises.md",
+    "DSA/05_Binary_Search/05_Binary_Search_Patterns.md",
+    "DSA/05_Binary_Search/05_Binary_Search_Index.md",
+    "DSA/04_Stack/04_Stack_Tricky.md",
+    "DSA/04_Stack/04_Stack_Problems_and_Exercises.md",
+    "DSA/04_Stack/04_Stack_Patterns.md",
+    "DSA/04_Stack/04_Stack_Index.md",
+    "DSA/03_Sliding_Window/03_Sliding_Window_Tricky.md",
+    "DSA/03_Sliding_Window/03_Sliding_Window_Problems_and_Exercises.md",
+    "DSA/03_Sliding_Window/03_Sliding_Window_Patterns.md",
+    "rename_vault.py",
+    "14_Greedy"
   ]
 }

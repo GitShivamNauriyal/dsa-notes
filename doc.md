@@ -1,6 +1,6 @@
 # DSA Vault -- Implementation Guide for Continuation
 
-> This document is for any Claude model continuing this vault build.
+> This document is for any AI models continuing this vault build.
 > Read this ENTIRELY before writing a single file. These are hard rules.
 
 ---
@@ -94,7 +94,7 @@ Preferred platforms: LeetCode > GFG > Codeforces.
 ## Pending Chapters (Build in this order)
 
 ### Chapter 8: Tries (`08_Tries/`)
-Files: `00_Index.md`, `01_Patterns.md`, `02_Problems_and_Exercises.md`, `03_Tricky.md`
+Files: `08_Tries_Index.md`, `08_Tries_Patterns.md`, `08_Tries_Problems_and_Exercises.md`, `08_Tries_Tricky.md`
 
 Key patterns to cover:
 - TrieNode structure (array[26] vs unordered_map for children)
@@ -108,7 +108,7 @@ Key patterns to cover:
 ---
 
 ### Chapter 9: Heap / Priority Queue (`09_Heap_Priority_Queue/`)
-Files: `00_Index.md`, `01_Patterns.md`, `02_Problems_and_Exercises.md`, `03_Tricky.md`
+Files: `09_Heap_Priority_Queue_Index.md`, `09_Heap_Priority_Queue_Patterns.md`, `09_Heap_Priority_Queue_Problems_and_Exercises.md`, `09_Heap_Priority_Queue_Tricky.md`
 
 Key patterns:
 - `std::priority_queue` (max-heap default, min-heap with `greater<>`)
@@ -121,7 +121,7 @@ Key patterns:
 ---
 
 ### Chapter 10: Backtracking (`10_Backtracking/`)
-Files: `00_Index.md`, `01_Patterns.md`, `02_Problems_and_Exercises.md`, `03_Tricky.md`
+Files: `10_Backtracking_Index.md`, `10_Backtracking_Patterns.md`, `10_Backtracking_Problems_and_Exercises.md`, `10_Backtracking_Tricky.md`
 
 Key patterns:
 - Subsets (power set)
@@ -136,7 +136,7 @@ Key patterns:
 ---
 
 ### Chapter 11: Graphs (`11_Graphs/`)
-Files: `00_Index.md`, `01_Foundations.md`, `02_BFS_DFS.md`, `03_Shortest_Path.md`, `04_Union_Find.md`, `05_Topological_Sort.md`, `06_Problems_and_Exercises.md`, `07_Tricky.md`
+Files: `11_Graphs_Index.md`, `11_Graphs_Foundations.md`, `11_Graphs_BFS_DFS.md`, `11_Graphs_Shortest_Path.md`, `11_Graphs_Union_Find.md`, `11_Graphs_Topological_Sort.md`, `11_Graphs_Problems_and_Exercises.md`, `11_Graphs_Tricky.md`
 
 Key patterns:
 - Graph representation: adjacency list, adjacency matrix, edge list
@@ -151,7 +151,7 @@ Key patterns:
 ---
 
 ### Chapter 12: Advanced Graphs (`12_Advanced_Graphs/`)
-Files: `00_Index.md`, `01_MST.md`, `02_Network_Flow.md`, `03_SCC.md`, `04_Problems_and_Exercises.md`, `05_Tricky.md`
+Files: `12_Advanced_Graphs_Index.md`, `12_Advanced_Graphs_MST.md`, `12_Advanced_Graphs_Network_Flow.md`, `12_Advanced_Graphs_SCC.md`, `12_Advanced_Graphs_Problems_and_Exercises.md`, `12_Advanced_Graphs_Tricky.md`
 
 Key patterns:
 - Minimum Spanning Tree: Kruskal (Union-Find) + Prim (Priority Queue)
@@ -233,28 +233,28 @@ Each DP sub-file must:
 ---
 
 ### Chapter 14: Greedy (`14_Greedy/`)
-Files: `00_Index.md`, `01_Patterns.md`, `02_Problems_and_Exercises.md`, `03_Tricky.md`
+Files: `14_Greedy_Index.md`, `14_Greedy_Patterns.md`, `14_Greedy_Problems_and_Exercises.md`, `14_Greedy_Tricky.md`
 
 Key patterns: Activity Selection, Huffman Coding concept, Jump Game, Candy, Gas Station
 
 ---
 
 ### Chapter 15: Intervals (`15_Intervals/`)
-Files: `00_Index.md`, `01_Patterns.md`, `02_Problems_and_Exercises.md`, `03_Tricky.md`
+Files: `15_Intervals_Index.md`, `15_Intervals_Patterns.md`, `15_Intervals_Problems_and_Exercises.md`, `15_Intervals_Tricky.md`
 
 Key patterns: Merge Intervals, Insert Interval, Meeting Rooms, Employee Free Time
 
 ---
 
 ### Chapter 16: Bit Manipulation (`16_Bit_Manipulation/`)
-Files: `00_Index.md`, `01_Patterns.md`, `02_Problems_and_Exercises.md`, `03_Tricky.md`
+Files: `16_Bit_Manipulation_Index.md`, `16_Bit_Manipulation_Patterns.md`, `16_Bit_Manipulation_Problems_and_Exercises.md`, `16_Bit_Manipulation_Tricky.md`
 
 Key patterns: Basic ops, XOR tricks, bit counting, power of 2, subset enumeration via bits
 
 ---
 
 ### Chapter 17: Math & Geometry (`17_Math_and_Geometry/`)
-Files: `00_Index.md`, `01_Patterns.md`, `02_Problems_and_Exercises.md`, `03_Tricky.md`
+Files: `17_Math_and_Geometry_Index.md`, `17_Math_and_Geometry_Patterns.md`, `17_Math_and_Geometry_Problems_and_Exercises.md`, `17_Math_and_Geometry_Tricky.md`
 
 Key patterns: Sieve of Eratosthenes, GCD/LCM, modular arithmetic, fast power, nCr mod p, geometry basics
 
@@ -287,7 +287,7 @@ After each commit, stop and type only: **"Continue?"**
 
 - **NeetCode.io roadmap** (the image attached by user): Arrays->Two Pointers->Stack->Binary Search->Sliding Window->Linked List->Trees->Tries->Heap->Backtracking->Graphs->Advanced Graphs->1D DP->2D DP->Greedy->Intervals->Bit Manipulation->Math
 - **TakeUForward (Striver's SDE Sheet)**: extends NeetCode with harder variants, especially in DP and Graphs
-- **Aditya Verma (YouTube)**: known for DP series (Knapsack variants as foundation for all DP) and Backtracking/Recursion style
+- **Aditya Verma (YouTube)**: known for DP series (Knapsack variants as foundation for all DP, and all other patterns and variants) and Backtracking/Recursion style
 
 The notes go BEYOND NeetCode into TakeUForward territory specifically for:
 - DP (full 9-subtype structure above)
@@ -300,11 +300,12 @@ The notes go BEYOND NeetCode into TakeUForward territory specifically for:
 ## File Naming Convention
 
 ```
-00_Index.md
-01_Foundations.md  (if needed)
-01_or_02_Patterns.md
-02_or_03_Problems_and_Exercises.md
-LAST_Tricky.md  (always the last file, e.g., 03_Tricky.md or 05_Tricky.md)
+XX_Chapter_Name_Index.md
+XX_Chapter_Name_Foundations.md  (if needed)
+XX_Chapter_Name_BST.md          (for BST if needed)
+XX_Chapter_Name_Patterns.md
+XX_Chapter_Name_Problems_and_Exercises.md
+XX_Chapter_Name_Tricky.md       (always the last file, e.g., XX_Chapter_Name_Tricky.md)
 ```
 
 ## YAML Frontmatter Template
