@@ -5,7 +5,7 @@ links: ["[[04_Stack_Index]]", "[[04_Stack_Problems_and_Exercises]]"]
 
 # Stack -- Patterns
 
-*<- [[04_Stack_Index|Index]] · [[04_Stack_Problems_and_Exercises|Problems ->]]*
+*<- [[04_Stack_Index\|Index]] · [[04_Stack_Problems_and_Exercises\|Problems ->]]*
 
 ---
 
@@ -399,4 +399,4 @@ int longestValidParentheses(string s) {
 
 ---
 
-*<- [[04_Stack_Index|Index]] · [[04_Stack_Tricky|Tricky ->]]*
+*<- [[04_Stack_Index\|Index]] · [[04_Stack_Tricky\|Tricky ->]]*

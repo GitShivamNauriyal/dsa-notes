@@ -5,7 +5,7 @@ links: ["[[05_Binary_Search_Index]]", "[[05_Binary_Search_Patterns]]", "[[05_Bin
 
 # Binary Search -- Problems & Exercises
 
-*<- [[05_Binary_Search_Patterns|Patterns]] · [[05_Binary_Search_Tricky|Tricky ->]]*
+*<- [[05_Binary_Search_Patterns\|Patterns]] · [[05_Binary_Search_Tricky\|Tricky ->]]*
 
 ---
 
@@ -134,4 +134,4 @@ int aggressiveCows(vector<int>& stalls, int cows) {
 
 ---
 
-*<- [[05_Binary_Search_Patterns|Patterns]] · [[05_Binary_Search_Tricky|Tricky ->]]*
+*<- [[05_Binary_Search_Patterns\|Patterns]] · [[05_Binary_Search_Tricky\|Tricky ->]]*

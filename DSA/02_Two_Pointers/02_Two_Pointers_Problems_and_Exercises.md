@@ -5,7 +5,7 @@ links: ["[[02_Two_Pointers_Index]]", "[[02_Two_Pointers_Patterns]]", "[[02_Two_P
 
 # Two Pointers -- Problems & Exercises
 
-*<- [[02_Two_Pointers_Patterns|Patterns]] · [[02_Two_Pointers_Tricky|Tricky ->]]*
+*<- [[02_Two_Pointers_Patterns\|Patterns]] · [[02_Two_Pointers_Tricky\|Tricky ->]]*
 
 ---
 
@@ -125,4 +125,4 @@ bool isSubsequenceFast(const string& s, const vector<vector<int>>& nxt, int tLen
 
 ---
 
-*<- [[02_Two_Pointers_Patterns|Patterns]] · [[02_Two_Pointers_Tricky|Tricky ->]]*
+*<- [[02_Two_Pointers_Patterns\|Patterns]] · [[02_Two_Pointers_Tricky\|Tricky ->]]*

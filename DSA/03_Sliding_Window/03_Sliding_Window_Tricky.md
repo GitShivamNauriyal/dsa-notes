@@ -5,7 +5,7 @@ links: ["[[03_Sliding_Window_Index]]", "[[03_Sliding_Window_Problems_and_Exercis
 
 # Sliding Window -- Tricky & Higher-Order
 
-*<- [[03_Sliding_Window_Problems_and_Exercises|Problems]] · [[../04_Stack/04_Stack_Index|Stack ->]]*
+*<- [[03_Sliding_Window_Problems_and_Exercises\|Problems]] · [[../04_Stack/04_Stack_Index\|Stack ->]]*
 
 ---
 
@@ -242,4 +242,4 @@ int minWindowSize(vector<int>& nums /* condition params */) {
 
 ---
 
-*<- [[03_Sliding_Window_Problems_and_Exercises|Problems]] · [[../04_Stack/04_Stack_Index|Stack ->]]*
+*<- [[03_Sliding_Window_Problems_and_Exercises\|Problems]] · [[../04_Stack/04_Stack_Index\|Stack ->]]*

@@ -5,7 +5,7 @@ links: ["[[07_Trees_Index]]", "[[07_Trees_Patterns]]", "[[07_Trees_Tricky]]"]
 
 # Trees -- Problems & Exercises
 
-*<- [[07_Trees_Patterns|Patterns]] · [[07_Trees_Tricky|Tricky ->]]*
+*<- [[07_Trees_Patterns\|Patterns]] · [[07_Trees_Tricky\|Tricky ->]]*
 
 ---
 
@@ -84,4 +84,4 @@ int countNodes(TreeNode* root) {
 
 ---
 
-*<- [[07_Trees_Patterns|Patterns]] · [[07_Trees_Tricky|Tricky ->]]*
+*<- [[07_Trees_Patterns\|Patterns]] · [[07_Trees_Tricky\|Tricky ->]]*

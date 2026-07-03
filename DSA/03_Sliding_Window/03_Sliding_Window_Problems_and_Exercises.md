@@ -5,7 +5,7 @@ links: ["[[03_Sliding_Window_Index]]", "[[03_Sliding_Window_Patterns]]", "[[03_S
 
 # Sliding Window -- Problems & Exercises
 
-*<- [[03_Sliding_Window_Patterns|Patterns]] · [[03_Sliding_Window_Tricky|Tricky ->]]*
+*<- [[03_Sliding_Window_Patterns\|Patterns]] · [[03_Sliding_Window_Tricky\|Tricky ->]]*
 
 ---
 
@@ -93,4 +93,4 @@ vector<int> findAnagrams(string s, string p) {
 
 ---
 
-*<- [[03_Sliding_Window_Patterns|Patterns]] · [[03_Sliding_Window_Tricky|Tricky ->]]*
+*<- [[03_Sliding_Window_Patterns\|Patterns]] · [[03_Sliding_Window_Tricky\|Tricky ->]]*

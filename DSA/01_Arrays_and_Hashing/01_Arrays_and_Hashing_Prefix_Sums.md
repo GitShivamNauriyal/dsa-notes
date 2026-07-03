@@ -5,7 +5,7 @@ links: ["[[01_Arrays_and_Hashing_Index]]", "[[01_Arrays_and_Hashing_Arrays_Basic
 
 # Prefix Sums & Difference Arrays
 
-*← [[01_Arrays_and_Hashing_Arrays_Basics|Arrays Basics]] · [[01_Arrays_and_Hashing_Hashing|Hashing →]]*
+*← [[01_Arrays_and_Hashing_Arrays_Basics\|Arrays Basics]] · [[01_Arrays_and_Hashing_Hashing\|Hashing →]]*
 
 ---
 
@@ -332,4 +332,4 @@ vector<int> corpFlightBookings(
 
 ---
 
-*← [[01_Arrays_and_Hashing_Arrays_Basics|Arrays Basics]] · [[01_Arrays_and_Hashing_Hashing|Hashing →]]*
+*← [[01_Arrays_and_Hashing_Arrays_Basics\|Arrays Basics]] · [[01_Arrays_and_Hashing_Hashing\|Hashing →]]*

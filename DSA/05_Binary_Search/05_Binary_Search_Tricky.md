@@ -5,7 +5,7 @@ links: ["[[05_Binary_Search_Index]]", "[[05_Binary_Search_Problems_and_Exercises
 
 # Binary Search -- Tricky & Higher-Order
 
-*<- [[05_Binary_Search_Problems_and_Exercises|Problems]] · [[../06_Linked_List/06_Linked_List_Index|Linked List ->]]*
+*<- [[05_Binary_Search_Problems_and_Exercises\|Problems]] · [[../06_Linked_List/06_Linked_List_Index\|Linked List ->]]*
 
 ---
 
@@ -296,4 +296,4 @@ int kthSmallest(vector<vector<int>>& matrix, int k) {
 
 ---
 
-*<- [[05_Binary_Search_Problems_and_Exercises|Problems]] · [[../06_Linked_List/06_Linked_List_Index|Linked List ->]]*
+*<- [[05_Binary_Search_Problems_and_Exercises\|Problems]] · [[../06_Linked_List/06_Linked_List_Index\|Linked List ->]]*

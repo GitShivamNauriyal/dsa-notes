@@ -5,7 +5,7 @@ links: ["[[03_Sliding_Window_Index]]", "[[03_Sliding_Window_Problems_and_Exercis
 
 # Sliding Window -- Patterns
 
-*<- [[03_Sliding_Window_Index|Index]] · [[03_Sliding_Window_Problems_and_Exercises|Problems ->]]*
+*<- [[03_Sliding_Window_Index\|Index]] · [[03_Sliding_Window_Problems_and_Exercises\|Problems ->]]*
 
 ---
 
@@ -379,4 +379,4 @@ string minWindow(string s, string t) {
 
 ---
 
-*<- [[03_Sliding_Window_Index|Index]] · [[03_Sliding_Window_Problems_and_Exercises|Problems ->]]*
+*<- [[03_Sliding_Window_Index\|Index]] · [[03_Sliding_Window_Problems_and_Exercises\|Problems ->]]*

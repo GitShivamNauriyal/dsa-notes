@@ -5,7 +5,7 @@ links: ["[[06_Linked_List_Index]]", "[[06_Linked_List_Foundations]]", "[[06_Link
 
 # Linked List -- Patterns
 
-*<- [[06_Linked_List_Foundations|Foundations]] · [[06_Linked_List_Problems_and_Exercises|Problems ->]]*
+*<- [[06_Linked_List_Foundations\|Foundations]] · [[06_Linked_List_Problems_and_Exercises\|Problems ->]]*
 
 ---
 
@@ -409,4 +409,4 @@ void reorderList(ListNode* head) {
 
 ---
 
-*<- [[06_Linked_List_Foundations|Foundations]] · [[06_Linked_List_Problems_and_Exercises|Problems ->]]*
+*<- [[06_Linked_List_Foundations\|Foundations]] · [[06_Linked_List_Problems_and_Exercises\|Problems ->]]*

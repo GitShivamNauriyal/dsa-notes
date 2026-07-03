@@ -5,7 +5,7 @@ links: ["[[02_Two_Pointers_Index]]", "[[02_Two_Pointers_Problems_and_Exercises]]
 
 # Two Pointers -- Tricky & Higher-Order
 
-*<- [[02_Two_Pointers_Problems_and_Exercises|Problems]] · [[../03_Sliding_Window/03_Sliding_Window_Index|Sliding Window ->]]*
+*<- [[02_Two_Pointers_Problems_and_Exercises\|Problems]] · [[../03_Sliding_Window/03_Sliding_Window_Index\|Sliding Window ->]]*
 
 ---
 
@@ -234,4 +234,4 @@ void threeWayPartition(vector<int>& arr, int lo, int hi) {
 
 ---
 
-*<- [[02_Two_Pointers_Problems_and_Exercises|Problems]] · [[../03_Sliding_Window/03_Sliding_Window_Index|Sliding Window ->]]*
+*<- [[02_Two_Pointers_Problems_and_Exercises\|Problems]] · [[../03_Sliding_Window/03_Sliding_Window_Index\|Sliding Window ->]]*

@@ -5,7 +5,7 @@ links: ["[[06_Linked_List_Index]]", "[[06_Linked_List_Patterns]]", "[[06_Linked_
 
 # Linked List -- Problems & Exercises
 
-*<- [[06_Linked_List_Patterns|Patterns]] · [[06_Linked_List_Tricky|Tricky ->]]*
+*<- [[06_Linked_List_Patterns\|Patterns]] · [[06_Linked_List_Tricky\|Tricky ->]]*
 
 ---
 
@@ -193,4 +193,4 @@ public:
 
 ---
 
-*<- [[06_Linked_List_Patterns|Patterns]] · [[06_Linked_List_Tricky|Tricky ->]]*
+*<- [[06_Linked_List_Patterns\|Patterns]] · [[06_Linked_List_Tricky\|Tricky ->]]*

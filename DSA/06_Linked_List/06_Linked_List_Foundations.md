@@ -5,7 +5,7 @@ links: ["[[06_Linked_List_Index]]", "[[06_Linked_List_Patterns]]"]
 
 # Linked List -- Foundations
 
-*<- [[06_Linked_List_Index|Index]] · [[06_Linked_List_Patterns|Patterns ->]]*
+*<- [[06_Linked_List_Index\|Index]] · [[06_Linked_List_Patterns\|Patterns ->]]*
 
 ---
 
@@ -197,4 +197,4 @@ void freeList(ListNode* head) {
 
 ---
 
-*<- [[06_Linked_List_Index|Index]] · [[06_Linked_List_Patterns|Patterns ->]]*
+*<- [[06_Linked_List_Index\|Index]] · [[06_Linked_List_Patterns\|Patterns ->]]*

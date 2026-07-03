@@ -5,7 +5,7 @@ links: ["[[08_Tries_Index]]", "[[08_Tries_Patterns]]", "[[08_Tries_Tricky]]"]
 
 # Tries -- Problems & Exercises
 
-*<- [[08_Tries_Patterns|Patterns]] · [[08_Tries_Tricky|Tricky ->]]*
+*<- [[08_Tries_Patterns\|Patterns]] · [[08_Tries_Tricky\|Tricky ->]]*
 
 ---
 
@@ -128,4 +128,4 @@ vector<vector<string>> suggestedProducts(
 
 ---
 
-*<- [[08_Tries_Patterns|Patterns]] · [[08_Tries_Tricky|Tricky ->]]*
+*<- [[08_Tries_Patterns\|Patterns]] · [[08_Tries_Tricky\|Tricky ->]]*

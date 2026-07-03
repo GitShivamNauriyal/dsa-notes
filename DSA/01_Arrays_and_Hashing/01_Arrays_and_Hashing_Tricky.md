@@ -5,7 +5,7 @@ links: ["[[01_Arrays_and_Hashing_Index]]", "[[01_Arrays_and_Hashing_Problems_and
 
 # Arrays & Hashing — Tricky & Higher-Order Problems
 
-*← [[01_Arrays_and_Hashing_Problems_and_Exercises|Problems]] · [[../02_Two_Pointers/02_Two_Pointers_Index|Two Pointers →]]*
+*← [[01_Arrays_and_Hashing_Problems_and_Exercises\|Problems]] · [[../02_Two_Pointers/02_Two_Pointers_Index\|Two Pointers →]]*
 
 ---
 
@@ -287,7 +287,7 @@ string minWindow(string s, string t) {
 
 **Why tricky**: Adversarial tests on Codeforces deliberately create inputs that cause `unordered_map` to degrade to O(n) per operation. Forgetting this in an OA costs TLE on a correct solution.
 
-Always use custom hash (shown in [[01_Arrays_and_Hashing_Hashing|Hashing notes]]) when using `unordered_map` or `unordered_set` in competitive settings.
+Always use custom hash (shown in [[01_Arrays_and_Hashing_Hashing\|Hashing notes]]) when using `unordered_map` or `unordered_set` in competitive settings.
 
 ```cpp
 // Alternatively use policy-based tree (GNU extension) for O(log n) guaranteed:
@@ -314,4 +314,4 @@ gp_hash_table<int, int> safe_table;
 
 ---
 
-*← [[01_Arrays_and_Hashing_Problems_and_Exercises|Problems]] · [[../02_Two_Pointers/02_Two_Pointers_Index|Two Pointers →]]*
+*← [[01_Arrays_and_Hashing_Problems_and_Exercises\|Problems]] · [[../02_Two_Pointers/02_Two_Pointers_Index\|Two Pointers →]]*

@@ -5,7 +5,7 @@ links: ["[[01_Arrays_and_Hashing_Index]]", "[[01_Arrays_and_Hashing_Prefix_Sums]
 
 # Arrays — Basics
 
-*← [[01_Arrays_and_Hashing_Index|Index]] · [[01_Arrays_and_Hashing_Prefix_Sums|Prefix Sums →]]*
+*← [[01_Arrays_and_Hashing_Index\|Index]] · [[01_Arrays_and_Hashing_Prefix_Sums\|Prefix Sums →]]*
 
 ---
 
@@ -343,4 +343,4 @@ do {
 
 ---
 
-*← [[01_Arrays_and_Hashing_Index|Index]] · [[01_Arrays_and_Hashing_Prefix_Sums|Next: Prefix Sums →]]*
+*← [[01_Arrays_and_Hashing_Index\|Index]] · [[01_Arrays_and_Hashing_Prefix_Sums\|Next: Prefix Sums →]]*

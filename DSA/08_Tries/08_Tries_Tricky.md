@@ -5,7 +5,7 @@ links: ["[[08_Tries_Index]]", "[[08_Tries_Problems_and_Exercises]]", "[[../09_He
 
 # Tries -- Tricky & Higher-Order
 
-*<- [[08_Tries_Problems_and_Exercises|Problems]] · [[../09_Heap_Priority_Queue/00_Index|Heap ->]]*
+*<- [[08_Tries_Problems_and_Exercises\|Problems]] · [[../09_Heap_Priority_Queue/00_Index\|Heap ->]]*
 
 ---
 
@@ -229,4 +229,4 @@ Each edge stores a string range [start, length] into a string pool.
 
 ---
 
-*<- [[08_Tries_Problems_and_Exercises|Problems]] · [[../09_Heap_Priority_Queue/00_Index|Heap ->]]*
+*<- [[08_Tries_Problems_and_Exercises\|Problems]] · [[../09_Heap_Priority_Queue/00_Index\|Heap ->]]*

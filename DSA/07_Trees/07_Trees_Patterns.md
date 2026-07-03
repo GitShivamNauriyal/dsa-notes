@@ -5,7 +5,7 @@ links: ["[[07_Trees_Index]]", "[[07_Trees_BST]]", "[[07_Trees_Problems_and_Exerc
 
 # Trees -- Patterns
 
-*<- [[07_Trees_BST|BST]] · [[07_Trees_Problems_and_Exercises|Problems ->]]*
+*<- [[07_Trees_BST\|BST]] · [[07_Trees_Problems_and_Exercises\|Problems ->]]*
 
 ---
 
@@ -277,4 +277,4 @@ TreeNode* invertTree(TreeNode* root) {
 
 ---
 
-*<- [[07_Trees_BST|BST]] · [[07_Trees_Problems_and_Exercises|Problems ->]]*
+*<- [[07_Trees_BST\|BST]] · [[07_Trees_Problems_and_Exercises\|Problems ->]]*

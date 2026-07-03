@@ -5,7 +5,7 @@ links: ["[[06_Linked_List_Index]]", "[[06_Linked_List_Problems_and_Exercises]]",
 
 # Linked List -- Tricky & Higher-Order
 
-*<- [[06_Linked_List_Problems_and_Exercises|Problems]] · [[../07_Trees/07_Trees_Index|Trees ->]]*
+*<- [[06_Linked_List_Problems_and_Exercises\|Problems]] · [[../07_Trees/07_Trees_Index\|Trees ->]]*
 
 ---
 
@@ -266,4 +266,4 @@ public:
 
 ---
 
-*<- [[06_Linked_List_Problems_and_Exercises|Problems]] · [[../07_Trees/07_Trees_Index|Trees ->]]*
+*<- [[06_Linked_List_Problems_and_Exercises\|Problems]] · [[../07_Trees/07_Trees_Index\|Trees ->]]*

@@ -5,7 +5,7 @@ links: ["[[02_Two_Pointers_Index]]", "[[02_Two_Pointers_Problems_and_Exercises]]
 
 # Two Pointers -- Patterns
 
-*<- [[02_Two_Pointers_Index|Index]] · [[02_Two_Pointers_Problems_and_Exercises|Problems ->]]*
+*<- [[02_Two_Pointers_Index\|Index]] · [[02_Two_Pointers_Problems_and_Exercises\|Problems ->]]*
 
 ---
 
@@ -390,4 +390,4 @@ int threeSumClosest(vector<int>& nums, int target) {
 
 ---
 
-*<- [[02_Two_Pointers_Index|Index]] · [[02_Two_Pointers_Tricky|Tricky ->]]*
+*<- [[02_Two_Pointers_Index\|Index]] · [[02_Two_Pointers_Tricky\|Tricky ->]]*

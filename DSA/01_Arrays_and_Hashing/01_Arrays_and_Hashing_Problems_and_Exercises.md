@@ -5,7 +5,7 @@ links: ["[[01_Arrays_and_Hashing_Index]]", "[[01_Arrays_and_Hashing_Key_Algorith
 
 # Arrays & Hashing — Problems & Exercises
 
-*← [[01_Arrays_and_Hashing_Key_Algorithms|Key Algorithms]] · [[../02_Two_Pointers/02_Two_Pointers_Index|Two Pointers →]]*
+*← [[01_Arrays_and_Hashing_Key_Algorithms\|Key Algorithms]] · [[../02_Two_Pointers/02_Two_Pointers_Index\|Two Pointers →]]*
 
 ---
 
@@ -138,4 +138,4 @@ int firstMissingPositive(vector<int>& nums) {
 
 ---
 
-*← [[01_Arrays_and_Hashing_Key_Algorithms|Key Algorithms]] · [[../02_Two_Pointers/02_Two_Pointers_Index|Next Chapter: Two Pointers →]]*
+*← [[01_Arrays_and_Hashing_Key_Algorithms\|Key Algorithms]] · [[../02_Two_Pointers/02_Two_Pointers_Index\|Next Chapter: Two Pointers →]]*

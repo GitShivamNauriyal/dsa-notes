@@ -5,7 +5,7 @@ links: ["[[01_Arrays_and_Hashing_Index]]", "[[01_Arrays_and_Hashing_Prefix_Sums]
 
 # Hashing, Maps & Sets
 
-*← [[01_Arrays_and_Hashing_Prefix_Sums|Prefix Sums]] · [[01_Arrays_and_Hashing_Key_Algorithms|Key Algorithms →]]*
+*← [[01_Arrays_and_Hashing_Prefix_Sums\|Prefix Sums]] · [[01_Arrays_and_Hashing_Key_Algorithms\|Key Algorithms →]]*
 
 ---
 
@@ -370,4 +370,4 @@ bool containsDuplicate(vector<int>& nums) {
 
 ---
 
-*← [[01_Arrays_and_Hashing_Prefix_Sums|Prefix Sums]] · [[01_Arrays_and_Hashing_Key_Algorithms|Key Algorithms →]]*
+*← [[01_Arrays_and_Hashing_Prefix_Sums\|Prefix Sums]] · [[01_Arrays_and_Hashing_Key_Algorithms\|Key Algorithms →]]*

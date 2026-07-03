@@ -5,7 +5,7 @@ links: ["[[04_Stack_Index]]", "[[04_Stack_Problems_and_Exercises]]", "[[../05_Bi
 
 # Stack -- Tricky & Higher-Order
 
-*<- [[04_Stack_Problems_and_Exercises|Problems]] · [[../05_Binary_Search/05_Binary_Search_Index|Binary Search ->]]*
+*<- [[04_Stack_Problems_and_Exercises\|Problems]] · [[../05_Binary_Search/05_Binary_Search_Index\|Binary Search ->]]*
 
 ---
 
@@ -236,4 +236,4 @@ public:
 
 ---
 
-*<- [[04_Stack_Problems_and_Exercises|Problems]] · [[../05_Binary_Search/05_Binary_Search_Index|Binary Search ->]]*
+*<- [[04_Stack_Problems_and_Exercises\|Problems]] · [[../05_Binary_Search/05_Binary_Search_Index\|Binary Search ->]]*

@@ -5,7 +5,7 @@ links: ["[[05_Binary_Search_Index]]", "[[05_Binary_Search_Problems_and_Exercises
 
 # Binary Search -- Patterns
 
-*<- [[05_Binary_Search_Index|Index]] · [[05_Binary_Search_Problems_and_Exercises|Problems ->]]*
+*<- [[05_Binary_Search_Index\|Index]] · [[05_Binary_Search_Problems_and_Exercises\|Problems ->]]*
 
 ---
 
@@ -371,4 +371,4 @@ auto it3 = lower_bound(vp.begin(), vp.end(), make_pair(0, 5),
 
 ---
 
-*<- [[05_Binary_Search_Index|Index]] · [[05_Binary_Search_Problems_and_Exercises|Problems ->]]*
+*<- [[05_Binary_Search_Index\|Index]] · [[05_Binary_Search_Problems_and_Exercises\|Problems ->]]*

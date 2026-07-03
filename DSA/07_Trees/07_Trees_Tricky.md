@@ -5,7 +5,7 @@ links: ["[[07_Trees_Index]]", "[[07_Trees_Problems_and_Exercises]]", "[[../08_Tr
 
 # Trees -- Tricky & Higher-Order
 
-*<- [[07_Trees_Problems_and_Exercises|Problems]] · [[../08_Tries/08_Tries_Index|Tries ->]]*
+*<- [[07_Trees_Problems_and_Exercises\|Problems]] · [[../08_Tries/08_Tries_Index\|Tries ->]]*
 
 ---
 
@@ -303,4 +303,4 @@ int lca(int u, int v) {
 
 ---
 
-*<- [[07_Trees_Problems_and_Exercises|Problems]] · [[../08_Tries/08_Tries_Index|Tries ->]]*
+*<- [[07_Trees_Problems_and_Exercises\|Problems]] · [[../08_Tries/08_Tries_Index\|Tries ->]]*

@@ -5,7 +5,7 @@ links: ["[[01_Arrays_and_Hashing_Index]]", "[[01_Arrays_and_Hashing_Hashing]]", 
 
 # Key Array Algorithms
 
-*← [[01_Arrays_and_Hashing_Hashing|Hashing]] · [[01_Arrays_and_Hashing_Problems_and_Exercises|Problems →]]*
+*← [[01_Arrays_and_Hashing_Hashing\|Hashing]] · [[01_Arrays_and_Hashing_Problems_and_Exercises\|Problems →]]*
 
 ---
 
@@ -327,4 +327,4 @@ Already shown in Pattern 4.
 
 ---
 
-*← [[01_Arrays_and_Hashing_Hashing|Hashing]] · [[01_Arrays_and_Hashing_Problems_and_Exercises|Problems →]]*
+*← [[01_Arrays_and_Hashing_Hashing\|Hashing]] · [[01_Arrays_and_Hashing_Problems_and_Exercises\|Problems →]]*

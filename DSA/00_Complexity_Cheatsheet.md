@@ -232,4 +232,4 @@ log_2(10^18) ≈ 60                         (long long max)
 
 ---
 
-*Links: [[00_Home]] · [[01_Arrays_and_Hashing/01_Arrays_and_Hashing_Index|Arrays & Hashing →]]*
+*Links: [[00_Home]] · [[01_Arrays_and_Hashing/01_Arrays_and_Hashing_Index\|Arrays & Hashing →]]*

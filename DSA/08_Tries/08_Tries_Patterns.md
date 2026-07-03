@@ -5,7 +5,7 @@ links: ["[[08_Tries_Index]]", "[[08_Tries_Problems_and_Exercises]]"]
 
 # Tries -- Patterns
 
-*<- [[08_Tries_Index|Index]] · [[08_Tries_Problems_and_Exercises|Problems ->]]*
+*<- [[08_Tries_Index\|Index]] · [[08_Tries_Problems_and_Exercises\|Problems ->]]*
 
 ---
 
@@ -380,4 +380,4 @@ string replaceWords(vector<string>& dictionary, string sentence) {
 
 ---
 
-*<- [[08_Tries_Index|Index]] · [[08_Tries_Problems_and_Exercises|Problems ->]]*
+*<- [[08_Tries_Index\|Index]] · [[08_Tries_Problems_and_Exercises\|Problems ->]]*

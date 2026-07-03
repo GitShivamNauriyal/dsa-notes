@@ -5,7 +5,7 @@ links: ["[[07_Trees_Index]]", "[[07_Trees_BST]]"]
 
 # Trees -- Foundations & Traversals
 
-*<- [[07_Trees_Index|Index]] · [[07_Trees_BST|BST ->]]*
+*<- [[07_Trees_Index\|Index]] · [[07_Trees_BST\|BST ->]]*
 
 ---
 
@@ -262,4 +262,4 @@ int diameterOfBinaryTree(TreeNode* root) {
 
 ---
 
-*<- [[07_Trees_Index|Index]] · [[07_Trees_BST|BST ->]]*
+*<- [[07_Trees_Index\|Index]] · [[07_Trees_BST\|BST ->]]*

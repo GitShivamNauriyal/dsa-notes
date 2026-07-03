@@ -5,7 +5,7 @@ links: ["[[07_Trees_Index]]", "[[07_Trees_Foundations]]", "[[07_Trees_Patterns]]
 
 # Binary Search Tree (BST)
 
-*<- [[07_Trees_Foundations|Foundations]] · [[07_Trees_Patterns|Patterns ->]]*
+*<- [[07_Trees_Foundations\|Foundations]] · [[07_Trees_Patterns\|Patterns ->]]*
 
 ---
 
@@ -258,4 +258,4 @@ TreeNode* inorderPredecessor(TreeNode* root, TreeNode* p) {
 
 ---
 
-*<- [[07_Trees_Foundations|Foundations]] · [[07_Trees_Patterns|Patterns ->]]*
+*<- [[07_Trees_Foundations\|Foundations]] · [[07_Trees_Patterns\|Patterns ->]]*
