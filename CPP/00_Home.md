@@ -19,7 +19,7 @@ links: ["[[../00_Home]]"]
 | 03 | [[03_OOP_in_CPP/03_OOP_Index\|OOP in C++]] | ✅ |
 | 04 | [[04_Templates_and_Generics/04_Tmpl_Index\|Templates & Generics]] | ✅ |
 | 05 | [[05_STL_and_Modern_Features/05_STL_Index\|STL & Modern Features]] | ✅ |
-| 06 | Memory and Smart Pointers | ⬜ |
+| 06 | [[06_Memory_and_Smart_Pointers/06_Mem_Index\|Memory and Smart Pointers]] | ✅ |
 | 07 | Concurrency | ⬜ |
 | 08 | Concurrency Primitives From Scratch | ⬜ |
 | 09 | Performance and Optimization | ⬜ |
