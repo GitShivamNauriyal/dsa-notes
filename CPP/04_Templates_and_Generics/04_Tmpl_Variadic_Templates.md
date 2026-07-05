@@ -1,5 +1,5 @@
 ---
-tags: [cpp, templates, variadic-templates, parameter-packs, fold-expressions]
+tags: [cpp, templates, variadic-templates, parameter-packs, fold-expressions, pack-expansion]
 links: ["[[04_Tmpl_Index]]", "[[04_Tmpl_Specialization]]", "[[04_Tmpl_SFINAE_and_Type_Traits]]"]
 ---
 
@@ -9,42 +9,76 @@ links: ["[[04_Tmpl_Index]]", "[[04_Tmpl_Specialization]]", "[[04_Tmpl_SFINAE_and
 
 ---
 
-## 1. Parameter Packs (C++11)
+## 1. Parameter Packs & Size Query
 
-**Variadic Templates** accept any number of arguments of any type. 
-- **`typename... Args`**: Declares a **template parameter pack**.
-- **`Args... args`**: Declares a **function parameter pack**.
+A **variadic template** (introduced in C++11) is a template that accepts an arbitrary number of arguments of any type.
+- **Template Parameter Pack**: `typename... Args` declares a pack of types.
+- **Function Parameter Pack**: `Args... args` declares a pack of values.
+- **`sizeof...` Operator**: Returns the number of elements inside a parameter pack as a compile-time constant expression.
 
 ```cpp
-#include <iostream>
+#include <cstddef>
 
-// Base case: terminates recursion when no arguments are left
-void printList() {
-    std::cout << "\n";
-}
-
-// Recursive step: extracts the first argument, recurses on the rest
-template <typename T, typename... Args>
-void printList(T first, Args... rest) {
-    std::cout << first << " ";
-    printList(rest...); // Expand the pack
-}
-
-void demoVariadic() {
-    printList(1, 2.5, "Hello", 'A'); // Prints: 1 2.5 Hello A
+template <typename... Args>
+std::size_t getPackSize(Args... args) {
+    // Evaluates at compile-time
+    return sizeof...(args); 
 }
 ```
 
 ---
 
-## 2. Fold Expressions (C++17)
+## 2. Advanced Pack Expansion Contexts
 
-To print or compute values with variadic templates prior to C++17, we had to write tedious recursive functions with base-case overloads. C++17 introduced **Fold Expressions** to expand parameter packs directly using binary/unary operators.
+Parameter packs are expanded by writing `...` to the right of the pattern. You can expand packs in several different C++ syntactic contexts:
 
-### Fold Expression Syntax:
-Let the parameter pack be `args`, and the operator be `op` (e.g. `+`, `,`, `<<`).
+### A. Template Argument Lists & Base Class Inheritances
+You can inherit from a variable number of classes and initialize them simultaneously:
 
-| Type | Syntax | Expanded Form |
+```cpp
+#include <iostream>
+
+struct Reader { void read() { std::cout << "Read\n"; } };
+struct Writer { void write() { std::cout << "Write\n"; } };
+
+// Inherit from multiple classes passed in template pack
+template <typename... Interfaces>
+class Device : public Interfaces... {
+public:
+    // Expand inside constructor initializer list
+    Device(Interfaces... inputs) : Interfaces(inputs)... {}
+};
+
+void demoDevice() {
+    Reader r;
+    Writer w;
+    Device<Reader, Writer> dev(r, w);
+    dev.read();
+    dev.write();
+}
+```
+
+### B. Array Initializer Lists
+Expand a pack directly into an array declaration:
+
+```cpp
+template <typename... Args>
+void populateArray(Args... args) {
+    // Expands to: int arr[] = { args1, args2, args3 };
+    int arr[] = { args... }; 
+}
+```
+
+---
+
+## 3. Fold Expressions (C++17)
+
+Prior to C++17, operating on a pack required writing a recursive helper function with a base-case overload. C++17 introduced **Fold Expressions** to process packs directly using operators.
+
+### Fold Operator Matrix
+Let `args` be the pack, `op` be a binary operator, and `init` be an initial value.
+
+| Category | Syntax | Expansion Pattern |
 |---|---|---|
 | **Unary Right Fold** | `(args op ...)` | `args1 op (args2 op (args3 op args4))` |
 | **Unary Left Fold** | `(... op args)` | `((args1 op args2) op args3) op args4` |
@@ -53,33 +87,33 @@ Let the parameter pack be `args`, and the operator be `op` (e.g. `+`, `,`, `<<`)
 
 ---
 
-## 3. Fold Expression Examples
+## 4. Practical Fold Applications
 
-### A. Variadic Sum (Unary Left Fold)
+### A. All / Any Conditions (Logical AND / OR)
+Verify that all arguments satisfy a specific condition at compile-time:
+
 ```cpp
-template <typename... Args>
-auto sumAll(Args... args) {
-    return (... + args); // Unary Left Fold: expands to ((args1 + args2) + args3) + ...
-}
+#include <concepts>
 
-void demoSum() {
-    int sum = sumAll(1, 2, 3, 4, 5); // Returns 15
+template <typename... Args>
+bool allPositive(Args... args) {
+    // Unary Left Fold using logical AND (&&)
+    // Expands to: ((args1 > 0) && (args2 > 0)) && ...
+    return (... && (args > 0)); 
 }
 ```
 
-### B. Variadic Print (Binary Left Fold with stream `<<`)
+### B. Perfect Forwarding Packs
+To forward a pack of arguments to an inner constructor while maintaining value categories (lvalue/rvalue) and constness, use `std::forward` combined with pack expansion:
+
 ```cpp
-#include <iostream>
+#include <memory>
+#include <utility>
 
-template <typename... Args>
-void foldPrint(Args... args) {
-    // Binary Left Fold using std::cout as the initial value
-    // Expands to: ((std::cout << args1) << args2) << ...
-    (std::cout << ... << args) << "\n";
-}
-
-void demoFoldPrint() {
-    foldPrint("Data:", 42, 3.14, 'Z');
+template <typename T, typename... Args>
+std::unique_ptr<T> createInstance(Args&&... args) {
+    // Expand the forwarded arguments pack: std::forward<Args>(args)...
+    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
 ```
 

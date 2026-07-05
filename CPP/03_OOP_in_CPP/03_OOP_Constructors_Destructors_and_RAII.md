@@ -152,7 +152,7 @@ Destruction happens in **exact reverse order**:
 
 ```
   Construction: ┌────────────────┐     ┌───────────────┐     ┌───────────────┐
-                │ Base Construct ├────►│ Member Init  ├────►│ Derived Body  │
+                │ Base Construct ├────►│ Member Init   ├────►│ Derived Body  │
                 └────────────────┘     └───────────────┘     └───────────────┘
                                                                      │
   Destruction:  ┌────────────────┐     ┌───────────────┐     ┌───────▼───────┐

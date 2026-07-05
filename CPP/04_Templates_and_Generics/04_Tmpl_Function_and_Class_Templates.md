@@ -1,5 +1,5 @@
 ---
-tags: [cpp, templates, class-templates, function-templates, nttp]
+tags: [cpp, templates, class-templates, function-templates, nttp, two-phase-lookup, compilation-model]
 links: ["[[04_Tmpl_Index]]", "[[04_Tmpl_Specialization]]"]
 ---
 
@@ -9,75 +9,96 @@ links: ["[[04_Tmpl_Index]]", "[[04_Tmpl_Specialization]]"]
 
 ---
 
-## 1. Templates: Compile-Time Code Generators
+## 1. Templates: Compile-Time Instantiation
 
-In C++, templates are not compiled directly. Instead, they are blueprints. When you instantiate a template with concrete arguments, the compiler generates a custom version of the class or function for those types. This process is called **template instantiation**.
+In C++, templates are not actual classes or functions. They are blueprints used by the compiler to generate code. When a template is called or instantiated, the compiler replaces the template parameters with concrete arguments and generates a distinct object code representation for those types. This process is called **template instantiation**.
 
-- **Template Argument Deduction**: The compiler automatically infers template parameters for functions based on argument types (no need to write `<Type>` explicitly).
+### Two-Phase Lookup
+Compilers parse templates in two distinct phases:
+1. **Phase 1 (Parsing/Compilation Time)**: The compiler parses the template definition without knowing the template arguments. Only basic syntax validation is performed. Dependent names (names that depend on a template parameter) are not resolved.
+2. **Phase 2 (Instantiation Time)**: When the template is instantiated with concrete types, the compiler does type resolution and validates whether the methods, variables, and operators used inside the template actually exist on those types.
 
 ```cpp
 template <typename T>
-T add(T a, T b) {
-    return a + b;
-}
-
-void demoDeduction() {
-    auto res1 = add(5, 10);     // Deduce T = int
-    auto res2 = add(2.5, 3.5); // Deduce T = double
-    // auto res3 = add(5, 2.5); // COMPILER ERROR: conflicting deduction for T (int vs double)
+void printProcessed(T obj) {
+    // Phase 1: compiler checks syntax (brackets, semicolons).
+    // Phase 2: compiler verifies if obj.serialize() exists and compiles for type T.
+    obj.serialize(); 
 }
 ```
 
 ---
 
-## 2. Class Templates
+## 2. Template Compilation Model
 
-Class templates generate class structures parameterized by types.
+Because templates require Phase 2 instantiation, the compiler **must** see the entire definition (implementation) of a template in the translation unit where it is used.
+
+### The Header Inclusion Rule
+- If you declare a template in a header `Array.h` and implement its methods in `Array.cpp`, compiling `Array.cpp` succeeds, but compiling another file `main.cpp` that calls `Array<int>` will compile successfully but fail at **link-time** with an `undefined reference` error.
+- **Why**: The compiler only instantiates the code for `Array<int>` when compiling `main.cpp`. But it doesn't have the implementation details from `Array.cpp` during that compile step, and `Array.cpp` was compiled without knowing that `int` was needed!
+- **Fix**: Place the entire implementation of the template class directly in the header file.
+
+### Explicit Instantiation (Compile-Time Optimization)
+To avoid header bloat and reduce compilation times, you can keep the implementation in a `.cpp` file and explicitly instantiate the required types:
 
 ```cpp
+// Array.h
 template <typename T>
-class Box {
-    T value;
-public:
-    Box(T val) : value(val) {}
-    T getValue() const { return value; }
+class Array {
+    void process();
+};
+
+// Array.cpp
+#include "Array.h"
+template <typename T>
+void Array<T>::process() { /* ... */ }
+
+// Explicit Instantiation tells the compiler to generate code for 'int' now!
+template class Array<int>;
+```
+
+---
+
+## 3. Class and Function Templates
+
+### Default Template Arguments
+Classes and functions can specify default values for their template parameters.
+
+```cpp
+// Class template with default type and default NTTP value
+template <typename T = int, int Capacity = 100>
+class Stack {
+    T data[Capacity];
 };
 ```
 
 ---
 
-## 3. Non-Type Template Parameters (NTTP)
+## 4. Non-Type Template Parameters (NTTP)
 
-A template parameter can also be a **constant value** rather than a type. This is known as a **Non-Type Template Parameter (NTTP)**.
+An NTTP is a template parameter that represents a **constant value** rather than a type.
 
 ```cpp
 #include <cstddef>
-#include <stdexcept>
+#include <iostream>
 
-// NTTP 'Size' is bound at compile-time
 template <typename T, std::size_t Size>
-class StaticArray {
+class FixedArray {
     T data[Size];
 public:
-    std::size_t getSize() const { return Size; }
-    
-    T& operator[](std::size_t index) {
-        if (index >= Size) throw std::out_of_range("Index out of bounds!");
-        return data[index];
-    }
+    constexpr std::size_t getSize() const { return Size; }
 };
 
 void demoNTTP() {
-    StaticArray<int, 5> arr1; // Instantiates custom class of size 5
-    StaticArray<int, 10> arr2; // Instantiates another distinct class of size 10
-    
-    // arr1 = arr2; // COMPILER ERROR: StaticArray<int, 5> and StaticArray<int, 10> are different classes!
+    FixedArray<int, 10> a;
+    FixedArray<int, 20> b;
+    // a = b; // COMPILER ERROR: FixedArray<int, 10> and FixedArray<int, 20> are distinct types!
 }
 ```
 
-### NTTP Standard Evolution:
-- **Pre-C++20**: NTTPs were restricted to integral types (integers, bools, chars), pointers, and lvalue references.
-- **C++20**: Relaxed to allow floating-point values (`double`, `float`) and certain literal struct types (with public members and defaulted equality operators) to be used as NTTPs.
+### Evolution of NTTP Rules:
+- **Pre-C++20**: NTTPs were restricted strictly to integral constants (integers, booleans, characters), pointers, and lvalue references.
+- **C++20**: Relaxed restrictions to allow **floating-point types** (`double`, `float`) and **literal structural class types** (classes with only public members and defaulted equality operators) to serve as NTTPs.
 
 ---
 

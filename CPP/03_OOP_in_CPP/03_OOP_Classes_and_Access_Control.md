@@ -86,11 +86,11 @@ When inheriting from a base class, you can specify `public`, `protected`, or `pr
 ```
 
 #### Detailed Inheritance Visibility Matrix:
-| Base Member Access | Public Inheritance | Protected Inheritance | Private Inheritance |
-|---|---|---|---|
-| **`public`** | Remains `public` | Becomes `protected` | Becomes `private` |
-| **`protected`** | Remains `protected` | Becomes `protected` | Becomes `private` |
-| **`private`** | **Inaccessible** | **Inaccessible** | **Inaccessible** |
+| Base Member Access | Public Inheritance  | Protected Inheritance | Private Inheritance |
+| ------------------ | ------------------- | --------------------- | ------------------- |
+| **`public`**       | Remains `public`    | Becomes `protected`   | Becomes `private`   |
+| **`protected`**    | Remains `protected` | Becomes `protected`   | Becomes `private`   |
+| **`private`**      | **Inaccessible**    | **Inaccessible**      | **Inaccessible**    |
 
 ---
 
