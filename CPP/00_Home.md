@@ -22,7 +22,7 @@ links: ["[[../00_Home]]"]
 | 06 | [[06_Memory_and_Smart_Pointers/06_Mem_Index\|Memory and Smart Pointers]] | ✅ |
 | 07 | [[07_Concurrency/07_Conc_Index\|Concurrency]] | ✅ |
 | 08 | [[08_Concurrency_Primitives_From_Scratch/08_CPS_Index\|Concurrency Primitives From Scratch]] | ✅ |
-| 09 | Performance and Optimization | ⬜ |
+| 09 | [[09_Performance_and_Optimization/09_Perf_Index\|Performance and Optimization]] | ✅ |
 | 10 | Low-Latency and Quant C++ | ⬜ |
 | 11 | Exception Handling and Safety | ⬜ |
 
