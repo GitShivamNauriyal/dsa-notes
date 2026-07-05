@@ -33,15 +33,15 @@ links: ["[[05_Binary_Search_Index]]", "[[05_Binary_Search_Patterns]]", "[[05_Bin
 
 ## Tier 3 -- Interview Level
 
-| # | Problem | Difficulty | Key Concept | Link |
-|---|---------|------------|-------------|------|
-| 13 | Split Array Largest Sum | Hard | Answer space (minimize max) | [LC 410](https://leetcode.com/problems/split-array-largest-sum/) |
-| 14 | Minimum Limit of Balls in Bag | Medium | Answer space | [LC 1760](https://leetcode.com/problems/minimum-limit-of-balls-in-a-bag/) |
-| 15 | Search in Rotated Array II (duplicates) | Medium | Rotated with dups | [LC 81](https://leetcode.com/problems/search-in-rotated-sorted-array-ii/) |
-| 16 | Find Minimum in Rotated Array II | Hard | Rotated min with dups | [LC 154](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array-ii/) |
-| 17 | Find K Closest Elements | Medium | Binary search + two pointer | [LC 658](https://leetcode.com/problems/find-k-closest-elements/) |
-| 18 | Time Based Key-Value Store | Medium | Binary search on timestamps | [LC 981](https://leetcode.com/problems/time-based-key-value-store/) |
-| 19 | Median of Two Sorted Arrays | Hard | Binary search on partition | [LC 4](https://leetcode.com/problems/median-of-two-sorted-arrays/) |
+| #   | Problem                                 | Difficulty | Key Concept                 | Link                                                                             |
+| --- | --------------------------------------- | ---------- | --------------------------- | -------------------------------------------------------------------------------- |
+| 13  | Split Array Largest Sum                 | Hard       | Answer space (minimize max) | [LC 410](https://leetcode.com/problems/split-array-largest-sum/)                 |
+| 14  | Minimum Limit of Balls in Bag           | Medium     | Answer space                | [LC 1760](https://leetcode.com/problems/minimum-limit-of-balls-in-a-bag/)        |
+| 15  | Search in Rotated Array II (duplicates) | Medium     | Rotated with dups           | [LC 81](https://leetcode.com/problems/search-in-rotated-sorted-array-ii/)        |
+| 16  | Find Minimum in Rotated Array II        | Hard       | Rotated min with dups       | [LC 154](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array-ii/) |
+| 17  | Find K Closest Elements                 | Medium     | Binary search + two pointer | [LC 658](https://leetcode.com/problems/find-k-closest-elements/)                 |
+| 18  | Time Based Key-Value Store              | Medium     | Binary search on timestamps | [LC 981](https://leetcode.com/problems/time-based-key-value-store/)              |
+| 19  | Median of Two Sorted Arrays             | Hard       | Binary search on partition  | [LC 4](https://leetcode.com/problems/median-of-two-sorted-arrays/)               |
 
 ## Tier 4 -- Placement-Hard / OA-Level
 
