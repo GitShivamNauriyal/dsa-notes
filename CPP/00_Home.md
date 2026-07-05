@@ -26,6 +26,12 @@ links: ["[[../00_Home]]"]
 | 10 | [[10_Low_Latency_and_Quant_CPP/10_LLQ_Index\|Low-Latency and Quant C++]] | ✅ |
 | 11 | [[11_Exception_Handling_and_Safety/11_Exc_Index\|Exception Handling and Safety]] | ✅ |
 
+### Extras
+- [[EXTRAS/Debugging/GDB_Basics\|Debugging with GDB]]
+- [[EXTRAS/Sanitizers/ASan_TSan_UBSan_MSan\|LLVM/GCC Sanitizers]]
+- [[EXTRAS/Build_Systems/CMake_Basics\|CMake Basics]]
+- [[EXTRAS/Compiler_Flags/Optimization_and_Warning_Flags\|Compiler Flags Reference]]
+
 ---
 
 *<- [[../00_Home|DSA Vault Home]] · [[01_Modern_CPP_Reference|Modern C++ Reference ->]]*
