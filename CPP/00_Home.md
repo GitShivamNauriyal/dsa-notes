@@ -17,7 +17,7 @@ links: ["[[../00_Home]]"]
 | 01 | [[01_Modern_CPP_Reference\|Modern C++ Reference]] | ✅ |
 | 02 | [[02_Core_Language_Mechanics/02_Core_Index\|Core Language Mechanics]] | ✅ |
 | 03 | [[03_OOP_in_CPP/03_OOP_Index\|OOP in C++]] | ✅ |
-| 04 | [[04_Templates_and_Generics/04_Tmpl_Index\|Templates & Generics]] | ⬜ |
+| 04 | [[04_Templates_and_Generics/04_Tmpl_Index\|Templates & Generics]] | ✅ |
 | 05 | [[05_STL_and_Modern_Features/05_STL_Index\|STL & Modern Features]] | ⬜ |
 | 06 | Memory and Smart Pointers | ⬜ |
 | 07 | Concurrency | ⬜ |
