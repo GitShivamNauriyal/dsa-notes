@@ -1,5 +1,5 @@
 ---
-tags: [cpp, stl, tricky, dangling-views, lambda-captures, std-function]
+tags: [cpp, stl, tricky, dangling-views, lambda-captures, vector-bool, hash-collisions, std-function]
 links: ["[[05_STL_Index]]", "[[05_STL_Solutions]]", "[[../06_Memory_and_Smart_Pointers/06_Mem_Index]]"]
 ---
 
@@ -39,23 +39,50 @@ void demoDanglingView() {
 
 ---
 
-## 2. `std::function` Performance Overhead
+## 2. `std::vector<bool>` Space Optimization Gotcha
 
-**The Trap**: Wrapping all callables (lambdas) in `std::function` blindly.
-- **`std::function`**: A type-safe polymorphic wrapper. It does **type erasure** (allowing callables of different actual lambda closure classes to be stored in the same variable type).
-- **The Overhead**:
-  1. **Heap Allocation**: If the captured closure object size exceeds the Small Buffer Optimization (SBO) limit, `std::function` allocates memory on the heap.
-  2. **Indirect Calls (Virtual Dispatch equivalent)**: Type erasure prevents the compiler from performing **inlining**. Calling `std::function` requires an indirect function pointer jump.
-- **Rule of Thumb**: Use raw lambdas or template parameters directly to preserve zero-cost compile-time binding. Only use `std::function` when you need dynamic storage (e.g. storing a vector of callbacks).
+**The Gotcha**: `std::vector<bool>` is a specialized optimization that packs booleans into individual bits (1 bit per bool) rather than bytes (1 byte per bool).
+
+### The Consequences:
+1. **No Real References**: You cannot get a raw reference `bool&` or a pointer `bool*` to an element inside `std::vector<bool>`.
+2. **Proxy Objects**: `v[0]` returns a temporary **proxy helper object** (`std::vector<bool>::reference`) that simulates reference behavior.
+3. **Template Failures**: Generic template codes expecting standard reference returns (`T&`) fail when compiling with `bool` specializations.
+4. **`auto&` compilation errors**:
+   ```cpp
+   std::vector<bool> v = {true, false};
+   // auto& ref = v[0]; // COMPILER ERROR: cannot bind non-const lvalue reference to temporary proxy!
+   ```
 
 ---
 
-## 3. Implicit `this` Capture Pitfall in Member Lambdas
+## 3. `std::unordered_map` Hash Collision DOS Attacks
+
+In standard hash tables, elements are indexed using bucket offsets calculated from `std::hash`.
+- **The Vulnerability**: If multiple keys resolve to the exact same hash value, they fall into the same bucket chain. The lookup speed degrades from average **$O(1)$** to worst-case **$O(N)$**.
+- **The Attack**: In web-servers parsing JSON payloads into `std::unordered_map`, attackers can feed crafted strings designed to force collisions, consuming server CPU resources and triggering a Denial of Service (DOS) lockup.
+- **The Mitigation**: Supply a custom hash functor using a randomized salt seed (e.g. splitmix64) to prevent attackers from predicting collisions.
+
+---
+
+## 4. `std::function` Performance Overhead
+
+**The Trap**: Wrapping all lambdas in `std::function` by default.
+- **`std::function`** uses **type erasure** to store different callable functor structures under a single type.
+- **The Cost**:
+  1. **Heap Allocation**: If the captured closure object size exceeds the Small Buffer Optimization (SBO) limit, `std::function` allocates memory on the heap.
+  2. **Indirect Calls**: Prevent the compiler from performing **inlining**.
+- **Rule of Thumb**: Use raw templates for callbacks to allow inline compilation. Only use `std::function` when you need runtime type-erasure (e.g. storing callbacks in a vector).
+
+---
+
+## 5. Implicit `this` Capture Pitfall in Member Lambdas
 
 **The Trap**: Writing `[=]` inside a class member function.
-- Many developers assume `[=]` copies the member variables of the class by value.
-- **Reality**: It captures the **`this` pointer** by value! Member variables are still accessed via `this->member`.
+- `[=]` does **not** copy the member variables of the class. It captures the **`this` pointer** by value. Member variables are still accessed via `this->member`.
 - If the enclosing object is destroyed, executing the lambda later dereferences a dangling pointer, causing crashes.
+
+### The C++17 Fix (`[*this]`)
+Capture `*this` explicitly to create a local, copied instance of the object inside the closure.
 
 ```cpp
 #include <functional>
@@ -65,33 +92,12 @@ class Task {
     int data = 100;
 public:
     std::function<void()> getCallback() {
-        // [=] implicitly captures 'this' by value, NOT 'data'!
-        return [=]() {
-            std::cout << data << "\n"; // accesses this->data
+        // C++17 [*this] safely copies the object state, preventing dangling pointer crash
+        return [*this]() {
+            std::cout << data << "\n"; 
         };
     }
 };
-
-std::function<void()> createDanglingCallback() {
-    Task t;
-    return t.getCallback();
-} // Object 't' is destroyed here!
-
-void demoCrash() {
-    auto cb = createDanglingCallback();
-    // cb(); // UB: Dereferences deallocated 'this' pointer!
-}
-```
-
-### The C++17 Fix (`[*this]`)
-Capture `*this` explicitly to create a local, copied instance of the object inside the closure.
-
-```cpp
-std::function<void()> getSafeCallback() {
-    return [*this]() {
-        std::cout << data << "\n"; // Safe: data accessed from copy
-    };
-}
 ```
 
 ---
@@ -101,6 +107,8 @@ std::function<void()> getSafeCallback() {
 | Gotcha | Theme |
 |---|---|
 | **Dangling Views** | Views only store references; building views over temporary objects leaves their references dangling. |
+| **`std::vector<bool>`** | Packs bits; returns temporary proxy objects instead of real `bool&` references. |
+| **Hash Collisions** | Lookup degrades to $O(N)$ if keys collide; susceptible to CPU exhaustion DOS attacks. |
 | **`std::function` Overhead** | Performs type erasure which disables inlining, and can trigger heap allocations if captures exceed SBO. |
 | **Implicit `this` Capture** | `[=]` inside classes captures `this` pointer by value; resolved via C++17 `[*this]` object copy. |
 

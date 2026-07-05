@@ -1,5 +1,5 @@
 ---
-tags: [cpp, stl, optional, variant, tuple, structured-bindings]
+tags: [cpp, stl, optional, variant, tuple, structured-bindings, monadic-operations, Cpp23]
 links: ["[[05_STL_Index]]", "[[05_STL_Containers_and_Iterator_Invalidation]]", "[[05_STL_Ranges_and_Views]]"]
 ---
 
@@ -9,59 +9,76 @@ links: ["[[05_STL_Index]]", "[[05_STL_Containers_and_Iterator_Invalidation]]", "
 
 ---
 
-## 1. `std::optional` (C++17)
+## 1. `std::optional` (C++17) & C++23 Monadic Operations
 
-`std::optional<T>` manages an optional contained value, which may or may not be present. It eliminates the need for error-prone sentinel values (like returning `-1` or `nullptr`).
+`std::optional<T>` represents a value that may or may not exist.
+
+### Size Overhead:
+- **Memory Footprint**: `sizeof(std::optional<T>)` is equal to `sizeof(T) + sizeof(bool)` plus alignment padding.
+- For example, `sizeof(std::optional<int>)` occupies **8 bytes** on 64-bit systems (4 bytes for `int`, 1 byte for the active flag, aligned to the 4-byte boundary).
+
+### C++23 Monadic Operations
+C++23 added Rust-like monadic interfaces to `std::optional` to chain transformations cleanly without nested `if (opt.has_value())` blocks.
+
+- **`.and_then(F)`**: If value exists, returns `F(*opt)`. F must return a `std::optional`.
+- **`.transform(F)`**: If value exists, applies `F(*opt)` and wraps the result in a new `std::optional`.
+- **`.or_else(F)`**: If empty, runs `F()` (which must return a `std::optional`).
 
 ```cpp
 #include <optional>
 #include <string>
+#include <iostream>
 
-std::optional<std::string> getUserName(int id) {
-    if (id == 42) return "Alice";
-    return std::nullopt; // represents empty state
+std::optional<std::string> fetchUser(int id) {
+    if (id == 4) return "User4";
+    return std::nullopt;
 }
 
-void demoOptional() {
-    auto nameOpt = getUserName(42);
-    
-    if (nameOpt.has_value()) {
-        std::string name = nameOpt.value(); // or *nameOpt
-    }
-    
-    // Fallback default value if empty
-    std::string finalName = nameOpt.value_or("Guest");
+std::optional<std::string> makeUppercase(std::string name) {
+    for (char& c : name) c = std::toupper(c);
+    return name;
+}
+
+void demoMonadic() {
+    // Monadic chaining (C++23)
+    auto result = fetchUser(4)
+                .and_then(makeUppercase)
+                .value_or("ANONYMOUS");
+                
+    std::cout << result << "\n"; // Outputs: USER4
 }
 ```
 
 ---
 
-## 2. `std::variant` & `std::visit` (C++17 type-safe union)
+## 2. `std::variant` & `std::visit` (C++17 Type-Safe Union)
 
-`std::variant<Types...>` is a type-safe alternative to C-style unions. It holds exactly one of its specified types at any given time.
+`std::variant<Types...>` represents a type-safe union. It holds exactly one of its active types.
+
+### Memory Overhead:
+- **No Dynamic Allocation**: Unlike polymorphic base class structures, `std::variant` stores its contents **entirely on the stack**. No `new` or `malloc` calls are made.
+- **Size**: Equal to `sizeof(largest_type)` + size of an internal index indicator variable + alignment padding.
 
 ### Visited Overload Pattern
-To process the active type inside a variant, we use **`std::visit`** along with a helper class template that overloads `operator()` for different types:
+Using the helper struct `overloaded` (which uses C++17 template pack expansion on base class constructors) allows visiting different types inside a variant using inline lambdas:
 
 ```cpp
 #include <variant>
 #include <iostream>
 #include <string>
 
-// Helper structure to overload lambda operators
+// Variadic template struct inherits from all lambdas and exposes their call operator
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 void demoVariant() {
-    // Can hold either int, double, or std::string
-    std::variant<int, double, std::string> var = "Hello";
+    std::variant<int, double, std::string> v = 3.14;
 
-    // Visit using overloaded lambda structures
     std::visit(overloaded {
-        [](int arg) { std::cout << "int: " << arg << '\n'; },
-        [](double arg) { std::cout << "double: " << arg << '\n'; },
-        [](const std::string& arg) { std::cout << "string: " << arg << '\n'; }
-    }, var);
+        [](int x) { std::cout << "int: " << x << "\n"; },
+        [](double x) { std::cout << "double: " << x << "\n"; },
+        [](const std::string& x) { std::cout << "string: " << x << "\n"; }
+    }, v); // Resolves to double output at runtime (based on active index)
 }
 ```
 
@@ -69,22 +86,23 @@ void demoVariant() {
 
 ## 3. `std::tuple` & Structured Bindings (C++17)
 
-A `std::tuple` is a generalization of `std::pair` that holds an arbitrary number of heterogeneous values.
-C++17 **Structured Bindings** allow unpacking tuples, pairs, or structs into individual variables easily.
+A `std::tuple` stores a fixed-size collection of heterogeneous values.
 
+### Structured Bindings Under the Hood
+When you write:
 ```cpp
-#include <tuple>
-#include <string>
-
-std::tuple<int, std::string, double> getEmployeeRecord() {
-    return {101, "Bob", 75000.0};
-}
-
-void demoTuple() {
-    // Unpack tuple into local variables using structured bindings
-    auto [id, name, salary] = getEmployeeRecord();
-}
+std::tuple<int, double> record = {1, 2.5};
+auto [id, score] = record;
 ```
+
+The compiler translates it by introducing a hidden compiler-generated variable:
+```cpp
+auto&& __temp = record;
+// Binds references or values to the tuple elements using std::get
+std::tuple_element_t<0, std::tuple<int, double>>& id = std::get<0>(__temp);
+std::tuple_element_t<1, std::tuple<int, double>>& score = std::get<1>(__temp);
+```
+- There is **zero runtime overhead**. The mapping is resolved entirely at compile-time.
 
 ---
 
