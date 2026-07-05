@@ -1,5 +1,5 @@
 ---
-tags: [cpp, core, value-categories, lvalue, rvalue, prvalue, xvalue]
+tags: [cpp, core, value-categories, lvalue, rvalue, prvalue, xvalue, copy-elision, rvo]
 links: ["[[02_Core_Index]]", "[[02_Core_Const_Constexpr_Consteval]]"]
 ---
 
@@ -19,10 +19,10 @@ Since C++11, expressions are categorized based on two primary properties:
 
 ```
                          Expression (glvalue)
-                       /                      \
-             lvalue (identity)                 rvalue
-                                              /      \
-                             xvalue (expiry)          prvalue (pure rvalue)
+                        /                      \
+              lvalue (identity)                 rvalue
+                                               /      \
+                              xvalue (expiry)          prvalue (pure rvalue)
 ```
 
 ### The Five Categories:
@@ -75,6 +75,37 @@ void handle(std::vector<int>&& vec) {
     
     // To cast it back to a movable xvalue, we must strip its name/identity using std::move
     process(std::move(vec)); // Invokes process(std::vector<int>&&) -> Move semantics!
+}
+```
+
+---
+
+## 4. C++17 Guaranteed Copy Elision (Prvalue Materialization)
+
+In C++17, the definition of `prvalue` changed fundamentally. 
+- A `prvalue` is no longer considered a temporary object. It is merely a **recipe/blueprint for initialization**.
+- **Deferred Materialization**: The actual object is not constructed until it has a destination (e.g. being bound to a reference or initializing a variable).
+- **The Result**: Guaranteed Copy Elision (RVO) in initializations. The compiler constructs the object directly inside the destination memory address. No copy or move constructor is called at all—and in fact, **they do not even need to exist or be defined**!
+
+```cpp
+class NonCopyableNonMovable {
+public:
+    NonCopyableNonMovable() = default;
+    
+    // Explicitly delete copy and move operations
+    NonCopyableNonMovable(const NonCopyableNonMovable&) = delete;
+    NonCopyableNonMovable(NonCopyableNonMovable&&) = delete;
+};
+
+NonCopyableNonMovable createObject() {
+    return NonCopyableNonMovable(); // prvalue expression
+}
+
+void demoCopyElision() {
+    // Under C++17: Guaranteed RVO compiles perfectly!
+    // The object is constructed directly in the storage of 'obj'.
+    // No copies or moves are attempted, bypassing deleted constructors.
+    NonCopyableNonMovable obj = createObject(); 
 }
 ```
 

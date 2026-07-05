@@ -1,5 +1,5 @@
 ---
-tags: [cpp, core, const, constexpr, consteval, constinit]
+tags: [cpp, core, const, constexpr, consteval, constinit, siof, memory-residency]
 links: ["[[02_Core_Index]]", "[[02_Core_Value_Categories]]", "[[02_Core_Storage_Duration_and_Linkage]]"]
 ---
 
@@ -11,86 +11,98 @@ links: ["[[02_Core_Index]]", "[[02_Core_Value_Categories]]", "[[02_Core_Storage_
 
 ## 1. Keywords Comparison Matrix
 
-| Keyword | Evaluation Phase | Applies to | Meaning |
-|---|---|---|---|
-| **`const`** | Runtime (usually) | Variables, member functions | Read-only view of data. Variable cannot be mutated after initialization. |
-| **`constexpr`** | Compile-time OR Runtime | Variables, functions | Variable/Function *can* be evaluated at compile-time if conditions allow. |
-| **`consteval`** *(C++20)* | **Compile-time ONLY** | Functions | Immediate function. Must be evaluated at compile-time, else compilation fails. |
-| **`constinit`** *(C++20)* | Compile-time initialization | Variables | Forces compile-time static initialization of variable. Variable remains mutable. |
+| Keyword | Evaluation Phase | Applies to | Meaning | Memory Residency |
+|---|---|---|---|---|
+| **`const`** | Runtime (usually) | Variables, member functions | Read-only view of data. Variable cannot be mutated after initialization. | `.rodata` (read-only data segment) |
+| **`constexpr`** | Compile-time OR Runtime | Variables, functions | Variable/Function *can* be evaluated at compile-time if conditions allow. | `.rodata` (if not fully inlined/optimized away) |
+| **`consteval`** *(C++20)* | **Compile-time ONLY** | Functions | Immediate function. Must be evaluated at compile-time, else compilation fails. | None (only exists in compiler AST) |
+| **`constinit`** *(C++20)* | Compile-time initialization | Variables | Forces compile-time static initialization of variable. Variable remains mutable. | `.data` or `.bss` (writable data segments) |
 
 ---
 
-## 2. Compile-Time vs Runtime Mechanics
+## 2. Static Initialization Order Fiasco (SIOF)
 
-### A. `constexpr` (Conditional Compile-Time)
-A `constexpr` function can be run at either compile-time or runtime depending on how it's invoked:
-- If all arguments are compile-time constants AND the output is assigned to a `constexpr` variable, evaluation happens at compile-time.
-- If called with runtime variables, it behaves like an ordinary runtime function.
+In C++, global and static variables defined in a single source file (translation unit) are initialized in the order of their declaration. However, the standard does not guarantee the initialization order of globals defined across **different source files**.
+
+### The SIOF Problem (Buggy Code):
+If global `logger` in `logger.cpp` uses global `config` in `config.cpp`, and the compiler decides to initialize `logger` before `config`, the logger accesses uninitialized memory, leading to crashes or undefined states.
 
 ```cpp
-constexpr int square(int x) {
-    return x * x;
-}
+// File A: config.cpp
+#include <string>
+std::string globalConfig = "PRODUCTION";
 
-void demo() {
-    constexpr int val = square(5); // Evaluated at compile-time
+// File B: logger.cpp
+#include <iostream>
+#include <string>
+extern std::string globalConfig;
+// BUG: If logger compiles before config, globalConfig is uninitialized garbage!
+std::string globalLog = "Running in: " + globalConfig; 
+```
+
+### The C++20 Solution: `constinit`
+Marking a variable `constinit` forces the compiler to initialize it at compile-time (**constant initialization**) rather than during runtime (**dynamic initialization**), eliminating SIOF.
+- Unlike `constexpr`, `constinit` variables **remain mutable** at runtime!
+
+```cpp
+// Guaranteed compile-time initialization
+constinit int globalMaxConnections = 1000; 
+
+void adjustConnections() {
+    globalMaxConnections = 500; // OK: mutable at runtime!
+}
+```
+
+---
+
+## 3. Compile-Time Evaluation Limits (constexpr Heap Allocations)
+
+Prior to C++20, `constexpr` functions were heavily restricted (no virtual calls, no heap allocations, no try-catch blocks). C++20 relaxed these rules.
+
+### Transient Heap Allocations (C++20)
+In C++20, you can allocate heap memory using `new` (or standard containers like `std::vector`) inside a `constexpr` context, provided that **all allocated memory is deleted before the constexpr function evaluation completes**. The heap memory is managed by the compiler's compile-time allocator.
+
+```cpp
+#include <vector>
+#include <numeric>
+
+// C++20 constexpr function using heap memory (std::vector)
+constexpr int computeSum(int limit) {
+    std::vector<int> nums(limit); // Transient heap allocation at compile-time!
+    std::iota(nums.begin(), nums.end(), 1); // Populate 1 to limit
     
-    int y = 5;
-    int val2 = square(y);          // Evaluated at runtime (behaves like a normal function)
-}
-```
-
----
-
-### B. `consteval` (C++20 Immediate Functions)
-Unlike `constexpr`, a `consteval` function **guarantees** compile-time execution. If the arguments are not compile-time constants, it generates a compiler error.
-
-```cpp
-consteval int cube(int x) {
-    return x * x * x;
-}
-
-void demoConsteval() {
-    constexpr int c1 = cube(3); // OK: evaluated at compile-time
+    int sum = 0;
+    for (int x : nums) sum += x;
     
-    int y = 3;
-    // int c2 = cube(y);       // COMPILER ERROR: y is not a compile-time constant!
+    return sum; // std::vector destructor runs, freeing transient heap memory. OK!
+}
+
+void demoTransient() {
+    constexpr int total = computeSum(100); // Evaluated at compile-time. No runtime allocations!
 }
 ```
 
 ---
 
-### C. `constinit` (C++20 Static Initialization Guarantee)
-In C++, global variables defined across different files have undefined initialization order at runtime, leading to the **Static Initialization Order Fiasco** (where one global variable reads another uninitialized global).
-- `constinit` guarantees that a global variable is initialized at compile-time.
-- Unlike `constexpr` or `const`, `constinit` variables **can be modified** later at runtime.
+## 4. `if consteval` (C++23)
+
+C++23 introduced `if consteval` to allow branching based on whether the current execution path is running at compile-time or runtime. This allows optimization (like using optimized hardware assembly instructions at runtime, but falling back to pure C++ code at compile-time).
 
 ```cpp
-constinit int globalCounter = 100; // Guaranteed to be initialized at compile-time
+#include <cmath>
 
-void incrementGlobal() {
-    globalCounter++; // OK: constinit variables are mutable!
-}
-```
-
----
-
-### D. `if consteval` (C++23)
-Enables branching depending on whether the function is currently executing in a compile-time context (allowing optimization like using faster intrinsics at runtime but falling back to pure C++ at compile-time).
-
-```cpp
-#include <type_traits>
-
-constexpr double power(double base, int exp) {
+constexpr double squareRoot(double x) {
     if consteval {
-        // Run slow, simple compile-time compatible loop
-        double res = 1.0;
-        for (int i = 0; i < exp; i++) res *= base;
-        return res;
+        // Compile-time path (no access to hardware intrinsics)
+        // Use a simple Newton-Raphson approximation
+        double val = x;
+        for (int i = 0; i < 10; ++i) {
+            val = 0.5 * (val + x / val);
+        }
+        return val;
     } else {
-        // Run optimized assembly/intrinsics at runtime
-        // e.g. return std::pow(base, exp);
-        return base; 
+        // Runtime path: use fast CPU instructions
+        return std::sqrt(x); 
     }
 }
 ```
