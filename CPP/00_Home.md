@@ -24,7 +24,7 @@ links: ["[[../00_Home]]"]
 | 08 | [[08_Concurrency_Primitives_From_Scratch/08_CPS_Index\|Concurrency Primitives From Scratch]] | ✅ |
 | 09 | [[09_Performance_and_Optimization/09_Perf_Index\|Performance and Optimization]] | ✅ |
 | 10 | [[10_Low_Latency_and_Quant_CPP/10_LLQ_Index\|Low-Latency and Quant C++]] | ✅ |
-| 11 | Exception Handling and Safety | ⬜ |
+| 11 | [[11_Exception_Handling_and_Safety/11_Exc_Index\|Exception Handling and Safety]] | ✅ |
 
 ---
 
