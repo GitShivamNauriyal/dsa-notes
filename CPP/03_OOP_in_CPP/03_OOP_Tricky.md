@@ -1,5 +1,5 @@
 ---
-tags: [cpp, oop, tricky, object-slicing, default-arguments, nvi]
+tags: [cpp, oop, tricky, object-slicing, default-arguments, nvi, constructor-virtuals]
 links: ["[[03_OOP_Index]]", "[[03_OOP_Solutions]]", "[[../04_Templates_and_Generics/04_Tmpl_Index]]"]
 ---
 
@@ -77,11 +77,61 @@ private:
 
 ---
 
-## 3. Object Slicing Under the Hood
-When a `Derived` object is copied into a `Base` object by value:
-- The base class copy constructor is called.
-- The compiler copies the base member variables.
-- The `vptr` is set to point to the `Base` class's `vtable`, completely stripping the derived class identity and custom virtual methods.
+## 3. Object Slicing Under the Hood & STL Containers
+
+When a `Derived` object is copied into a `Base` object by value, its derived components are stripped away, and its `vptr` is re-pointed to the `Base` class's `vtable`.
+
+### Container Slicing Trap:
+If you store polymorphism by value in standard library containers, slicing occurs silently.
+
+```cpp
+#include <vector>
+#include <memory>
+
+class Base {
+public:
+    virtual void sayHi() const { std::cout << "Base\n"; }
+};
+class Derived : public Base {
+public:
+    void sayHi() const override { std::cout << "Derived\n"; }
+};
+
+void demoVectorSlice() {
+    std::vector<Base> vec;
+    vec.push_back(Derived()); // Slicing! Copy constructor of Base is called
+    
+    vec[0].sayHi(); // Outputs: "Base" (polymorphic state is completely lost!)
+}
+```
+
+### The Solutions:
+1. **Pointers**: Use `std::vector<std::unique_ptr<Base>>` (exclusive heap ownership).
+2. **References**: Use `std::vector<std::reference_wrapper<Base>>` from `<functional>` to store reference semantics without heap allocations.
+
+---
+
+## 4. Virtual Call Resolution in Constructors & Destructors
+
+During the construction of a base class, the object is not yet a derived class instance.
+- The `vptr` inside the base class constructor points to the **Base class VTable**.
+- Calling a virtual function resolves to the base class implementation.
+- If the virtual function is **pure virtual** (`= 0`) and has no definition, this triggers undefined behavior or immediate linker crashes (`pure virtual method called` runtime error).
+
+```cpp
+class Component {
+public:
+    Component() {
+        init(); // DANGEROUS: resolves to Component::init(), not Derived!
+    }
+    virtual void init() { std::cout << "Base Init\n"; }
+};
+
+class GraphicsComponent : public Component {
+public:
+    void init() override { std::cout << "Derived Graphics Init\n"; }
+};
+```
 
 ---
 
@@ -92,6 +142,7 @@ When a `Derived` object is copied into a `Base` object by value:
 | **Default Arguments + Virtuals** | Methods resolve dynamically, but default arguments bind statically at compile-time based on pointer type. |
 | **NVI Pattern** | Public interface remains static and non-virtual; implementation customizability kept private and virtual. |
 | **Object Slicing** | Value-based assignment strips derived variables and resets the `vptr` to the base class vtable. |
+| **Constructor Virtuals** | Virtual dispatch is disabled inside constructors and destructors because the derived state is not yet constructed or is already destroyed. |
 
 ---
 

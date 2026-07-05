@@ -1,5 +1,5 @@
 ---
-tags: [cpp, oop, constructors, destructors, raii, initialization-order]
+tags: [cpp, oop, constructors, destructors, raii, initialization-order, explicit-constructor, initializer-list]
 links: ["[[03_OOP_Index]]", "[[03_OOP_Classes_and_Access_Control]]", "[[03_OOP_Rule_of_Zero_Three_Five]]"]
 ---
 
@@ -11,103 +11,169 @@ links: ["[[03_OOP_Index]]", "[[03_OOP_Classes_and_Access_Control]]", "[[03_OOP_R
 
 ## 1. Resource Acquisition Is Initialization (RAII)
 
-**RAII** is the core management pattern of modern C++. 
-- **Concept**: Bind the lifecycle of a resource (heap memory, file handles, sockets, database locks) to the lifecycle of a **stack-allocated local object**.
-- **Constructor**: Acquires the resource.
-- **Destructor**: Automatically releases the resource when the object goes out of scope.
-- **Exception Safety**: Because destructors are guaranteed to be called during stack unwinding, RAII ensures no resource leaks occur even if an exception is thrown.
+**RAII** is the core resource management pattern of C++. It links the lifecycle of a resource (heap memory, database locks, file handles) directly to the scope-bound lifetime of a stack object.
+
+### The Stack Unwinding Guarantee:
+When a block exits (either via regular return or when an exception is thrown), the C++ runtime automatically destroys all stack variables in reverse order of their construction. Because destructors of RAII wrapper classes execute automatically during this **stack unwinding** phase, resource leaks are completely eliminated.
 
 ```cpp
-#include <fstream>
-#include <string>
+#include <mutex>
+#include <stdexcept>
 
-class FileWrapper {
-    std::ofstream fileStream;
+// [Original] Simple RAII Lock Wrapper Concept
+class SimpleLock {
+    std::mutex& mtx;
 public:
-    // Resource acquired in constructor
-    FileWrapper(const std::string& filename) : fileStream(filename) {
-        if (!fileStream.is_open()) {
-            throw std::runtime_error("Failed to open file!");
-        }
+    SimpleLock(std::mutex& m) : mtx(m) {
+        mtx.lock(); // Acquire resource
     }
-
-    void writeData(const std::string& data) {
-        fileStream << data;
+    ~SimpleLock() {
+        mtx.unlock(); // Release resource
     }
-
-    // Resource automatically released in destructor
-    ~FileWrapper() {
-        if (fileStream.is_open()) {
-            fileStream.close();
-        }
-    }
+    // Disable copy to prevent duplicate releases
+    SimpleLock(const SimpleLock&) = delete;
+    SimpleLock& operator=(const SimpleLock&) = delete;
 };
+
+std::mutex resourceMutex;
+void safeAccess() {
+    SimpleLock lock(resourceMutex); // Lock acquired
+    
+    // Critical Section
+    if (someConditionFails()) {
+        throw std::runtime_error("Error occurred!"); // Exception thrown
+    }
+    // lock goes out of scope here (or during exception unwinding); 
+    // destructor runs and mutex is safely unlocked. No deadlocks!
+}
 ```
 
 ---
 
-## 2. Member Initialization Lists vs Assignment
+## 2. Constructor Synthesis Rules
 
-Using member initialization lists inside constructors is preferred over assigning values in the constructor body.
-
-### Why it Matters for Performance:
-- **Assignment in Body**: The compiler first calls the default constructor of the member variable, and then calls its assignment operator inside the constructor body (double initialization).
-- **Initialization List**: The compiler calls the copy/parameterized constructor directly once.
+The compiler automatically synthesizes a **default constructor** `Widget()` only if **no other user-defined constructors** are declared.
+- Declaring any parameterized constructor (e.g. `Widget(int)`) suppresses the synthesis of the default constructor.
+- You can force the compiler to restore the default constructor using the `= default` specifier.
 
 ```cpp
-#include <string>
-
 class Widget {
-    std::string name;
 public:
-    // Suboptimal: default construct name -> assign "Bob"
-    Widget(const std::string& n) {
-        name = n; 
-    }
-
-    // Optimal: directly construct name with n
-    Widget(const std::string& n) : name(n) {}
+    Widget(int x) {}
+    // Widget() = default; // If commented out, Widget w; will fail to compile!
 };
 ```
 
 ---
 
-## 3. The Member Initialization Order Trap
+## 3. Implicit Conversions & the `explicit` Keyword
 
-> [!IMPORTANT]
-> Class members are always initialized in the **order of their declaration in the class definition**, NOT the order they appear in the member initialization list!
+Single-argument constructors can be used by the compiler to perform **implicit type conversions** to resolve argument matching. This can cause subtle bugs.
 
 ```cpp
+class Buffer {
+public:
+    // Single-argument constructor
+    Buffer(int capacity) {}
+};
+
+void printBuffer(const Buffer& buf) {}
+
+void demoBuggyConversion() {
+    // Intention: pass a Buffer object.
+    // Reality: compiles fine! The compiler implicitly converts '42' into Buffer(42).
+    printBuffer(42); 
+}
+```
+
+### The Fix: `explicit` Constructors
+Declaring a constructor as **`explicit`** prevents the compiler from performing implicit conversions or copy-initializations. The object must be initialized using direct initialization or explicit casts.
+
+```cpp
+class SafeBuffer {
+public:
+    explicit SafeBuffer(int capacity) {}
+};
+
+void demoSafe() {
+    // SafeBuffer b = 10; // COMPILER ERROR: conversion is blocked!
+    SafeBuffer b(10);     // OK: Direct initialization
+}
+```
+
+> [!TIP]
+> **Explicit Conversion Operators**: You can also mark conversion operators as `explicit` to prevent implicit evaluations, which is heavily used in standard types like `std::unique_ptr`'s `explicit operator bool()` to allow checks like `if (ptr)` but block `int x = ptr;`.
+
+---
+
+## 4. Initializer List Constructors (`std::initializer_list<T>`)
+
+If a class defines a constructor accepting `std::initializer_list<T>`, it takes precedence over other constructors when using brace initialization `{}`.
+
+```cpp
+#include <vector>
+#include <initializer_list>
 #include <iostream>
 
-class OrderDemo {
-    int x;
-    int y; // x is declared before y
+class WidgetArray {
 public:
-    // Trap: y appears first in the initializer list, but x is initialized first!
-    // Since x is initialized using y (which is uninitialized garbage), x gets garbage values!
-    OrderDemo(int val) : y(val), x(y + 5) {
-        std::cout << "x: " << x << ", y: " << y << "\n";
+    WidgetArray(int size, int defaultValue) {
+        std::cout << "Normal constructor\n";
+    }
+    WidgetArray(std::initializer_list<int> list) {
+        std::cout << "Initializer list constructor\n";
     }
 };
+
+void demoInitializer() {
+    WidgetArray w1(10, 20); // Normal constructor called
+    WidgetArray w2{10, 20}; // Initializer list constructor called!
+}
 ```
 
 ---
 
-## 4. Delegating Constructors
+## 5. Construction & Destruction Order in Inheritance
 
-Allows a constructor to call another constructor of the same class to reduce duplicate code.
+When creating a derived class object, memory is initialized in a strict hierarchical order.
+
+### Order of Construction:
+1. **Base Class Constructor**: Runs first (hierarchically down from root base).
+2. **Derived Member Variables**: Initialized in the order of their declaration in the class definition.
+3. **Derived Class Constructor Body**: Executes last.
+
+### Order of Destruction:
+Destruction happens in **exact reverse order**:
+1. **Derived Class Destructor Body**: Executes first.
+2. **Derived Member Variables**: Destroyed in reverse order of declaration.
+3. **Base Class Destructor**: Executes last.
+
+### ASCII Order Timeline
+
+```
+  Construction: ┌────────────────┐     ┌───────────────┐     ┌───────────────┐
+                │ Base Construct ├────►│ Member Init  ├────►│ Derived Body  │
+                └────────────────┘     └───────────────┘     └───────────────┘
+                                                                     │
+  Destruction:  ┌────────────────┐     ┌───────────────┐     ┌───────▼───────┐
+                │ Base Destroy   │◄────┤ Member Destr  │◄────┤ Derived Body  │
+                └────────────────┘     └───────────────┘     └───────────────┘
+```
+
+---
+
+## 6. Member Initialization Order Trap
+
+Remember that class members are initialized in their **declaration order inside the class definition**, not their order in the initializer list.
 
 ```cpp
-class Server {
-    std::string host;
-    int port;
+class Trap {
+    int a;
+    int b; // 'a' is initialized before 'b'
 public:
-    // Core constructor
-    Server(std::string h, int p) : host(h), port(p) {}
-
-    // Delegating constructor
-    Server(int p) : Server("localhost", p) {} 
+    // Trap: 'b' appears first in the list, but 'a' is initialized first!
+    // Since 'a' reads uninitialized 'b', 'a' gets garbage values.
+    Trap(int val) : b(val), a(b + 10) {} 
 };
 ```
 

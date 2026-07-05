@@ -1,5 +1,5 @@
 ---
-tags: [cpp, oop, operator-overloading, spaceship-operator, comparison]
+tags: [cpp, oop, operator-overloading, prefix-postfix, spaceship-operator, subscript-operator]
 links: ["[[03_OOP_Index]]", "[[03_OOP_Static_vs_Dynamic_Polymorphism_CRTP]]", "[[03_OOP_Problems]]"]
 ---
 
@@ -11,84 +11,134 @@ links: ["[[03_OOP_Index]]", "[[03_OOP_Static_vs_Dynamic_Polymorphism_CRTP]]", "[
 
 ## 1. Member vs Non-Member Overloading Rules
 
-When overloading operators, follow these design principles:
+Overloaded operators are functions with special signatures. To maintain standard language behavior, follow these structural rules:
 
-1. **Member Operators**:
-   - Use for operators that modify the left-hand object: `+=`, `-=`, `=`, `++`, `--`.
-   - Must be members for: `[]`, `()`, `->`, `=`.
-2. **Non-Member (Friend) Operators**:
-   - Use for symmetric binary operators to allow implicit type conversion on both operands: `+`, `-`, `*`, `/`, `==`, `!=`.
-   - Mandatory for stream operators `<<` and `>>` because the left-hand operand is an stream object (`std::ostream` / `std::istream`), which you cannot modify.
+### A. Operators That MUST Be Member Functions
+The C++ standard forces the following operators to be non-static member functions of the class:
+- **`operator=`** (Assignment)
+- **`operator[]`** (Subscript access)
+- **`operator()`** (Function call / Functor execution)
+- **`operator->`** (Member selection pointer dereference)
+
+---
+
+### B. Symmetric Binary Operators (Use Friend Non-Members)
+Symmetric operators (such as `+`, `-`, `*`, `/`, `==`) should be overloaded as **non-member friend functions**.
+- **Reason**: Allowing implicit type conversions on **both** the left-hand and right-hand operands.
+- If `operator+` is a member function, `myFraction + 2` compiles (implicit conversion of 2 via constructor), but `2 + myFraction` **fails** because the compiler cannot call a member operator on a primitive `int` literal.
 
 ```cpp
 #include <iostream>
 
-class Fraction {
-    int num;
-    int den;
+class Complex {
+    double real;
+    double imag;
 public:
-    Fraction(int n, int d = 1) : num(n), den(d) {}
+    Complex(double r, double i = 0.0) : real(r), imag(i) {}
 
-    // Member += operator (modifies left-hand side)
-    Fraction& operator+=(const Fraction& other) {
-        num = num * other.den + other.num * den;
-        den = den * other.den;
-        return *this;
-    }
-
-    // Friend non-member operator (symmetric, allows: 2 + frac and frac + 2)
-    friend Fraction operator+(Fraction lhs, const Fraction& rhs) {
-        lhs += rhs;
-        return lhs;
-    }
-
-    // Friend stream insertion operator
-    friend std::ostream& operator<<(std::ostream& os, const Fraction& f) {
-        os << f.num << "/" << f.den;
-        return os;
+    // Friend non-member: permits 'complexVal + 5.0' and '5.0 + complexVal'
+    friend Complex operator+(const Complex& lhs, const Complex& rhs) {
+        return Complex(lhs.real + rhs.real, lhs.imag + rhs.imag);
     }
 };
 ```
 
 ---
 
-## 2. C++20 Spaceship Operator (`<=>`)
+## 2. Overloading Prefix vs Postfix Operators
 
-Prior to C++20, to make a custom class fully comparable, we had to write six separate comparison functions (`==`, `!=`, `<`, `>`, `<=`, `>=`).
-C++20 introduced the **Three-Way Comparison Operator (`<=>`)**, also known as the **spaceship operator**.
+Overloading increment (`++`) and decrement (`--`) operators requires distinguishing between their prefix and postfix forms.
 
-### Default Lexicographical Comparisons:
-By defining `<=>` and `==` as `= default`, the compiler automatically generates all six comparison operators for you! It compares members lexicographically in the order they are declared in the class.
+### The Dummy Parameter Workaround
+- **Prefix (`++obj`)**: Has signature `Type& operator++()`. It increments state and returns `*this` by reference (fast, no copies).
+- **Postfix (`obj++`)**: Has signature `Type operator++(int)`. The `int` is a dummy compiler flag with no variable name. It saves a temporary copy of the old state, increments the actual object state, and returns the **old state by value** (slower due to temporary object construction).
 
 ```cpp
-#include <compare>
-#include <iostream>
-
-class Point {
-    int x;
-    int y;
+class Counter {
+    int val = 0;
 public:
-    Point(int xVal, int yVal) : x(xVal), y(yVal) {}
+    // Prefix: ++c
+    Counter& operator++() {
+        val++;          // Modify state
+        return *this;   // Return by reference
+    }
 
-    // Automatically generates all 6 comparison operators!
-    auto operator<=>(const Point&) const = default;
+    // Postfix: c++
+    Counter operator++(int) {
+        Counter temp = *this; // Save copy of old state
+        ++(*this);            // Call prefix operator to increment state
+        return temp;          // Return old state by value
+    }
+};
+```
+
+> [!TIP]
+> **Performance Tip**: In loop counters (e.g. `for (auto it = v.begin(); it != v.end(); ++it)`), always prefer prefix `++it` over postfix `it++`. For complex iterators, postfix creates and destroys a temporary iterator object on every iteration, wasting CPU cycles.
+
+---
+
+## 3. Subscript Operator (`operator[]`)
+
+When overloading `operator[]` for collections, you must provide **two versions** to support both mutable and read-only const references.
+
+```cpp
+#include <stdexcept>
+
+class IntegerList {
+    int data[10] = {0};
+public:
+    // 1. Non-const: returns reference, allowing modifications
+    int& operator[](size_t index) {
+        if (index >= 10) throw std::out_of_range("Index out of bounds");
+        return data[index];
+    }
+
+    // 2. Const: returns const reference / value for read-only access
+    const int& operator[](size_t index) const {
+        if (index >= 10) throw std::out_of_range("Index out of bounds");
+        return data[index];
+    }
 };
 
-void demoSpaceship() {
-    Point p1(1, 2);
-    Point p2(1, 3);
-
-    if (p1 < p2) {
-        std::cout << "p1 is less than p2\n"; // Executes: compares x first, then y.
-    }
+void demoSubscript(const IntegerList& constList) {
+    IntegerList list;
+    list[0] = 42; // OK: calls non-const operator[]
+    
+    int val = constList[0]; // OK: calls const operator[]
+    // constList[0] = 50;   // COMPILER ERROR: cannot modify through const reference!
 }
 ```
 
-### Comparison Category Return Types:
-The spaceship operator returns one of three comparison categories depending on the member types:
-1. **`std::strong_ordering`**: Strict ordering (elements are either less, greater, or equivalent/equal, e.g., integers).
-2. **`std::weak_ordering`**: Equivalent values might not be identical (e.g. case-insensitive string match).
-3. **`std::partial_ordering`**: Some values are incomparable (e.g. float `NaN` comparisons).
+---
+
+## 4. The Spaceship Operator (`<=>`) & Ordering Categories
+
+C++20 introduced the **Three-Way Comparison Operator (`<=>`)** to simplify comparisons.
+
+### Default Member-wise Lexicographical Order:
+Declaring `<=>` as `= default` auto-generates all six comparison operators (`==`, `!=`, `<`, `<=`, `>`, `>=`). It compares members sequentially in the order of their class declaration.
+
+```cpp
+#include <compare>
+
+struct Employee {
+    int rank;
+    int age;
+
+    // Automatically generates all 6 comparison operators!
+    auto operator<=>(const Employee&) const = default;
+};
+```
+
+### The Three Comparison Categories
+The return type of `<=>` determines the ordering guarantees of the class:
+
+1. **`std::strong_ordering`**:
+   - Strict ordering. If `a <=> b` returns equivalent, they are identical and indistinguishable (e.g. integers, standard strings).
+2. **`std::weak_ordering`**:
+   - Equivalent values may have different details. E.g., case-insensitive string comparison: `"Hello" <=> "hello"` is equivalent, but they are not identical.
+3. **`std::partial_ordering`**:
+   - Some values cannot be compared. E.g., floating-point comparisons containing `NaN` (Not a Number). `NaN < 5.0` is false, and `NaN > 5.0` is also false.
 
 ---
 

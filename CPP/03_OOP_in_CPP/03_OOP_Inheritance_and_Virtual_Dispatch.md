@@ -1,5 +1,5 @@
 ---
-tags: [cpp, oop, inheritance, virtual-dispatch, vtable, vptr, virtual-destructor]
+tags: [cpp, oop, inheritance, virtual-dispatch, vtable, vptr, virtual-destructor, covariant-return, override-final]
 links: ["[[03_OOP_Index]]", "[[03_OOP_Rule_of_Zero_Three_Five]]", "[[03_OOP_Multiple_Inheritance_and_Diamond_Problem]]"]
 ---
 
@@ -11,60 +11,111 @@ links: ["[[03_OOP_Index]]", "[[03_OOP_Rule_of_Zero_Three_Five]]", "[[03_OOP_Mult
 
 ## 1. Virtual Dispatch Mechanics
 
-In C++, by default, function calls are bound at compile-time (**static binding**). To enable runtime polymorphism (**dynamic binding**), we declare base class functions using the **`virtual`** keyword.
-- If a function is virtual, calling it through a base class pointer or reference invokes the version defined in the actual derived object.
+In C++, dynamic binding (invoking a function based on the runtime type of an object rather than its compile-time pointer type) is enabled using the **`virtual`** keyword.
+- If a method is marked `virtual` in the base class, it remains virtual for all subsequent subclasses in the hierarchy.
+- **Dynamic Binding Trigger**: Dynamic dispatch is triggered **only** when calling the function through a base pointer (`Base*`) or reference (`Base&`). Calling it on a value object (e.g., `Base b = Derived();`) triggers object slicing and runs static binding.
 
 ---
 
-## 2. Memory Layout: `vptr` and `vtable`
+## 2. Under the Hood: `vptr` and `vtable` Resolution
 
-Dynamic binding is implemented under the hood using a table of function pointers known as the **`vtable`** (virtual table) and a pointer to it inside each object known as the **`vptr`** (virtual pointer).
+The compiler implements dynamic binding using two structures:
+1. **`vtable` (Virtual Table)**: A static table created **once per class** that contains an array of function pointers pointing to the virtual methods of that class.
+2. **`vptr` (Virtual Pointer)**: A hidden pointer added **to each object instance** at offset 0. It is initialized in the constructor to point to the class's `vtable`.
 
-### ASCII Structural Layout
+### Step-by-Step VTable Overwrite Mechanics
+Let's see how the compiler populates the `vtable` when subclassing:
+
+1. **Base Class Compilation**:
+   - Compiler generates `Base VTable` containing:
+     - Index 0: `&Base::f()`
+     - Index 1: `&Base::g()`
+2. **Derived Class Compilation**:
+   - Compiler copies `Base VTable` entries.
+   - If `Derived` overrides `f()` but inherits `g()`, the compiler replaces index 0's pointer with `&Derived::f()`, but leaves index 1 pointing to `&Base::g()`.
 
 ```
-    Object on Heap/Stack                    Class VTable
-  ┌─────────────────────────┐             ┌─────────────────────────┐
-  │ vptr (hidden pointer)  ─┼────────────►│ &Derived::speak()       │
-  ├─────────────────────────┤             ├─────────────────────────┤
-  │ int data = 42;          │             │ &Base::run()            │
-  └─────────────────────────┘             └─────────────────────────┘
+  Base Object (on stack)                     Base VTable (static)
+  ┌──────────────────┐                     ┌─────────────────────┐
+  │ vptr             ├────────────────────►│ Index 0: &Base::f() │
+  ├──────────────────┤                     ├─────────────────────┤
+  │ int base_data;   │                     │ Index 1: &Base::g() │
+  └──────────────────┘                     └─────────────────────┘
+
+  Derived Object (on stack)                  Derived VTable (static)
+  ┌──────────────────┐                     ┌────────────────────────┐
+  │ vptr             ├────────────────────►│ Index 0: &Derived::f() │ (Overwritten)
+  ├──────────────────┤                     ├────────────────────────┤
+  │ int base_data;   │                     │ Index 1: &Base::g()    │ (Inherited)
+  ├──────────────────┤                     └────────────────────────┘
+  │ int derived_data;│
+  └──────────────────┘
 ```
 
-- **`vtable` (created per-class)**: An array of function pointers containing the addresses of virtual functions for that class.
-- **`vptr` (created per-object instance)**: A hidden pointer added by the compiler to the beginning of the object structure. It points to the class's `vtable`.
-- **Memory Overhead**:
-  - Every object of a class with virtual functions gets a `vptr` (usually 8 bytes on a 64-bit architecture).
-  - Every call to a virtual function requires an indirect pointer jump: dereference `vptr` $\to$ offset into `vtable` $\to$ dereference function pointer. This prevents the compiler from performing inline optimizations on these calls.
+- **Call Indirection overhead**: A virtual call `ptr->f()` compiles to:
+  1. Retrieve `vptr` from `ptr`: `void** vtable = *(void***)ptr;`
+  2. Retrieve function pointer at index 0: `void (*func_ptr)() = (void (*)())vtable[0];`
+  3. Invoke function pointer: `func_ptr();`
+  - This extra pointer dereference blocks compilers from performing **inlining optimizations**, introducing a minor latency penalty.
+
+---
+
+## 3. The `override` and `final` Specifiers (C++11)
+
+### `override`
+Ensures that a derived class function signature matches a virtual function declared in the base class. Without `override`, subtle mismatches in constness or parameters compile as new overloaded functions instead of overrides, leading to silent bugs.
 
 ```cpp
-#include <iostream>
-
 class Base {
-    int x;
 public:
-    virtual void func() {}
+    virtual void process(const std::string& str) const {}
 };
 
-class NonVirtual {
-    int x;
+class Derived : public Base {
+public:
+    // Without 'override', this compiles but is a new function (parameter lacks const)!
+    // With 'override', compiler throws error, alerting us to the signature mismatch!
+    void process(std::string& str) const override {} 
 };
+```
 
-void demoSizes() {
-    // NonVirtual: only size of int (4 bytes, padded to 4)
-    std::cout << sizeof(NonVirtual) << "\n"; // Outputs 4
-    
-    // Base: size of int (4) + size of vptr (8) = 12, padded to 16
-    std::cout << sizeof(Base) << "\n";       // Outputs 16
-}
+### `final`
+Prevents further overriding of a virtual method, or blocks inheritance of a class entirely (allowing compiler to optimize and de-virtualize calls, restoring static speed).
+
+```cpp
+class FinalClass final {}; // Cannot be inherited
+
+// class SubClass : public FinalClass {}; // COMPILER ERROR!
 ```
 
 ---
 
-## 3. The Virtual Destructor Rule
+## 4. Covariant Return Types
 
-> [!WARNING]
-> If you delete a derived class object through a pointer to a base class, and the base class lacks a **virtual destructor**, the behavior is **undefined**. In practice, the compiler will only call the base class destructor, leaking any resources allocated by the derived class!
+An exception to the rule that virtual function overrides must have identical return types:
+- A virtual function in a derived class can return a **pointer or reference to a class derived from the type returned by the base class**.
+
+```cpp
+class BaseProduct {};
+class DerivedProduct : public BaseProduct {};
+
+class Factory {
+public:
+    virtual BaseProduct* create() { return new BaseProduct(); }
+};
+
+class DerivedFactory : public Factory {
+public:
+    // Covariant Return Type: returning DerivedProduct* instead of BaseProduct*
+    DerivedProduct* create() override { return new DerivedProduct(); }
+};
+```
+
+---
+
+## 5. The Virtual Destructor Mandate
+
+If a derived class object is deleted through a base class pointer `Base*`, and the base class lacks a **virtual destructor**, the compiler executes static binding, calling only `~Base()`. The derived class destructor body is never run, leaking all derived member allocations.
 
 ```cpp
 #include <iostream>
@@ -72,26 +123,21 @@ void demoSizes() {
 class Base {
 public:
     Base() {}
-    // Mandatory virtual destructor for polymorphic base classes
+    // Declaring destructor virtual ensures the entire hierarchy cleans up properly
     virtual ~Base() {
-        std::cout << "Base Destructor\n";
+        std::cout << "Base Cleaned\n";
     }
 };
 
 class Derived : public Base {
-    int* data;
+    int* buffer;
 public:
-    Derived() { data = new int[100]; }
+    Derived() { buffer = new int[500]; }
     ~Derived() override {
-        delete[] data; // Guaranteed to be called if Base has a virtual destructor!
-        std::cout << "Derived Destructor\n";
+        delete[] buffer; // Safely freed during Base* deletion
+        std::cout << "Derived Cleaned\n";
     }
 };
-
-void cleanupDemo() {
-    Base* ptr = new Derived();
-    delete ptr; // Calls Derived destructor first, then Base destructor
-}
 ```
 
 ---
